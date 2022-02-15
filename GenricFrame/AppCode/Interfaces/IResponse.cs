@@ -1,0 +1,19 @@
+﻿using GenricFrame.Models;
+using System;
+
+namespace GenricFrame.AppCode.Interfaces
+{
+    public interface IResponse<T>
+    {
+        Status StatusCode { get; set; }
+        string ResponseText { get; set; }
+        Exception Exception { get; set; }
+        T Result { get; set; }
+    }
+
+    public interface IRequest<T>
+    {
+        string AuthToken { get; set; }
+        T Param { get; set; }
+    }
+}

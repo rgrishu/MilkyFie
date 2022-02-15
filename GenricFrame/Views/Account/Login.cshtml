@@ -1,0 +1,83 @@
+﻿@model GenricFrame.Models.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+    Layout ="_LoginLayout";
+}
+<div class="container">
+			
+			<form asp-action="Login">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="row justify-content-md-center">
+					<div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+						<div class="login-screen">
+							<div class="login-box">
+								<a href="#" class="login-logo">
+									<img src="~/theme/img/logo-dark.png" alt="Le Rouge Admin Dashboard" />
+								</a>
+								<h5>Welcome back,<br />Please Login to your Account.</h5>
+								<div class="form-group">
+									    <label asp-for="EmailId" class="control-label"></label>
+                <input asp-for="EmailId" class="form-control" />
+                <span asp-validation-for="EmailId" class="text-danger"></span>
+								</div>
+								<div class="form-group">
+									<label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+								</div>
+								<div class="actions mb-4">
+									<div class="custom-control custom-checkbox">
+										<input type="checkbox" class="custom-control-input" id="remember_pwd">
+										 <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
+									</div>
+									 <input type="submit" value="Login" class="btn btn-primary" />
+								</div>
+								@*<div class="forgot-pwd">
+									<a class="link" href="forgot-pwd.html">Forgot password?</a>
+								</div>*@
+								<hr>
+								<div class="actions align-left">
+									<span class="additional-link">New here?</span>
+									<a href="~/Account/Register" class="btn btn-dark">Create an Account</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+@*<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="EmailId" class="control-label"></label>
+                <input asp-for="EmailId" class="form-control" />
+                <span asp-validation-for="EmailId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+*@
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
