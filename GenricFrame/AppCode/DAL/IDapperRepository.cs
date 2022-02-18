@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GenricFrame.AppCode.DAL
 {
-    interface IDapperRepository 
+    public interface IDapperRepository
     {
         DbConnection GetDbconnection();
         IDbConnection GetMasterConnection();
@@ -18,5 +18,6 @@ namespace GenricFrame.AppCode.DAL
         Task<T> UpdateAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure);
         Task<dynamic> GetMultipleAsync<T1, T2>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure);
         Task<dynamic> GetMultipleAsync<T1, T2, T3>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure);
+        IEnumerable<TReturn> GetAsync<T1, T2, TReturn>(string sqlQuery, Func<T1, T2, TReturn> p, string splitOn, DynamicParameters parms = null, CommandType commandType = CommandType.StoredProcedure);
     }
 }

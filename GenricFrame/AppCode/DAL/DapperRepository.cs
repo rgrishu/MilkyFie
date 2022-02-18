@@ -7,17 +7,26 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using static Dapper.SqlMapper;
 
 namespace GenricFrame.AppCode.DAL
 {
     public class DapperRepository : IDapperRepository, IDisposable
     {
         private readonly IConfiguration _config;
+        private readonly IDbConnection _dbConnection;
+
         private readonly string Connectionstring = "SqlConnection";
-        public DapperRepository(IConfiguration config)
+        public DapperRepository(IConfiguration config, string connectionString = "SqlConnection")
         {
             _config = config;
+            Connectionstring = connectionString;
         }
+        public DapperRepository(string connectionString = "SqlConnection")
+        {
+            Connectionstring = connectionString;
+        }
+
         public void Dispose()
         {
             GC.SuppressFinalize(this);
@@ -29,18 +38,20 @@ namespace GenricFrame.AppCode.DAL
 
         public async Task<T> GetAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.Text)
         {
-            using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+            //using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+            using (IDbConnection db = new SqlConnection(Connectionstring))
             {
                 var result = await db.QueryAsync<T>(sp, parms, commandType: commandType);
                 return result.FirstOrDefault();
             }
         }
-
+            
         public async Task<IEnumerable<T>> GetAllAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
         {
             try
             {
-                using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+                //using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+                using (IDbConnection db = new SqlConnection(Connectionstring))
                 {
                     var result = await db.QueryAsync<T>(sp, parms, commandType: commandType);
                     return result.ToList();
@@ -55,7 +66,8 @@ namespace GenricFrame.AppCode.DAL
         public async Task<T> InsertAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
         {
             T result;
-            using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+            // using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+            using (IDbConnection db = new SqlConnection(Connectionstring))
             {
                 try
                 {
@@ -94,7 +106,8 @@ namespace GenricFrame.AppCode.DAL
         public async Task<T> UpdateAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
         {
             T result;
-            using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+            //using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+            using (IDbConnection db = new SqlConnection(Connectionstring))
             {
                 try
                 {
@@ -136,7 +149,8 @@ namespace GenricFrame.AppCode.DAL
         {
             try
             {
-                using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+                // using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+                using (IDbConnection db = new SqlConnection(Connectionstring))
                 {
                     var result = await db.QueryMultipleAsync(sp, parms, commandType: commandType).ConfigureAwait(false);
                     var res = new
@@ -157,7 +171,8 @@ namespace GenricFrame.AppCode.DAL
         {
             try
             {
-                using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+                //using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+                using (IDbConnection db = new SqlConnection(Connectionstring))
                 {
                     var result = await db.QueryMultipleAsync(sp, parms, commandType: commandType).ConfigureAwait(false);
                     var res = new
@@ -175,8 +190,41 @@ namespace GenricFrame.AppCode.DAL
             }
         }
 
+        public async Task<GridReader> GetMultipleAsync(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
+        {
+            try
+            {
+                //using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    var result = await db.QueryMultipleAsync(sp, parms, commandType: commandType).ConfigureAwait(false);
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         public DbConnection GetDbconnection() => new SqlConnection(_config.GetConnectionString(Connectionstring));
 
         public IDbConnection GetMasterConnection() => new SqlConnection(_config.GetConnectionString("MasterConnection"));
+
+        public  IEnumerable<TReturn> GetAsync<T1, T2, TReturn>(string sqlQuery, Func<T1, T2, TReturn> p, string splitOn, DynamicParameters parms = null, CommandType commandType = CommandType.StoredProcedure)
+        {
+            try
+            {
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    var result = db.Query<T1, T2, TReturn>(sqlQuery, p, splitOn: splitOn, param: parms, commandType: commandType);
+                     return result;
+                };
+            }
+            catch (Exception ex)
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

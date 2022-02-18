@@ -11,6 +11,13 @@ namespace GenricFrame.Models
         public T Result { get; set; }
     }
 
+    public class Response : IResponse
+    {
+        public Status StatusCode { get; set; }
+        public string ResponseText { get; set; }
+        public Exception Exception { get; set; }
+    }
+
     public class Request<T> : IRequest<T>
     {
         public string AuthToken { get; set; }

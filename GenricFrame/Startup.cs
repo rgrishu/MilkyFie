@@ -5,6 +5,7 @@ using GenricFrame.AppCode.Interfaces;
 using GenricFrame.AppCode.Middleware;
 using GenricFrame.AppCode.Migrations;
 using GenricFrame.AppCode.Reops;
+using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -33,7 +34,13 @@ namespace GenricFrame
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<DapperRepository>();
+            //services.AddSingleton<DapperRepository>();
+            // Read the connection string from appsettings.
+            string dbConnectionString = this.Configuration.GetConnectionString("SqlConnection");
+            services.AddSingleton<IDapperRepository, DapperRepository>((sp) => new DapperRepository(Configuration, dbConnectionString));
+            services.AddSingleton<IRepository<Category>, CategoryRepo>();
+            services.AddSingleton<IRepository<Unit>, UnitRepo>();
+            services.AddSingleton<IRepository<Product>, ProductRepo>();
             services.AddSingleton<Database>();
             services.AddLogging(c => c.AddFluentMigratorConsole())
                 .AddFluentMigratorCore()
@@ -49,20 +56,20 @@ namespace GenricFrame
                 option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
                .AddJwtBearer(options =>
-                {
-                    options.RequireHttpsMetadata = false;
-                    options.SaveToken = false;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = true,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        ValidAudience = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                    };
-                });
+               {
+                   options.RequireHttpsMetadata = false;
+                   options.SaveToken = false;
+                   options.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuer = true,
+                       ValidateAudience = true,
+                       ValidateLifetime = true,
+                       ValidateIssuerSigningKey = true,
+                       ValidIssuer = Configuration["Jwt:Issuer"],
+                       ValidAudience = Configuration["Jwt:Issuer"],
+                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                   };
+               });
             /* End Jwd */
             services.AddControllersWithViews();
             #region Identity
@@ -98,7 +105,6 @@ namespace GenricFrame
                 options.AddPolicy("AllowAll",
                     builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
             });
-
             //services.AddHttpContextAccessor();
         }
 
@@ -119,7 +125,7 @@ namespace GenricFrame
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 

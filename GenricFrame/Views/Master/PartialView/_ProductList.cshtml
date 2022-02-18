@@ -1,0 +1,31 @@
+﻿@using GenricFrame.AppCode.Reops.Entities;
+ @model List<Product>
+
+@if (Model != null && Model.Any())
+{
+    int i = 1;
+
+    @foreach (var item in Model)
+    {
+        <tr data-id="@item.CategoryID">
+            <td>@i</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.ProductName)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.MRP)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.SellingPrice)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Description)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Remark)</td>
+            <td>
+                <a class="btn-ed-ed" data-id="@item.CategoryID" ><img src="~/img/pencil.png" class="img-action" /></a>
+                <a class="btn-ed-del" data-id="@item.CategoryID"><img src="~/img/delete.png" class="img-action" /></a>
+            </td>
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="5">No Records Found</td>
+    </tr>
+}
+   

@@ -11,6 +11,13 @@ namespace GenricFrame.AppCode.Interfaces
         T Result { get; set; }
     }
 
+    public interface IResponse
+    {
+        Status StatusCode { get; set; }
+        string ResponseText { get; set; }
+        Exception Exception { get; set; }
+    }
+
     public interface IRequest<T>
     {
         string AuthToken { get; set; }

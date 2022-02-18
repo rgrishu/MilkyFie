@@ -1,0 +1,63 @@
+﻿@using GenricFrame.AppCode.Reops.Entities;
+@model List<Category>
+
+    @if (Model != null && Model.Any())
+{
+    int i = 1;
+   
+    @foreach (var item in Model)
+    {
+        <tr data-id="@item.CategoryID">
+            <td>@i</td>
+            @*<td style="display:none">@Html.DisplayFor(modelItem => item.ParentID)</td>*@
+            <td class="name@(item.CategoryID)">@Html.DisplayFor(modelItem => item.CategoryName)</td>
+            <td class="parent@(item.CategoryID)">@Html.DisplayFor(modelItem => item.Parent.ParentName)</td>
+            <td class="icon@(item.CategoryID)">@Html.DisplayFor(modelItem => item.Icon)</td>
+            <td>
+                <a class="btn-ed-ed" data-id="@item.CategoryID" data-pid="@item.Parent.ParentID"><img src="~/img/pencil.png" class="img-action" /></a>
+                <a class="btn-ed-del" data-id="@item.CategoryID"><img src="~/img/delete.png" class="img-action" /></a>
+            </td>
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="5">No Records Found</td>
+    </tr>
+}
+
+<script>
+    $('.btn-ed-ed').click(function(){
+        debugger;
+         var id = $(this).attr("data-id");
+         var pid = $(this).attr("data-pid");
+         var name=$(".name"+id).text();
+         var icon=$(".icon"+id).text();
+        $('#txtCategoryName').val(name);
+        $('#txticon').val(icon);
+        $('#ddlCategory').val(pid);
+        $('#hdncatid').val(id);
+    })
+     $('.btn-ed-del').click(function(){
+         debugger;
+         var id = $(this).attr("data-id");
+
+        $.ajax({
+           type: 'post',
+            url: 'DelCategory',
+            data: {id:id},
+            success: function (data) {
+                BindDropDown();
+                loadCategory();
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
+        });
+
+    })
+
+</script>

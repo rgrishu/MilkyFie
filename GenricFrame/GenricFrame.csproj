@@ -180,4 +180,8 @@
     <None Include="wwwroot\theme\vendor\wizard\jquery.steps.min.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\ViewModel\" />
+  </ItemGroup>
+
 </Project>

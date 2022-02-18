@@ -1,0 +1,121 @@
+﻿
+
+<div class="main-container">
+    <!-- Row start -->
+    <div class="row gutters">
+
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white h6">
+                    Prodcuts
+                    <div class="float-right">  <button id="btnNew" class="btn btn-info">New</button></div>
+                </div>
+                <div class="card-body">
+
+                    <div class="table-container">
+                        <div class="t-header">No Search Field</div>
+                        <div class="table-responsive">
+                            <table id="basicExample" class="table custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Product Name</th>
+                                        <th>MRP</th>
+                                        <th>SellingPrice</th>
+                                        <th>Description</th>
+                                        <th>Remark</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+@section scripts{
+<script>
+    $(document).ready(function(){
+       loadProduct();
+        $('#btnNew').click(function(){
+             BindDropDowncat();
+             BindDropDownUnit();
+              $.ajax({
+                type: 'post',
+                url: 'NewProduct',
+                success: function (data) {
+                Q.alert({
+                    title: "Add Product",
+                    body:data,
+                    width : '900px',
+                    });
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                },
+            });
+        });
+    });
+     var frm = $('#frmproduct');
+        frm.submit(function (e) {
+            e.preventDefault();
+            let data=frm.serialize();
+            console.log(data);
+            $.ajax({
+                type: frm.attr('method'),
+                url: frm.attr('action'),
+                data: frm.serialize(),
+                success: function (data) {
+                   $("#frmproduct").trigger("reset");
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                },
+            });
+        });
+
+
+     function BindDropDowncat(){
+          var categorylist=s.Dropdown.Category();
+      categorylist.then(result=>
+        {
+            $('#ddlCategory').empty().append('<option id="Option" name="ParentID" value="0">:: Category ::</option>').append(result.map(x=>`<option value="${x.categoryID}">${x.categoryName}</option>`));
+        });
+    }
+     function BindDropDownUnit(){
+          var unitlist=s.Dropdown.Unit();
+      unitlist.then(result=>
+        {
+            $('#ddlUnit').empty().append('<option id="Option" name="UnitID" value="0">:: Unit ::</option>').append(result.map(x=>`<option value="${x.unitID}">${x.unitName}</option>`));
+        });
+    }
+    function loadProduct(){
+         $.ajax({
+               type: 'post',
+                url: 'GetProduct',
+                data: frm.serialize(),
+                success: function (data) {
+                      $('tbody').html(data);
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                },
+          });
+    }
+        
+</script>
+
+}

@@ -6,8 +6,8 @@ namespace GenricFrame.AppCode.Migrations
 {
     public class Database
     {
-        private readonly DapperRepository _context;
-        public Database(DapperRepository context) => _context = context;
+        private readonly IDapperRepository _context;
+        public Database(IDapperRepository context) => _context = context;
         public void CreateDatabase(string dbName)
         {
             var query = "SELECT * FROM sys.databases WHERE name = @name";
