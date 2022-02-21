@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using GenricFrame.Models;
+using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -250,5 +252,68 @@ namespace GenricFrame.AppCode.CustomAttributes
             }
             return result;
         }
+
+
+        public bool IsFileAllowed(byte[] fileContent, string ext)
+        {
+            if (fileContent == null)
+                return false;
+            if (string.IsNullOrEmpty(ext))
+                return false;
+            if (!ext.ToUpper().In(FileFormatsAllowed))
+                return false;
+            var SubByte = GetSubBytes(fileContent, 0, 20);
+            string Start20BytesStr = SubByte?.Length > 0 ? Encoding.UTF8.GetString(SubByte) : "";
+            if (Start20BytesStr.Length < 1)
+                return false;
+            if (!CheckFFSignature.Any(Start20BytesStr.ToUpper().Contains))
+                return false;
+            return true;
+        }
+
+        public Response IsFileValid(IFormFile file)
+        {
+            var res = new Response
+            {
+                StatusCode = Status.Failed,
+                ResponseText = "Temperory Error"
+            };
+            if (file != null)
+            {
+                var filename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                string ext = Path.GetExtension(filename).ToLower();
+
+                byte[] filecontent = null;
+                using (var ms = new MemoryStream())
+                {
+                    file.CopyTo(ms);
+                    filecontent = ms.ToArray();
+                }
+                if (!Validate.O.IsFileAllowed(filecontent, ext))
+                {
+                    res.ResponseText = "Invalid File Format!";
+                    return res;
+                }
+                else if (!file.ContentType.Any())
+                    res.ResponseText = "File not found!";
+                else if (file.Length < 1)
+                    res.ResponseText = "Empty file not allowed!";
+                else if (file.Length / 1024 > 1024 && !ext.ToLower().In(".zip", ".rar"))
+                    res.ResponseText = "File size exceeded! Not more than 1 MB is allowed";
+                else
+                {
+                    res.StatusCode = Status.Success;
+                    res.ResponseText = "it is a valid file";
+                }
+              
+            }
+            else
+            {
+                res.ResponseText = "No File Found";
+            }
+            return res;
+        }
+
+
     }
 }

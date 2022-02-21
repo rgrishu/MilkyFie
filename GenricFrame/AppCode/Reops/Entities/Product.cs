@@ -1,4 +1,5 @@
 ﻿using GenricFrame.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace GenricFrame.AppCode.Reops.Entities
 {
@@ -19,6 +20,7 @@ namespace GenricFrame.AppCode.Reops.Entities
         public string ProductIcon { get; set; }
         public string Description { get; set; }
         public string Remark { get; set; }
+        
     }
     //public class ProductCategory
     //{

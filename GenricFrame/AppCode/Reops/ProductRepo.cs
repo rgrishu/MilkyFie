@@ -1,8 +1,10 @@
 ﻿using Dapper;
 using GenricFrame.AppCode.DAL;
+using GenricFrame.AppCode.Helper;
 using GenricFrame.AppCode.Interfaces;
 using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
+using GenricFrame.Models.ViewModel;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;

@@ -42,6 +42,7 @@ namespace GenricFrame
             services.AddSingleton<IRepository<Unit>, UnitRepo>();
             services.AddSingleton<IRepository<Product>, ProductRepo>();
             services.AddSingleton<Database>();
+            services.AddAutoMapper(typeof(Startup));
             services.AddLogging(c => c.AddFluentMigratorConsole())
                 .AddFluentMigratorCore()
                 .ConfigureRunner(c => c.AddSqlServer2016()
