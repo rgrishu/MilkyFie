@@ -28,5 +28,6 @@ namespace GenricFrame.Models
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Password and compare password do not match..")]
         public string ConfirmPassword { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

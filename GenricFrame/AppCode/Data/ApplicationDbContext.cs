@@ -96,7 +96,8 @@ namespace GenricFrame.AppCode.Data
 
         public Task<List<string>> GetRolesAsync(AppicationUser user)
         {
-            return Task.FromResult(_dbConnection.Query<string>("select * from UserRoles where UserId=@UserId", new { UserId = user.Id }, commandType: CommandType.Text).ToList());
+
+            return Task.FromResult(_dbConnection.Query<string>("proc_getUserRole", new { UserId = user.Id, Email = user.Email }, commandType: CommandType.StoredProcedure).ToList());
             //return Task.FromResult(_dbConnection.Query<string>("GetUserRoles", new { UserId = user.Id }, commandType: CommandType.StoredProcedure).ToList());
         }
 

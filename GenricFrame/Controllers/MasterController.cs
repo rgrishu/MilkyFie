@@ -6,6 +6,7 @@ using GenricFrame.AppCode.Reops;
 using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
 using GenricFrame.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -15,20 +16,11 @@ using System.Threading.Tasks;
 
 namespace GenricFrame.Controllers
 {
-    public class MasterController : Controller
+  
+    public class MasterController : BaseController//Controller
     {
-        private IDapperRepository _dapper;
-        private IRepository<Category> _category;
-        private IRepository<Unit> _unit;
-        private IRepository<Product> _product;
-        private IMapper _mapper;
-        public MasterController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit, IRepository<Product> product, IMapper mapper)
+        public MasterController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit, IRepository<Product> product, IMapper mapper) : base(dapper, category, unit, product,mapper)
         {
-            _dapper = dapper;
-            _category = category;
-            _unit = unit;
-            _product = product;
-            _mapper = mapper;
 
         }
         #region Category
@@ -128,6 +120,20 @@ namespace GenricFrame.Controllers
             var resp = await _unit.GetDropdownAsync(null);
             return Json(resp);
         }
+
+
+
+        #endregion
+
+        #region Users
+        [HttpPost]
+        public async Task<IActionResult> UserForm()
+        {
+            return PartialView("~/Views/Account/PartialView/_Register.cshtml", new RegisterViewModel { IsAdmin = true });
+        }
+
+
+
         #endregion
 
     }

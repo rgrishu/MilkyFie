@@ -35,20 +35,18 @@
     <link rel="stylesheet" href="~/theme/vendor/datatables/dataTables.bs4.css" />
     <link rel="stylesheet" href="~/theme/vendor/datatables/dataTables.bs4-custom.css" />
     <link href="~/theme/vendor/datatables/buttons.bs.css" rel="stylesheet" />
-
+    
 </head>
 <style>
-    form {
-        width: 100%
-    }
-
-    .img-action {
+            form{
+            width:100%
+            }
+            .img-action {
         height: 20px;
         margin: 5px;
     }
-
-    a {
-        cursor: pointer;
+    a{
+    cursor:pointer;
     }
 
 </style>
@@ -69,7 +67,7 @@
             <!-- Sidebar brand start  -->
             <div class="sidebar-brand">
                 <a href="index.html" class="logo">
-                    <img src="~/img/logo.png" alt="Le Rouge Admin Dashboard" />
+                    <img src="~/img/logo.png" alt="Admin Dashboard" />
                 </a>
             </div>
             <!-- Sidebar brand end  -->
@@ -81,13 +79,13 @@
                     <ul>
                         <li class="header-menu">General</li>
                         <li class=" active">
-                            <a href="/">
+                            <a href="/Consumer">
                                 <i class="icon-devices_other"></i>
                                 <span class="menu-text">Dashboards</span>
                             </a>
 
                         </li>
-                        <li class="sidebar-dropdown">
+                      @*  <li class="sidebar-dropdown">
                             <a href="#">
                                 <i class="icon-calendar1"></i>
                                 <span class="menu-text">Master</span>
@@ -97,29 +95,21 @@
                                     <li>
                                         <a href="~/Master/Category">Category</a>
                                     </li>
-                                    <li>
+                                     <li>
                                         <a href="~/Master/Product">Product</a>
                                     </li>
                                 </ul>
                             </div>
-                        </li>
+                        </li>*@
 
-                        <li class="sidebar-dropdown">
-                            <a href="#">
-                                <i class="icon-calendar1"></i>
-                                <span class="menu-text">User</span>
+                      @*  <li>
+                            <a href="~/Account/Users">
+                                <i class="icon-message-circle"></i>
+                                <span class="menu-text">User Details</span>
                             </a>
-                            <div class="sidebar-submenu">
-                                <ul>
-                                    <li>
-                                        <a id="btnaddUser">Add User</a>
-                                    </li>
-                                    <li>
-                                        <a href="~/Account/Users">User Details</a>
-                                    </li>
-                                </ul>
-                            </div>
                         </li>
+*@
+
 
                     </ul>
                 </div>
@@ -152,25 +142,27 @@
                     <!-- Custom search end -->
                     <!-- Header actions start -->
                     <ul class="header-actions">
-
+                      
+                        
                         <li class="dropdown">
                             <a href="#" id="userSettings" class="user-settings" data-toggle="dropdown" aria-haspopup="true">
-                                <span class="user-name">Admin</span>
+                                <span class="user-name">Consumer</span>
                                 <span class="avatar">
-                                    <img src="~/theme/img/user24.png" alt="avatar">
+                                    <img src="~/theme/img/user.png" alt="avatar">
                                     <span class="status busy"></span>
                                 </span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userSettings">
                                 <div class="header-profile-actions">
-                                    <div class="header-user-profile">
+                                  @*  <div class="header-user-profile">
                                         <div class="header-user">
-                                            <img src="~/theme/img/user24.png" alt="Admin Template">
+                                            <img src="~/theme/img/user.png" alt="Admin Template">
                                         </div>
+                                        <h5>Admin</h5>
                                         <p>Admin</p>
-                                    </div>
-                                    @*   <a href="user-profile.html"><i class="icon-user1"></i> My Profile</a>
-                                        <a href="account-settings.html"><i class="icon-settings1"></i> Account Settings</a>*@
+                                    </div>*@
+                                  @*  <a href="user-profile.html"><i class="icon-user1"></i> My Profile</a>
+                                    <a href="account-settings.html"><i class="icon-settings1"></i> Account Settings</a>*@
                                     <a href="~/Account/Logout"><i class="icon-log-out1"></i> Sign Out</a>
                                 </div>
                             </div>
@@ -184,7 +176,7 @@
             <div class="page-header">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">Home</li>
-                    <li class="breadcrumb-item active">Admin Dashboard</li>
+                    <li class="breadcrumb-item active">Consumer Dashboard</li>
                 </ol>
 
                 <ul class="app-actions">
@@ -280,7 +272,7 @@
     <script src="~/theme/vendor/datatables/vfs_fonts.js"></script>
     <script src="~/theme/vendor/datatables/html5.min.js"></script>
     <script src="~/theme/vendor/datatables/buttons.print.min.js"></script>
-
+    
 
     <script src="~/js/coreLib.js"></script>
     <script src="~/js/app.js"></script>
@@ -290,30 +282,6 @@
 
     <!-- Main JS -->
     <script src="~/theme/js/main.js"></script>
-    <script>
-              $(document).ready(function(){
-        $('#btnaddUser').click(function(){
-                  $.ajax({
-                    type: 'post',
-                    url: 'Master/UserForm',
-                    success: function (data) {
-                        console.log(data)
-                    Q.alert({
-                        title: "Add User",
-                        body:data,
-                        width : '900px',
-                        });
-                    },
-                    error: function (data) {
-                        console.log('An error occurred.');
-                        console.log(data);
-                    },
-                });
-
-        });
-        });
-    </script>
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>

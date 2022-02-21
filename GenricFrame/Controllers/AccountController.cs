@@ -53,24 +53,27 @@ namespace GenricFrame.Controllers
             {
                 return View();
             }
-            model.RoleName = "Admin";
+            if (string.IsNullOrEmpty(model.RoleName))
+            {
+                model.RoleName = "Consumer";
+            }
             var user = new AppicationUser
-            { 
+            {
                 UserId = Guid.NewGuid().ToString(),
                 UserName = model.EmailId,
                 Email = model.EmailId,
                 Role = model.RoleName,
                 Name = model.Name,
-                Address= model.Address,
-                Pincode= model.PinCode,
-                PhoneNumber= model.Mobile
+                Address = model.Address,
+                Pincode = model.PinCode,
+                PhoneNumber = model.Mobile
             };
             var res = await _userManager.CreateAsync(user, model.Password);
             if (res.Succeeded)
             {
                 user = _userManager.FindByEmailAsync(user.Email).Result;
                 await _userManager.AddToRoleAsync(user, model.RoleName);
-                model.Password=String.Empty;
+                model.Password = String.Empty;
                 model.EmailId = String.Empty;
                 ModelState.Clear();
                 ModelState.AddModelError("", "Register Successfully.");
@@ -98,15 +101,29 @@ namespace GenricFrame.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.EmailId, model.Password, model.RememberMe, false);
             if (result.Succeeded)
             {
-                    return LocalRedirect(returnUrl);
-
+                var roles = await _userManager.GetRolesAsync(new AppicationUser { Email = model.EmailId });
+                if (roles != null)
+                    if (roles.FirstOrDefault() == "1")
+                    {
+                        return LocalRedirect(returnUrl);
+                    }
+                    else if (roles.FirstOrDefault() == "3")
+                    {
+                        returnUrl = "/Consumer";
+                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                        return View();
+                    }
             }
             else
             {
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View();
             }
-
+            return View();
         }
 
         //[HttpPost]
