@@ -8,6 +8,9 @@ using GenricFrame.Models;
 using GenricFrame.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
+using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace GenricFrame.Controllers
@@ -82,7 +85,7 @@ namespace GenricFrame.Controllers
         [HttpPost]
         public async Task<IActionResult> NewProduct()
         {
-            Product objpt = new Product(); 
+            Product objpt = new Product();
             return PartialView("PartialView/_Product", objpt);
         }
         [HttpPost]
@@ -92,11 +95,16 @@ namespace GenricFrame.Controllers
             {
                 return View();
             }
-           var fileres= AppUtility.O.UploadFile(new FileUploadModel
+            StringBuilder sb = new StringBuilder("P_");
+            sb.Append(DateTime.Now.ToString("yyyymmddMMss"));
+            sb.Append(Path.GetExtension(model.file.FileName));
+            var fileres = AppUtility.O.UploadFile(new FileUploadModel
             {
-                FilePath = "~/Product/img/",
-                file = model.file
+                FilePath = FileDirectories.ProductImage,
+                file = model.file,
+                FileName = sb.ToString()
             });
+            model.ProductImage = sb.ToString();
             if (fileres.StatusCode == Status.Success)
             {
                 Product product = _mapper.Map<Product>(model);

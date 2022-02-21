@@ -66,26 +66,10 @@
                 },
             });
         });
-    });
-     var frm = $('#frmproduct');
-        frm.submit(function (e) {
-            e.preventDefault();
-            let data=frm.serialize();
-            console.log(data);
-            $.ajax({
-                type: frm.attr('method'),
-                url: frm.attr('action'),
-                data: frm.serialize(),
-                success: function (data) {
-                   $("#frmproduct").trigger("reset");
-                },
-                error: function (data) {
-                    console.log('An error occurred.');
-                    console.log(data);
-                },
-            });
-        });
+              
 
+    });
+     
 
      function BindDropDowncat(){
           var categorylist=s.Dropdown.Category();
@@ -105,7 +89,6 @@
          $.ajax({
                type: 'post',
                 url: 'GetProduct',
-                data: frm.serialize(),
                 success: function (data) {
                       $('tbody').html(data);
                 },
@@ -115,7 +98,7 @@
                 },
           });
     }
-        
+
 </script>
 
 }
