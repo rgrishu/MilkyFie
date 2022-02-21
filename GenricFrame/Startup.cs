@@ -7,6 +7,7 @@ using GenricFrame.AppCode.Migrations;
 using GenricFrame.AppCode.Reops;
 using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -38,6 +39,8 @@ namespace GenricFrame
             // Read the connection string from appsettings.
             string dbConnectionString = this.Configuration.GetConnectionString("SqlConnection");
             services.AddSingleton<IDapperRepository, DapperRepository>((sp) => new DapperRepository(Configuration, dbConnectionString));
+            services.AddHangfire(x => x.UseSqlServerStorage(dbConnectionString));
+            services.AddHangfireServer();
             services.AddSingleton<IRepository<Category>, CategoryRepo>();
             services.AddSingleton<IRepository<Unit>, UnitRepo>();
             services.AddSingleton<IRepository<Product>, ProductRepo>();
@@ -129,10 +132,9 @@ namespace GenricFrame
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
+            app.UseHangfireDashboard("/mydashboard");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
