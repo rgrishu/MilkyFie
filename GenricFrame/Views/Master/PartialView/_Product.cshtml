@@ -29,7 +29,7 @@
                         <div class="form-group">
                             <label for="inputName">Quantity</label>
                             <input type="text" required="" class="form-control"
-                                   id="txtQuantity" autocomplete="off" name="Quantity" placeholder="Enter Product">
+                                   id="txtQuantity" autocomplete="off" name="Quantity" placeholder="Enter Quantity">
                         </div>
                     </div>
                     <div class="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
@@ -116,8 +116,7 @@
 </div>
 <script>
     $('#btnSubmit').click(function () {
-        
-        debugger;
+        Q.preloader.load();
           var fileupload = $("#productimage").get(0);
           var isdiscount = $('#chekdiscount').is(':checked') == true ? true : false;
           var files = fileupload.files;
@@ -142,8 +141,24 @@
               contentType: false,
               data: formData,
               success: result => {
-               console.log(result)
-              }
+                    console.log(result);
+                  if(result.statusCode==1)
+                  {
+                  $('input').val('');
+                  $('.field-validation-valid').remove();
+                 Q.notify(result.statusCode, result.responseText);
+                  }
+                  else
+                  {
+                   Q.notify(result.statusCode, result.responseText);
+                  }
+                  Q.preloader.remove();
+              },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                    Q.preloader.remove();
+                },
           })
       });
 </script>

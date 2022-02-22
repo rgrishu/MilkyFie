@@ -41,7 +41,7 @@ else
         $('#hdncatid').val(id);
     })
      $('.btn-ed-del').click(function(){
-         debugger;
+           Q.preloader.load();
          var id = $(this).attr("data-id");
 
         $.ajax({
@@ -49,12 +49,24 @@ else
             url: 'DelCategory',
             data: {id:id},
             success: function (data) {
-                BindDropDown();
+                if(data.statusCode==1)
+              {
+                  BindDropDown();
                 loadCategory();
+                        Q.notify(data.statusCode, data.responseText);
+              }
+              else
+              {
+                      Q.notify(data.statusCode, data.responseText);
+              }
+
+                  Q.preloader.remove();
             },
             error: function (data) {
                 console.log('An error occurred.');
                 console.log(data);
+                   Q.notify(-1, 'An error occurred.');
+                     Q.preloader.remove();
             },
         });
 

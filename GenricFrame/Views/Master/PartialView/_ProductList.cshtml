@@ -13,10 +13,10 @@
             <td class="name">@Html.DisplayFor(modelItem => item.MRP)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.SellingPrice)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.Description)</td>
-            <td class="name">@Html.DisplayFor(modelItem => item.Remark)</td>
+            <td class="name"><img height="60px" width="60px"  src="~/images/Product/@item.ProductImage"/></td>
             <td>
-                <a class="btn-ed-ed" data-id="@item.CategoryID" ><img src="~/img/pencil.png" class="img-action" /></a>
-                <a class="btn-ed-del" data-id="@item.CategoryID"><img src="~/img/delete.png" class="img-action" /></a>
+              @*  <a class="btn-ed-ed" data-id="@item.CategoryID" ><img src="~/img/pencil.png"  class="img-action" /></a>*@
+                <a class="btn-ed-del" data-id="@item.ProductID"><img src="~/img/delete.png" class="img-action" /></a>
             </td>
         </tr>
         i++;
@@ -28,4 +28,33 @@ else
         <td colspan="5">No Records Found</td>
     </tr>
 }
-   
+
+<script>
+       $('.btn-ed-del').click(function(){
+         Q.preloader.load();
+         var id = $(this).attr("data-id");
+        $.ajax({
+           type: 'post',
+            url: 'DelProduct',
+            data: {id:id},
+            success: function (data) {
+                if(data.statusCode==1)
+                {
+                 loadProduct();   Q.notify(-1, 'An error occurred.');
+                }
+                else
+                { 
+                       Q.notify(-1, 'An error occurred.');
+                }
+                Q.preloader.remove();
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                   Q.notify(-1, 'An error occurred.');
+                   Q.preloader.remove();
+            },
+        });
+
+    })
+</script>

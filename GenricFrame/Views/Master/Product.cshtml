@@ -23,7 +23,7 @@
                                         <th>MRP</th>
                                         <th>SellingPrice</th>
                                         <th>Description</th>
-                                        <th>Remark</th>
+                                        <th>Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -48,28 +48,32 @@
     $(document).ready(function(){
        loadProduct();
         $('#btnNew').click(function(){
-             BindDropDowncat();
-             BindDropDownUnit();
+              Q.preloader.load();
               $.ajax({
                 type: 'post',
                 url: 'NewProduct',
                 success: function (data) {
+                      BindDropDowncat();
+             BindDropDownUnit();
                 Q.alert({
+                  
                     title: "Add Product",
                     body:data,
                     width : '900px',
                     });
+                     Q.preloader.remove();
                 },
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
+                    Q.preloader.remove();
                 },
             });
         });
-              
+
 
     });
-     
+
 
      function BindDropDowncat(){
           var categorylist=s.Dropdown.Category();
@@ -95,6 +99,7 @@
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
+                       Q.notify(-1, 'An error occurred.');
                 },
           });
     }
