@@ -1,81 +1,175 @@
 ﻿@model GenricFrame.Models.RegisterViewModel
 
 <div class="container">
-    <form asp-action="Register" >
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="row justify-content-md-center">
-            <div class="col-xl-5 col-lg-6 col-md-6 col-sm-12">
-                <div class="login-screen">
-                    <div class="login-box">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row justify-content-md-center">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="login-screen w-500">
+                <div class="login-box">
+                    <div class="text-center">
                         <a href="#" class="login-logo">
                             <img src="~/img/logo.png" alt="Le Rouge Admin Dashboard" />
                         </a>
-                        <h5>Welcome,Create your  Account.</h5>
-                        @if(Model.IsAdmin)
+                    </div>
+                    <h5>Create your  Account.</h5>
+                    <input type="hidden" id="hdnIsAdmin" value="@Model.IsAdmin" />
+                    @{
+                        string admin = "display:none";
+                        if (Model.IsAdmin)
                         {
-                        <div class="form-group">
-                            <label asp-for="RoleName"  class="control-label"></label>
-                            <select asp-for="RoleName" class="form-control">
-                                <option value="Consumer">Consumer</option>
-                                <option value="FOS">FOS</option>
-                            </select>
-                            <span asp-validation-for="RoleName" class="text-danger"></span>
-                        </div>
+                            admin = string.Empty;
                         }
-                         <div class="form-group">
-                            <label asp-for="Name" class="control-label"></label>
-                            <input asp-for="Name" required="" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="Name"  class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Mobile" class="control-label"></label>
-                            <input asp-for="Mobile" maxlength="10"  autocomplete="off" class="form-control" />
-                            <span asp-validation-for="Mobile" class="text-danger"></span>
-                        </div>
-                         <div class="form-group">
-                            <label asp-for="Address" class="control-label"></label>
-                            <input asp-for="Address" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="Address" class="text-danger"></span>
-                        </div>
-                         <div class="form-group">
-                            <label asp-for="PinCode" class="control-label"></label>
-                            <input asp-for="PinCode" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="PinCode" class="text-danger"></span>
+                    }
+
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" style="@admin">
+                            <div class="form-group">
+                                <label asp-for="RoleName" class="control-label"></label>
+                                <select asp-for="RoleName" id="ddlRole" class="form-control">
+                                    <option value="Consumer" selected="selected">Consumer</option>
+                                    <option value="FOS">FOS</option>
+                                </select>
+                                <span asp-validation-for="RoleName" class="text-danger"></span>
+                            </div>
                         </div>
 
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" required="" id="txtName" autocomplete="off" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
 
-                        <div class="form-group">
-                            <label asp-for="EmailId" class="control-label"></label>
-                            <input asp-for="EmailId"  required="" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="EmailId"  class="text-danger"></span>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label asp-for="Mobile" class="control-label"></label>
+                                <input asp-for="Mobile" id="txtMobile" maxlength="10" autocomplete="off" class="form-control" />
+                                <span asp-validation-for="Mobile" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="Password" class="control-label"></label>
-                            <input asp-for="Password" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
+
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label asp-for="Address" class="control-label"></label>
+                                <input asp-for="Address" id="txtAddress" autocomplete="off" class="form-control" />
+                                <span asp-validation-for="Address" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label asp-for="ConfirmPassword" class="control-label"></label>
-                            <input asp-for="ConfirmPassword" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label asp-for="PinCode" class="control-label"></label>
+                                <input asp-for="PinCode" id="txtPincode" autocomplete="off" class="form-control" />
+                                <span asp-validation-for="PinCode" class="text-danger"></span>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <input type="submit"  value="Create" class="btn btn-primary" />
+
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label asp-for="EmailId" class="control-label"></label>
+                                <input asp-for="EmailId" id="txtEmailID" required="" autocomplete="off" class="form-control" />
+                                <span asp-validation-for="EmailId" class="text-danger"></span>
+                            </div>
                         </div>
-                        <hr>
-                        <div class="m-0">
-                            <span class="additional-link">Have an account? <a href="~/Account/Login" class="btn text-info">Login</a></span>
+
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label asp-for="Password" class="control-label"></label>
+                                <input asp-for="Password" id="txtPassword" autocomplete="off" class="form-control" />
+                                <span asp-validation-for="Password" class="text-danger"></span>
+                            </div>
                         </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                            <div class="form-group">
+                                <label asp-for="ConfirmPassword" class="control-label"></label>
+                                <input asp-for="ConfirmPassword" id="txtConfirmPassword" autocomplete="off" class="form-control" />
+                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" id="btnSubmit" class="btn btn-primary">Create</button>
+                    </div>
+                    <hr>
+                    <div class="actions align-left">
+                        <span class="additional-link">Have an account? </span>
+                        <a href="~/Account/Login" class="btn btn-dark">Login</a>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+    </div>
+
+
 
 </div>
+<script src="~/theme/js/jquery.min.js"></script>
+<script src="~/js/coreLib.js"></script>
+<script>
+    $('#btnSubmit').click(function () {
+        //if($("#txtName").val()=="")
+        //{
+        //alert('Name Required.!')
+        //return;
+        //}
+        // if($("#txtMobile").val()=="")
+        //{
+        //alert('Mobile Required.!')
+        //return;
+        //}
+        //if($("#txtEmailID").val()=="")
+        //{
+        //alert('EmailID Required.!')
+        //return;
+        //}
 
-@section Scripts {
-    @{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
-}
-}
+        //if($("#txtPassword").val()=="")
+        //{
+        //alert('Passowrd Required.!')
+        //return;
+        //}
+
+        //  if($("#txtConfirmPassword").val()=="")
+        //{
+        //alert('Confirm Passowrd Required.!')
+        //return;
+        //}
+
+         formData=new  FormData();
+         formData.append("RoleName", $("#ddlRole").val());
+         formData.append("Name", $("#txtName").val());
+         formData.append("Mobile", $("#txtMobile").val());
+         formData.append("EmailId", $("#txtEmailID").val());
+         formData.append("Address", $("#txtAddress").val());
+         formData.append("PinCode", $("#txtPincode").val());
+         formData.append("Password", $("#txtPassword").val());
+         formData.append("ConfirmPassword", $("#txtConfirmPassword").val());
+         formData.append("IsAdmin", $("#hdnIsAdmin").val()=="true"?true:false);
+         $.ajax({
+             type: 'POST',
+             url: '/Account/Register',
+             processData: false,
+             contentType: false,
+             data: formData,
+             success: result => {
+              if(result.statusCode==1)
+              {
+                  $('input').val('');
+                  $('.field-validation-valid').remove();
+              alert('Registeration Successfull.');
+              }
+              else
+              {
+              alert('Registeration Failed.');
+              }
+             },
+             error:xhr=>{
+                 Q.renderError(xhr);
+             }
+         })
+     });
+       
+
+</script>

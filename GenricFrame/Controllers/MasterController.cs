@@ -131,10 +131,6 @@ namespace GenricFrame.Controllers
         {
             return PartialView("~/Views/Account/PartialView/_Register.cshtml", new RegisterViewModel { IsAdmin = true });
         }
-
-
-
         #endregion
-
     }
 }

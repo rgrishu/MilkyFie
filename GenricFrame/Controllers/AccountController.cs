@@ -14,7 +14,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace GenricFrame.Controllers
 {
     public class AccountController : Controller
@@ -41,17 +40,19 @@ namespace GenricFrame.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-
-            var roles = _roleManager.Roles.ToList();
-            ViewBag.Roles = new SelectList(roles, "Name", "Name");
-            return View();
+            
+            return View(new RegisterViewModel { IsAdmin = false });
         }
+
         [HttpPost]
+        [ValidateAjaxAttribute]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            Response response=new Response();
+            response.StatusCode = Status.Failed;
             if (!ModelState.IsValid)
             {
-                return View();
+                return Json(response);
             }
             if (string.IsNullOrEmpty(model.RoleName))
             {
@@ -77,6 +78,7 @@ namespace GenricFrame.Controllers
                 model.EmailId = String.Empty;
                 ModelState.Clear();
                 ModelState.AddModelError("", "Register Successfully.");
+                response.StatusCode = Status.Success;
             }
             else
             {
@@ -85,7 +87,7 @@ namespace GenricFrame.Controllers
                     ModelState.TryAddModelError("", error.Description);
                 }
             }
-            return View();
+            return Json(response);
         }
 
         public IActionResult Login()
@@ -105,6 +107,7 @@ namespace GenricFrame.Controllers
                 if (roles != null)
                     if (roles.FirstOrDefault() == "1")
                     {
+                        returnUrl = "/Home";
                         return LocalRedirect(returnUrl);
                     }
                     else if (roles.FirstOrDefault() == "3")
