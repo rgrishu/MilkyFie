@@ -48,12 +48,20 @@ namespace GenricFrame.AppCode.Reops
             throw new System.NotImplementedException();
         }
 
+        //public async Task<IEnumerable<EmailConfig>> GetAllAsync(EmailConfig entity = null)
+        //{
+        //    string sqlQuery = @"Select * from EmailConfig(nolock)";
+        //    entity = entity == null ? new EmailConfig() : entity;
+        //    var prepared = _dapper.PrepareParameters(sqlQuery, entity.ToDictionary());
+        //    var res = await _dapper.GetAllAsync<EmailConfig>(prepared.preparedQuery, prepared.dynamicParameters, commandType: CommandType.Text);
+        //    return res ?? new List<EmailConfig>();
+        //}
+
         public async Task<IEnumerable<EmailConfig>> GetAllAsync(EmailConfig entity = null)
         {
-            entity.ToDictionary();
-            var dbparams = _dapper.PrepareParameters(entity.ToDictionary());
-            string sqlQuery = @"Select * from EmailConfig(nolock) where id=@id";
-            var res = await _dapper.GetAllAsync<EmailConfig>(sqlQuery, dbparams, commandType: CommandType.Text);
+            string sqlQuery = @"Select * from EmailConfig(nolock)";
+            entity = entity == null ? new EmailConfig() : entity;
+            var res = await _dapper.GetAllAsync<EmailConfig>(entity, sqlQuery);
             return res ?? new List<EmailConfig>();
         }
 

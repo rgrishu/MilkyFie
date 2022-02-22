@@ -114,9 +114,10 @@ namespace GenricFrame.Controllers
 
         public void SendWelcomeMail(string userName)
         {
-            var config = _emailConfig.GetAllAsync(new EmailConfig { Id = 2 }).Result;
+            var config = _emailConfig.GetAllAsync().Result;
+                config = _emailConfig.GetAllAsync(new EmailConfig { Id = 2 }).Result;
             var setting= _mapper.Map<EmailSettings>(config.FirstOrDefault());
-            AppUtility.O.SendMail();
+            var _ = AppUtility.O.SendMail(setting);
         }
     }
 }
