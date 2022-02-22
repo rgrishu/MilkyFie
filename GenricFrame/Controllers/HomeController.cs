@@ -73,6 +73,32 @@ namespace GenricFrame.Controllers
             return Json(result);
         }
 
+        public void NLog()
+        {
+            _logger.LogInformation("Requested a Random API");
+            int count;
+            try
+            {
+                for (count = 0; count <= 5; count++)
+                {
+                    if (count == 3)
+                    {
+                        throw new Exception("Random Exception Occured");
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Iteration Count is {iteration}", count);
+                    }
+                }
+            }
+            
+            catch (Exception ex)
+            {
+                
+                _logger.LogError(ex,ex.Message);
+            }
+        }
+
         [HttpPost]
         [Route("welcome")]
         public IActionResult Welcome(string userName)
