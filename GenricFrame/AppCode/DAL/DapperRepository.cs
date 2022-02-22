@@ -45,7 +45,7 @@ namespace GenricFrame.AppCode.DAL
                 return result.FirstOrDefault();
             }
         }
-            
+
         public async Task<IEnumerable<T>> GetAllAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
         {
             try
@@ -211,20 +211,28 @@ namespace GenricFrame.AppCode.DAL
 
         public IDbConnection GetMasterConnection() => new SqlConnection(_config.GetConnectionString("MasterConnection"));
 
-        public  IEnumerable<TReturn> GetAsync<T1, T2, TReturn>(string sqlQuery, Func<T1, T2, TReturn> p, string splitOn, DynamicParameters parms = null, CommandType commandType = CommandType.StoredProcedure)
+        public IEnumerable<TReturn> GetAsync<T1, T2, TReturn>(string sqlQuery, Func<T1, T2, TReturn> p, string splitOn, DynamicParameters parms = null, CommandType commandType = CommandType.StoredProcedure)
         {
             try
             {
                 using (IDbConnection db = new SqlConnection(Connectionstring))
                 {
                     var result = db.Query<T1, T2, TReturn>(sqlQuery, p, splitOn: splitOn, param: parms, commandType: commandType);
-                     return result;
+                    return result;
                 };
             }
             catch (Exception ex)
             {
                 throw new NotImplementedException();
             }
+        }
+
+        public DynamicParameters PrepareParameters(Dictionary<string, dynamic> args = null)
+        {
+            var dbParam = new DynamicParameters();
+            if (args != null)
+                foreach (var pair in args) dbParam.Add(pair.Key, pair.Value);
+            return dbParam;
         }
     }
 }

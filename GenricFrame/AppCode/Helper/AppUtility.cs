@@ -77,10 +77,10 @@ namespace GenricFrame.AppCode.Helper
                     mail.Body = setting.Body;
                     mail.IsBodyHtml = true;
                     //mail.Attachments.Add(new Attachment("D:\\TestFile.txt"));//--Uncomment this to send any attachment
-                    using (SmtpClient smtp = new SmtpClient(setting.smtpAddress, setting.Port))
+                    using (SmtpClient smtp = new SmtpClient(setting.HostName, setting.Port))
                     {
                         smtp.Credentials = new NetworkCredential(setting.EmailFrom, setting.Password);
-                        smtp.EnableSsl = setting.enableSSL;
+                        smtp.EnableSsl = setting.EnableSSL;
                         smtp.Send(mail);
                     }
                 }

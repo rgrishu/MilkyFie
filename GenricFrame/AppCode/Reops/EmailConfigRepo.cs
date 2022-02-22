@@ -1,0 +1,86 @@
+﻿using Dapper;
+using GenricFrame.AppCode.DAL;
+using GenricFrame.AppCode.Extensions;
+using GenricFrame.AppCode.Interfaces;
+using GenricFrame.AppCode.Reops.Entities;
+using GenricFrame.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Threading.Tasks;
+
+namespace GenricFrame.AppCode.Reops
+{
+    public class EmailConfigRepo : IRepository<EmailConfig>
+    {
+        private IDapperRepository _dapper;
+        public EmailConfigRepo(IDapperRepository dapper)
+        {
+            _dapper = dapper;
+        }
+        public async Task<Response> AddAsync(EmailConfig entity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+
+
+
+        public async Task<Response> DeleteAsync(int id)
+        {
+            //Response res = new Response();
+            //try
+            //{
+            //    var dbparams = new DynamicParameters();
+            //    dbparams.Add("CategoryID", id);
+            //    dbparams.Add("CategoryName", "");
+            //    dbparams.Add("ParentID", 0);
+            //    dbparams.Add("Icon", "");
+            //    dbparams.Add("QueryType", "D");
+            //    res = await _dapper.GetAsync<Response>("proc_Category", dbparams, commandType: CommandType.StoredProcedure);
+            //}
+            //catch (Exception ex)
+            //{
+            //    res.Exception = ex;
+            //}
+            //return res;
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<IEnumerable<EmailConfig>> GetAllAsync(EmailConfig entity = null)
+        {
+            entity.ToDictionary();
+            var dbparams = _dapper.PrepareParameters(entity.ToDictionary());
+            string sqlQuery = @"Select * from EmailConfig(nolock) where id=@id";
+            var res = await _dapper.GetAllAsync<EmailConfig>(sqlQuery, dbparams, commandType: CommandType.Text);
+            return res ?? new List<EmailConfig>();
+        }
+
+        public async Task<Response<EmailConfig>> GetByIdAsync(int id)
+        {
+            var response = new Response<EmailConfig>
+            {
+                StatusCode = Status.Failed
+            };
+            var dbparams = new DynamicParameters();
+            dbparams.Add("ID", id);
+            string sqlQuery = @"Select * from EmailConfig(nolock) where ID=@Id";
+            var result = await _dapper.GetAsync<EmailConfig>(sqlQuery, dbparams, commandType: CommandType.Text);
+            if (result != null)
+            {
+                response = new Response<EmailConfig>
+                {
+                    StatusCode = Status.Success,
+                    Result = result
+                };
+            }
+            return response;
+        }
+
+        public Task<IReadOnlyList<EmailConfig>> GetDropdownAsync(EmailConfig entity)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+}
