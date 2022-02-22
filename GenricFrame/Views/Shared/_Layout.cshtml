@@ -8,7 +8,7 @@
     <!-- Meta -->
     <meta name="description" content="Responsive Bootstrap4 Dashboard Template">
     <meta name="author" content="ParkerThemes">
-   <link rel="icon" href="~/img/favicon.png" type="image/x-icon">>
+    <link rel="icon" href="~/img/favicon.png" type="image/x-icon">>
 
     <!-- Title -->
     <title>Milkyfie</title>
@@ -53,39 +53,22 @@
 
 </style>
 <body>
-    <!-- Loading starts -->
-    @*	<div id="loading-wrapper">
-        <div class="spinner-border" role="status">
-        <span class="sr-only">Loading...</span>
-        </div>
-        </div>*@
-    <!-- Loading ends -->
-    <!-- Page wrapper start -->
     <div class="page-wrapper">
-
-        <!-- Sidebar wrapper start -->
         <nav id="sidebar" class="sidebar-wrapper">
-
-            <!-- Sidebar brand start  -->
             <div class="sidebar-brand">
                 <a href="index.html" class="logo">
                     <img src="~/img/logo.png" alt="Le Rouge Admin Dashboard" />
                 </a>
             </div>
-            <!-- Sidebar brand end  -->
-            <!-- Sidebar content start -->
             <div class="sidebar-content">
-
-                <!-- sidebar menu start -->
                 <div class="sidebar-menu">
                     <ul>
                         <li class="header-menu">General</li>
-                        <li class=" active">
-                            <a href="/">
+                        <li class="active">
+                            <a href="/Home">
                                 <i class="icon-devices_other"></i>
                                 <span class="menu-text">Dashboards</span>
                             </a>
-
                         </li>
                         <li class="sidebar-dropdown">
                             <a href="#">
@@ -103,7 +86,6 @@
                                 </ul>
                             </div>
                         </li>
-
                         <li class="sidebar-dropdown">
                             <a href="#">
                                 <i class="icon-calendar1"></i>
@@ -120,7 +102,6 @@
                                 </ul>
                             </div>
                         </li>
-
                     </ul>
                 </div>
                 <!-- sidebar menu end -->
@@ -169,8 +150,6 @@
                                         </div>
                                         <p>Admin</p>
                                     </div>
-                                    @*   <a href="user-profile.html"><i class="icon-user1"></i> My Profile</a>
-                                        <a href="account-settings.html"><i class="icon-settings1"></i> Account Settings</a>*@
                                     <a href="~/Account/Logout"><i class="icon-log-out1"></i> Sign Out</a>
                                 </div>
                             </div>
@@ -288,29 +267,7 @@
         <script src="~/js/component.modal.js"></script>*@
     <!-- Main JS -->
     <script src="~/theme/js/main.js"></script>
-    <script>
-              $(document).ready(function(){
-        $('#btnaddUser').click(function(){
-                  $.ajax({
-                    type: 'post',
-                    url: 'Master/UserForm',
-                    success: function (data) {
-                        console.log(data)
-                    Q.alert({
-                        title: "Add User",
-                        body:data,
-                        width : '900px',
-                        });
-                    },
-                    error: function (data) {
-                        console.log('An error occurred.');
-                        console.log(data);
-                    },
-                });
-
-        });
-        });
-    </script>
+    
     @RenderSection("Scripts", required: false)
 </body>
 </html>
