@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
 using System;
 using System.Reflection;
 using System.Text;
@@ -38,6 +39,7 @@ namespace GenricFrame
             //services.AddSingleton<DapperRepository>();
             // Read the connection string from appsettings.
             string dbConnectionString = this.Configuration.GetConnectionString("SqlConnection");
+            GlobalDiagnosticsContext.Set("connectionString", dbConnectionString);
             services.AddSingleton<IDapperRepository, DapperRepository>((sp) => new DapperRepository(Configuration, dbConnectionString));
             services.AddHangfire(x => x.UseSqlServerStorage(dbConnectionString));
             services.AddHangfireServer();
