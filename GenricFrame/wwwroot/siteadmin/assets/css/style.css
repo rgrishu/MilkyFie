@@ -703,13 +703,14 @@ img {
     right: 0;
 }
 
-.main-menu .navigation>li {
-    position: relative;
-    padding: 15px 35px;
-    -webkit-transition: all 300ms ease;
-    -o-transition: all 300ms ease;
-    transition: all 300ms ease;
-}
+    .main-menu .navigation > li {
+        position: relative;
+        padding: 14px 20px;
+        -webkit-transition: all 300ms ease;
+        -o-transition: all 300ms ease;
+        transition: all 300ms ease;
+        border-right: 1px solid #838181;
+    }
 
 .main-menu .navigation>li:last-child {
     margin-right: 0px;
