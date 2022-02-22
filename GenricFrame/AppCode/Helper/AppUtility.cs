@@ -1,11 +1,16 @@
 ﻿
 using GenricFrame.AppCode.CustomAttributes;
+using GenricFrame.AppCode.Reops;
+using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Net.Mail;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GenricFrame.AppCode.Helper
 {
@@ -58,6 +63,32 @@ namespace GenricFrame.AppCode.Helper
             }
             return response;
         }
+
+        public async Task SendMail(EmailSettings setting)
+        {
+            await Task.Delay(0);
+            try
+            {
+                using (MailMessage mail = new MailMessage())
+                {
+                    mail.From = new MailAddress(setting.EmailFrom);
+                    mail.To.Add(setting.EmailTo);
+                    mail.Subject = setting.Subject;
+                    mail.Body = setting.Body;
+                    mail.IsBodyHtml = true;
+                    //mail.Attachments.Add(new Attachment("D:\\TestFile.txt"));//--Uncomment this to send any attachment
+                    using (SmtpClient smtp = new SmtpClient(setting.smtpAddress, setting.Port))
+                    {
+                        smtp.Credentials = new NetworkCredential(setting.EmailFrom, setting.Password);
+                        smtp.EnableSsl = setting.enableSSL;
+                        smtp.Send(mail);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
     }
-  
 }

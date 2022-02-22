@@ -1,8 +1,10 @@
 ﻿using GenricFrame.AppCode.CustomAttributes;
 using GenricFrame.AppCode.Extensions;
+using GenricFrame.AppCode.Helper;
 using GenricFrame.AppCode.Interfaces;
 using GenricFrame.AppCode.Migrations;
 using GenricFrame.Models;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +14,7 @@ using System.Diagnostics;
 
 namespace GenricFrame.Controllers
 {
-      [Authorize]
+    [Authorize]
     //[JWTAuthorize]
     public class HomeController : Controller
     {
@@ -21,13 +23,16 @@ namespace GenricFrame.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IServiceProvider IServiceProvider;
         private readonly AppicationUser _user;
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContext, IUserService userService, IServiceProvider ServiceProvider)
+         public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContext, IUserService userService, IServiceProvider ServiceProvider)
         {
             _userService = userService;
             _httpContext = httpContext;
             _logger = logger;
             IServiceProvider = ServiceProvider;
-            _user = (Models.AppicationUser)_httpContext.HttpContext.Items["User"];
+            if (_httpContext!=null && _httpContext.HttpContext != null)
+            {
+                _user = (AppicationUser)_httpContext?.HttpContext.Items["User"];
+            }
         }
 
         public IActionResult Index()
@@ -66,6 +71,19 @@ namespace GenricFrame.Controllers
         {
             var result = MigrationManager.MigrateDatabase(IServiceProvider, DatabaseName);
             return Json(result);
+        }
+
+        [HttpPost]
+        [Route("welcome")]
+        public IActionResult Welcome(string userName)
+        {
+            var jobId = BackgroundJob.Enqueue(() => SendWelcomeMail(userName));
+            return Ok($"Job Id {jobId} Completed. Welcome Mail Sent!");
+        }
+
+        public void SendWelcomeMail(string userName)
+        {
+            AppUtility.O.SendMail(new EmailSettings { EmailTo = "np4652@gmail.com", Subject = "Welcome", Body = "Alert" });
         }
     }
 }
