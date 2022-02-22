@@ -10,8 +10,8 @@
     <meta name="author" content="ParkerThemes">
 
     <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
-<link rel="icon" href="~/img/favicon.png" type="image/x-icon">
-@*    <link rel="shortcut icon" href="~/theme/img/fav.png" />*@
+    <link rel="icon" href="~/img/favicon.png" type="image/x-icon">
+    @*    <link rel="shortcut icon" href="~/theme/img/fav.png" />*@
 
     <!-- Title -->
     <title>Milkyfie - Login</title>
@@ -24,6 +24,8 @@
 
     <!-- Master CSS -->
     <link rel="stylesheet" href="~/theme/css/main.css" />
+
+    <link rel="stylesheet" href="~/js/toastr/toastr.min.css">
     <style type="text/css">
         input.parsley-success,
         select.parsley-success,
@@ -64,7 +66,11 @@
 
 
     @RenderBody()
-      
+    <script src="~/js/jquery.js"></script>
+    <script src="~/theme/js/jquery.min.js"></script>
+    <script src="~/js/coreLib.js"></script>
+    <link rel="stylesheet" href="~/js/toastr/toastr.js.map">
+    <script src="~/js/toastr/toastr.min.js"></script>
 
     @RenderSection("Scripts", required: false)
 </body>

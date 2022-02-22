@@ -1,0 +1,30 @@
+﻿body.has-loading {
+    height: 100vh !important;
+    width: 100%;
+    overflow: hidden;
+}
+
+.loading {
+    color: #ffff;
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    z-index: 9999999;
+    background: rgba(0,0,0,0.7);
+    justify-content: center;
+    align-items: center;
+}
+form {
+    width: 100%
+}
+
+.img-action {
+    height: 20px;
+    margin: 5px;
+}
+
+a {
+    cursor: pointer;
+}

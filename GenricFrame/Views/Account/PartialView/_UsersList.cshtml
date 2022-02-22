@@ -1,0 +1,29 @@
+﻿@model IEnumerable<GenricFrame.Models.AppicationUser>
+@if (Model != null && Model.Any())
+{
+    int i = 1;
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@i</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+             <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="3">No Records Found</td>
+    </tr>
+}
+

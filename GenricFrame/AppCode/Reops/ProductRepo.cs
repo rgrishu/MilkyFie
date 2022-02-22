@@ -5,6 +5,7 @@ using GenricFrame.AppCode.Interfaces;
 using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
 using GenricFrame.Models.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
@@ -42,9 +43,21 @@ namespace GenricFrame.AppCode.Reops
 
         }
 
-        public Task<Response> DeleteAsync(int id)
+        public async Task<Response> DeleteAsync(int id)
         {
-            throw new System.NotImplementedException();
+            Response res = new Response();
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("ProductID", id);  
+                res = await _dapper.GetAsync<Response>("proc_DeleteProduct", dbparams, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+                res.Exception = ex;
+            }
+            return res;
+            //throw new System.NotImplementedException();
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync(Product entity = null)

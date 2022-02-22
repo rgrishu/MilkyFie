@@ -146,6 +146,12 @@ namespace GenricFrame.Controllers
             return View(users);
 
         }
+        [HttpPost]
+        public async Task<IActionResult> Users(int id=0)
+        {
+            var users = _userManager.Users.ToList();
+            return PartialView("~/Views/Account/PartialView/_UsersList.cshtml", users);
+        }
         /* JWT */
         #region JWT
         [HttpPost("authenticate")]
