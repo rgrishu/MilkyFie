@@ -1,0 +1,65 @@
+﻿@using GenricFrame.AppCode.Reops.Entities;
+@model List<Banners>
+
+    @if (Model != null && Model.Any())
+{
+    int i = 1;
+
+    @foreach (var item in Model)
+    {
+        <tr data-id="@item.BannerID">
+            <td>@i</td>
+            @*<td style="display:none">@Html.DisplayFor(modelItem => item.ParentID)</td>*@
+            <td class="name@(item.BannerID)"><img src="@item.Banner" /></td>
+            <td class="parent@(item.IsActive)"><input type="checkbox"> </td>
+
+            <td>
+                @*                <a class="btn-ed-ed" data-id="@item.CategoryID" data-pid="@item.Parent.ParentID"><img src="~/img/pencil.png" class="img-action" /></a>
+                *@                <a class="btn-ed-del" data-id="@item.BannerID"><img src="~/img/delete.png" class="img-action" /></a>
+            </td>
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="5">No Records Found</td>
+    </tr>
+}
+
+<script>
+
+     $('.btn-ed-del').click(function(){
+           Q.preloader.load();
+         var id = $(this).attr("data-id");
+
+        $.ajax({
+           type: 'post',
+            url: 'DelBanner',
+            data: {id:id},
+            success: function (data) {
+                if(data.statusCode==1)
+              {
+
+                loadBanner();
+                        Q.notify(data.statusCode, data.responseText);
+              }
+              else
+              {
+                      Q.notify(data.statusCode, data.responseText);
+              }
+
+                  Q.preloader.remove();
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                   Q.notify(-1, 'An error occurred.');
+                     Q.preloader.remove();
+            },
+        });
+
+    })
+
+</script>

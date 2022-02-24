@@ -24,9 +24,10 @@ namespace GenricFrame.Controllers
 
 
 
-        [HttpPost("Registration")]
-        [Route("API/Registration")]
-        public IActionResult UserRegistration([FromBody] RegisterViewModel getIntouch)
+        [HttpPost]
+        [Route("Registration")]
+        //public IActionResult UserRegistration([FromBody] RegisterViewModel getIntouch)
+        public IActionResult UserRegistration()
         {
             
             return Json("");

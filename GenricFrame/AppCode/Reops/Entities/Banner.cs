@@ -1,0 +1,10 @@
+﻿namespace GenricFrame.AppCode.Reops.Entities
+{
+    public class Banners
+    {
+        public int BannerID { get; set; }
+        public string Banner { get; set; }
+        public float BannerNo { get; set; }
+        public  bool IsActive { get; set; }
+    }
+}

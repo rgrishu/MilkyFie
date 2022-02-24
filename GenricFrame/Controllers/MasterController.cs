@@ -7,6 +7,7 @@ using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
 using GenricFrame.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
@@ -21,9 +22,11 @@ namespace GenricFrame.Controllers
 
     public class MasterController : BaseController//Controller
     {
-        public MasterController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit, IRepository<Product> product, IMapper mapper) : base(dapper, category, unit, product, mapper)
+        protected IRepository<Banners> _banner;
+        public MasterController(IDapperRepository dapper, IRepository<Category> category,
+            IRepository<Unit> unit, IRepository<Product> product, IRepository<Banners> banner, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
-
+            _banner = banner;
         }
         #region Category
         public async Task<IActionResult> Category()
@@ -188,6 +191,83 @@ namespace GenricFrame.Controllers
 
 
 
+        #endregion
+
+        #region Banner
+        public async Task<IActionResult> Banner()
+        {
+
+            //var resp = await _category.GetAllAsync(null);
+            return View();
+        }
+        public async Task<IActionResult> UploadBanner(IFormFile file)
+        {
+            var response = new Response()
+            {
+                StatusCode=Status.Failed,
+                ResponseText="Failed"
+            };
+            try
+            {
+                StringBuilder sb = new StringBuilder("B_");
+                sb.Append(DateTime.Now.ToString("yyyymmddMMss"));
+                sb.Append(Path.GetExtension(file.FileName));
+                var fileres = AppUtility.O.UploadFile(new FileUploadModel
+                {
+                    FilePath = FileDirectories.BannerImage,
+                    file = file,
+                    FileName = sb.ToString()
+                });
+                if (fileres.StatusCode == Status.Success)
+                {
+                    var banner = new Banners()
+                    {
+                        Banner = sb.ToString(),
+                        IsActive = true
+                    };
+                    var resp = await _banner.AddAsync(banner);
+                    return Json(resp);
+                }
+                else
+                {
+                    return Json(fileres);
+                }
+            }
+            catch(Exception ex)
+            { 
+            
+            }
+            return Json(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetBanner()
+        {
+            var resp = await _banner.GetAllAsync();
+            return PartialView("PartialView/_Category", resp);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> DelBanner(int id)
+        {
+            var response = new Response()
+            {
+                StatusCode = Status.Failed,
+                ResponseText = "Failed"
+            };
+            var resp = await _banner.DeleteAsync(id);
+            if (resp.StatusCode == Status.Success)
+            {
+                response.StatusCode = Status.Success;
+                response.ResponseText = resp.ResponseText;
+            }
+            else
+            {
+                response.ResponseText = resp.ResponseText;
+            }
+            return Json(resp);
+        }
         #endregion
     }
 }

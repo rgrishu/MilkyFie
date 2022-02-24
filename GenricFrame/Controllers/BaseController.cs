@@ -14,13 +14,15 @@ namespace GenricFrame.Controllers
         protected IRepository<Category> _category;
         protected IRepository<Unit> _unit;
         protected IRepository<Product> _product;
+      
         protected IMapper _mapper;
-        public BaseController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit, IRepository<Product> product, IMapper mapper)
+        public BaseController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit,
+            IRepository<Product> product, IMapper mapper)
         {
             _dapper = dapper;
             _category = category;
             _unit = unit;
-            _product = product;
+            _product = product;           
             _mapper = mapper;
 
         }
