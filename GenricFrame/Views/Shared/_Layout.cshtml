@@ -8,7 +8,7 @@
     <!-- Meta -->
     <meta name="description" content="Responsive Bootstrap4 Dashboard Template">
     <meta name="author" content="ParkerThemes">
-    <link rel="icon" href="~/img/favicon.png" type="image/x-icon">>
+    <link rel="icon" href="~/img/favicon.png" type="image/x-icon">
 
     <!-- Title -->
     <title>Milkyfie</title>
@@ -25,6 +25,8 @@
     <!-- Main css -->
     <link rel="stylesheet" href="~/theme/css/main.css">
 
+    <link rel="stylesheet" href="~/js/toastr/toastr.min.css">
+
 
     <!-- *************
         ************ Vendor Css Files *************
@@ -35,23 +37,9 @@
     <link rel="stylesheet" href="~/theme/vendor/datatables/dataTables.bs4.css" />
     <link rel="stylesheet" href="~/theme/vendor/datatables/dataTables.bs4-custom.css" />
     <link href="~/theme/vendor/datatables/buttons.bs.css" rel="stylesheet" />
-
+      <link href="~/css/custom.css" rel="stylesheet" />
 </head>
-<style>
-    form {
-        width: 100%
-    }
 
-    .img-action {
-        height: 20px;
-        margin: 5px;
-    }
-
-    a {
-        cursor: pointer;
-    }
-
-</style>
 <body>
     <div class="page-wrapper">
         <nav id="sidebar" class="sidebar-wrapper">
@@ -67,7 +55,7 @@
                         <li class="active">
                             <a href="/Home">
                                 <i class="icon-devices_other"></i>
-                                <span class="menu-text">Dashboards</span>
+                                <span class="menu-text">Dashboard</span>
                             </a>
                         </li>
                         <li class="sidebar-dropdown">
@@ -93,9 +81,6 @@
                             </a>
                             <div class="sidebar-submenu">
                                 <ul>
-                                    <li>
-                                        <a id="btnaddUser">Add User</a>
-                                    </li>
                                     <li>
                                         <a href="~/Account/Users">User Details</a>
                                     </li>
@@ -138,7 +123,7 @@
                             <a href="#" id="userSettings" class="user-settings" data-toggle="dropdown" aria-haspopup="true">
                                 <span class="user-name">Admin</span>
                                 <span class="avatar">
-                                    <img src="~/theme/img/user24.png" alt="avatar">
+                                    <img src="~/theme/img/user.png" alt="avatar">
                                     <span class="status busy"></span>
                                 </span>
                             </a>
@@ -146,7 +131,7 @@
                                 <div class="header-profile-actions">
                                     <div class="header-user-profile">
                                         <div class="header-user">
-                                            <img src="~/theme/img/user24.png" alt="Admin Template">
+                                            <img src="~/theme/img/user.png" alt="Admin Template">
                                         </div>
                                         <p>Admin</p>
                                     </div>
@@ -262,6 +247,8 @@
 
 
     <script src="~/js/coreLib.js"></script>
+            <link rel="stylesheet" href="~/js/toastr/toastr.js.map">
+      <script src="~/js/toastr/toastr.min.js"></script>
     <script src="~/js/app.js"></script>
     @*    <script src="~/js/component.alert.js"></script>
         <script src="~/js/component.modal.js"></script>*@

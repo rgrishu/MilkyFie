@@ -1,5 +1,5 @@
 ﻿@using GenricFrame.AppCode.Reops.Entities;
- @model Product
+@model  Product
 
 
 <!-- Row start -->
@@ -9,6 +9,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row gutters">
+                    <input type="hidden" id="hdnProductID" />
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Select Category</label>
@@ -28,14 +29,14 @@
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Quantity</label>
-                            <input type="text" required="" class="form-control"
-                                   id="txtQuantity" autocomplete="off" name="Quantity" placeholder="Enter Product">
+                            <input type="text" required="" value="@Model.Quantity" class="form-control"
+                                   id="txtQuantity" autocomplete="off" name="Quantity" placeholder="Enter Quantity">
                         </div>
                     </div>
                     <div class="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Product Name</label>
-                            <input type="text" required="" class="form-control"
+                            <input type="text" required="" value="@Model.ProductName" class="form-control"
                                    id="txtProductName" autocomplete="off" name="ProductName" placeholder="Enter Product name">
                         </div>
                     </div>
@@ -45,24 +46,18 @@
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">MRP</label>
-                            <input type="text" required="" class="form-control"
+                            <input type="text" required="" value="@Model.MRP" class="form-control"
                                    id="txtMRP" autocomplete="off" name="MRP" placeholder="Enter MRP">
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Selling Price</label>
-                            <input type="text" required="" class="form-control"
+                            <input type="text" required="" value="@Model.SellingPrice" class="form-control"
                                    id="txtSellingPrice" autocomplete="off" name="SellingPrice" placeholder="Enter Selling Price">
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
-                        <div class="form-group">
-                            <label for="inputName">Is Discount</label>
-                            <br />
-                            <input type="checkbox" name="IsDiscount" id="chekdiscount" value="true" />
-                        </div>
-                    </div>
+                   
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Discount Type</label>
@@ -73,42 +68,51 @@
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Discount</label>
-                            <input type="text" required="" class="form-control"
+                            <input type="text" required="" value="@Model.Discount" class="form-control"
                                    id="txtdiscount" autocomplete="off" name="Discount" placeholder="Enter Discount">
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
-                            <label for="inputName">Product Image</label>
-                            <input type="file" name="file" id="productimage" />
+                            <label for="inputName">Is Discount</label>
+                            <br />
+                            <input type="checkbox" name="IsDiscount" value="@Model.IsDiscount" id="chekdiscount" value="true" />
                         </div>
                     </div>
+                  
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Product Icon</label>
                             <input type="text" required="" class="form-control"
-                                   id="txtProducticon" autocomplete="off" name="ProductIcon" placeholder="Enter Product Icon">
+                                   id="txtProducticon" autocomplete="off" value="@Model.ProductIcon" name="ProductIcon" placeholder="Enter Product Icon">
+                        </div>
+                    </div>
+                      <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Product Image</label>
+                            <input type="file" name="file" id="productimage" />
                         </div>
                     </div>
                     <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
                         <div class="form-group">
                             <label for="inputName">Discription</label>
                             <textarea type="text" required="" class="form-control"
-                                      id="txtDiscription" autocomplete="off" name="Description" placeholder="Enter Discription"></textarea>
+                                      id="txtDiscription" autocomplete="off"  name="Description" placeholder="Enter Discription">
+                                  @Model.Description</textarea>
                         </div>
                     </div>
                     <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
                         <div class="form-group">
                             <label for="inputName">Remark</label>
                             <textarea type="text" required="" class="form-control"
-                                      id="txtRemark" autocomplete="off" name="Remark" placeholder="EnterRemark"></textarea>
+                                      id="txtRemark" autocomplete="off" value="@Model.Remark" name="Remark" placeholder="EnterRemark"></textarea>
                         </div>
                     </div>
 
 
                 </div>
                 <input class="btn btn-primary" id="btnSubmit" type="submit" value="Submit">
-                <input class="btn btn-secondary" type="button" id="mdlCancel" value="Cancel">
+               
             </div>
         </div>
     </div>
@@ -116,8 +120,7 @@
 </div>
 <script>
     $('#btnSubmit').click(function () {
-        
-        debugger;
+        Q.preloader.load();
           var fileupload = $("#productimage").get(0);
           var isdiscount = $('#chekdiscount').is(':checked') == true ? true : false;
           var files = fileupload.files;
@@ -142,8 +145,24 @@
               contentType: false,
               data: formData,
               success: result => {
-               console.log(result)
-              }
+                    console.log(result);
+                  if(result.statusCode==1)
+                  {
+                  $('input').val('');
+                  $('.field-validation-valid').remove();
+                 Q.notify(result.statusCode, result.responseText);
+                  }
+                  else
+                  {
+                   Q.notify(result.statusCode, result.responseText);
+                  }
+                  Q.preloader.remove();
+              },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                    Q.preloader.remove();
+                },
           })
       });
 </script>

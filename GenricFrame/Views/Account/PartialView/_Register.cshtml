@@ -1,142 +1,96 @@
 ﻿@model GenricFrame.Models.RegisterViewModel
 
-<div class="container">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="row justify-content-md-center">
-        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-            <div class="login-screen w-500">
-                <div class="login-box">
-                    <div class="text-center">
-                        <a href="#" class="login-logo">
-                            <img src="~/img/logo.png" alt="Le Rouge Admin Dashboard" />
-                        </a>
-                    </div>
-                    <h5>Create your  Account.</h5>
-                    <input type="hidden" id="hdnIsAdmin" value="@Model.IsAdmin" />
+
+<input type="hidden" id="hdnIsAdmin" value="@Model.IsAdmin" />
                     @{
-                        string admin = "display:none";
-                        if (Model.IsAdmin)
-                        {
-                            admin = string.Empty;
-                        }
-                    }
+    string admin = "display:none";
+    if (Model.IsAdmin)
+    {
+        admin = string.Empty;
+    }
+    else
+    {
+      <script src="~/theme/js/jquery.min.js"></script>
+    }
+}
 
-                    <div class="row">
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" style="@admin">
-                            <div class="form-group">
-                                <label asp-for="RoleName" class="control-label"></label>
-                                <select asp-for="RoleName" id="ddlRole" class="form-control">
-                                    <option value="Consumer" selected="selected">Consumer</option>
-                                    <option value="FOS">FOS</option>
-                                </select>
-                                <span asp-validation-for="RoleName" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label asp-for="Name" class="control-label"></label>
-                                <input asp-for="Name" required="" id="txtName" autocomplete="off" class="form-control" />
-                                <span asp-validation-for="Name" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label asp-for="Mobile" class="control-label"></label>
-                                <input asp-for="Mobile" id="txtMobile" maxlength="10" autocomplete="off" class="form-control" />
-                                <span asp-validation-for="Mobile" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label asp-for="Address" class="control-label"></label>
-                                <input asp-for="Address" id="txtAddress" autocomplete="off" class="form-control" />
-                                <span asp-validation-for="Address" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label asp-for="PinCode" class="control-label"></label>
-                                <input asp-for="PinCode" id="txtPincode" autocomplete="off" class="form-control" />
-                                <span asp-validation-for="PinCode" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label asp-for="EmailId" class="control-label"></label>
-                                <input asp-for="EmailId" id="txtEmailID" required="" autocomplete="off" class="form-control" />
-                                <span asp-validation-for="EmailId" class="text-danger"></span>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label asp-for="Password" class="control-label"></label>
-                                <input asp-for="Password" id="txtPassword" autocomplete="off" class="form-control" />
-                                <span asp-validation-for="Password" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
-                            <div class="form-group">
-                                <label asp-for="ConfirmPassword" class="control-label"></label>
-                                <input asp-for="ConfirmPassword" id="txtConfirmPassword" autocomplete="off" class="form-control" />
-                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <button type="submit" id="btnSubmit" class="btn btn-primary">Create</button>
-                    </div>
-                    <hr>
-                    <div class="actions align-left">
-                        <span class="additional-link">Have an account? </span>
-                        <a href="~/Account/Login" class="btn btn-dark">Login</a>
-                    </div>
-                </div>
-            </div>
+<div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12" style="@admin">
+        <div class="form-group">
+            <label asp-for="RoleName" class="control-label"></label>
+            <select asp-for="RoleName" id="ddlRole" class="form-control">
+                <option value="Consumer" selected="selected">Consumer</option>
+                <option value="FOS">FOS</option>
+            </select>
+            <span asp-validation-for="RoleName" class="text-danger"></span>
         </div>
     </div>
 
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <div class="form-group">
+            <label asp-for="Name" class="control-label"></label>
+            <input asp-for="Name" required="" id="txtName" autocomplete="off" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
 
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <div class="form-group">
+            <label asp-for="Mobile" class="control-label"></label>
+            <input asp-for="Mobile" id="txtMobile" maxlength="10" autocomplete="off" class="form-control" />
+            <span asp-validation-for="Mobile" class="text-danger"></span>
+        </div>
+    </div>
 
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <div class="form-group">
+            <label asp-for="Address" class="control-label"></label>
+            <input asp-for="Address" id="txtAddress" autocomplete="off" class="form-control" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <div class="form-group">
+            <label asp-for="PinCode" class="control-label"></label>
+            <input asp-for="PinCode" id="txtPincode" autocomplete="off" class="form-control" />
+            <span asp-validation-for="PinCode" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <div class="form-group">
+            <label asp-for="EmailId" class="control-label"></label>
+            <input asp-for="EmailId" id="txtEmailID" required="" autocomplete="off" class="form-control" />
+            <span asp-validation-for="EmailId" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <div class="form-group">
+            <label asp-for="Password" class="control-label"></label>
+            <input asp-for="Password" id="txtPassword" autocomplete="off" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+        <div class="form-group">
+            <label asp-for="ConfirmPassword" class="control-label"></label>
+            <input asp-for="ConfirmPassword" id="txtConfirmPassword" autocomplete="off" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+    </div>
 </div>
-<script src="~/theme/js/jquery.min.js"></script>
-<script src="~/js/coreLib.js"></script>
+
+<div class="form-group">
+    <button type="submit" id="btnSubmit" class="btn btn-primary">Create</button>
+</div>
+
+
+
 <script>
     $('#btnSubmit').click(function () {
-        //if($("#txtName").val()=="")
-        //{
-        //alert('Name Required.!')
-        //return;
-        //}
-        // if($("#txtMobile").val()=="")
-        //{
-        //alert('Mobile Required.!')
-        //return;
-        //}
-        //if($("#txtEmailID").val()=="")
-        //{
-        //alert('EmailID Required.!')
-        //return;
-        //}
-
-        //if($("#txtPassword").val()=="")
-        //{
-        //alert('Passowrd Required.!')
-        //return;
-        //}
-
-        //  if($("#txtConfirmPassword").val()=="")
-        //{
-        //alert('Confirm Passowrd Required.!')
-        //return;
-        //}
-
+        Q.preloader.load();
          formData=new  FormData();
          formData.append("RoleName", $("#ddlRole").val());
          formData.append("Name", $("#txtName").val());
@@ -156,20 +110,24 @@
              success: result => {
               if(result.statusCode==1)
               {
+
                   $('input').val('');
                   $('.field-validation-valid').remove();
-              alert('Registeration Successfull.');
+                    getUsers();
+                    Q.preloader.remove()
+                        Q.notify(result.statusCode, result.responseText);
               }
               else
               {
-              alert('Registeration Failed.');
+                      Q.notify(result.statusCode, result.responseText);
               }
              },
              error:xhr=>{
                  Q.renderError(xhr);
+                    Q.notify(-1, 'An error occurred.');
              }
          })
      });
-       
+
 
 </script>

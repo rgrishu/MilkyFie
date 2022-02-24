@@ -3,7 +3,7 @@
 <div class="main-container">
     <!-- Row start -->
     <div class="row gutters">
-
+       
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
                 <div class="card-header bg-primary text-white h6">
@@ -23,7 +23,7 @@
                                         <th>MRP</th>
                                         <th>SellingPrice</th>
                                         <th>Description</th>
-                                        <th>Remark</th>
+                                        <th>Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -48,28 +48,36 @@
     $(document).ready(function(){
        loadProduct();
         $('#btnNew').click(function(){
-             BindDropDowncat();
-             BindDropDownUnit();
+             getform(id=0)
+        });
+    });
+
+    
+     function getform(id=0){
+          Q.preloader.load();
+             // var id=$('#hdnProductID').val();
               $.ajax({
                 type: 'post',
                 url: 'NewProduct',
+                data:{id:id},
                 success: function (data) {
+                      BindDropDowncat();
+             BindDropDownUnit();
                 Q.alert({
+                  
                     title: "Add Product",
                     body:data,
                     width : '900px',
                     });
+                     Q.preloader.remove();
                 },
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
+                    Q.preloader.remove();
                 },
             });
-        });
-              
-
-    });
-     
+    }
 
      function BindDropDowncat(){
           var categorylist=s.Dropdown.Category();
@@ -95,6 +103,7 @@
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
+                       Q.notify(-1, 'An error occurred.');
                 },
           });
     }

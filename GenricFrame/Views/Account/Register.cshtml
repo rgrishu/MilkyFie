@@ -5,71 +5,30 @@
     Layout = "_LoginLayout";
 }
 <div class="container">
-  @*  <form asp-action="Register" >
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="row justify-content-md-center">
-            <div class="col-xl-5 col-lg-6 col-md-6 col-sm-12">
-                <div class="login-screen">
-                    <div class="login-box">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="row justify-content-md-center">
+        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+            <div class="login-screen w-500">
+                <div class="login-box">
+                    <div class="text-center">
                         <a href="#" class="login-logo">
                             <img src="~/img/logo.png" alt="Le Rouge Admin Dashboard" />
                         </a>
-                        <h5>Welcome,Create your  Account.</h5>
-
-                        <div class="form-group" style="display:none">
-                            <label asp-for="RoleName"  class="control-label"></label>
-                            <select asp-for="RoleName" class="form-control" asp-items="ViewBag.Roles"></select>
-                            <span asp-validation-for="RoleName" class="text-danger"></span>
-                        </div>
-                         <div class="form-group">
-                            <label asp-for="Name" class="control-label"></label>
-                            <input asp-for="Name" required="" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="Name"  class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Mobile" class="control-label"></label>
-                            <input asp-for="Mobile" maxlength="10"  autocomplete="off" class="form-control" />
-                            <span asp-validation-for="Mobile" class="text-danger"></span>
-                        </div>
-                         <div class="form-group">
-                            <label asp-for="Address" class="control-label"></label>
-                            <input asp-for="Address" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="Address" class="text-danger"></span>
-                        </div>
-                         <div class="form-group">
-                            <label asp-for="PinCode" class="control-label"></label>
-                            <input asp-for="PinCode" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="PinCode" class="text-danger"></span>
-                        </div>
-
-
-                        <div class="form-group">
-                            <label asp-for="EmailId" class="control-label"></label>
-                            <input asp-for="EmailId"  required="" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="EmailId"  class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="Password" class="control-label"></label>
-                            <input asp-for="Password" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="Password" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <label asp-for="ConfirmPassword" class="control-label"></label>
-                            <input asp-for="ConfirmPassword" autocomplete="off" class="form-control" />
-                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
-                            <input type="submit"  value="Create" class="btn btn-primary" />
-                        </div>
-                        <hr>
-                        <div class="m-0">
-                            <span class="additional-link">Have an account? <a href="~/Account/Login" class="btn text-info">Login</a></span>
-                        </div>
+                    </div>
+                    <h5>Create your  Account.</h5>
+                    @Html.Partial("PartialView/_Register")
+                    <hr>
+                    <div class="actions align-left">
+                        <span class="additional-link">Have an account? </span>
+                        <a href="~/Account/Login" class="btn btn-dark">Login</a>
                     </div>
                 </div>
             </div>
         </div>
-    </form>*@
-    @Html.Partial("PartialView/_Register");
+    </div>
+
+
+
 </div>
+
 

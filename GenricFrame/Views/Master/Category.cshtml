@@ -1,5 +1,5 @@
 ﻿@*@using GenricFrame.AppCode.Reops.Entities;
-@model List<Category>*@
+    @model List<Category>*@
 
 <div class="main-container">
     <!-- Row start -->
@@ -8,13 +8,12 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
                     <div class="card-header bg-primary text-white h6">
-						Category
-
-					</div>
+                        Category
+                    </div>
                     <div class="card-body">
                         <div class="row gutters">
                             <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
-                                 <input type="hidden" name="CategoryID" value="0" id="hdncatid" />
+                                <input type="hidden" name="CategoryID" value="0" id="hdncatid" />
                                 <div class="form-group">
                                     @*                                    <label asp-for="@mdl.ParentID" class="control-label"></label>
                                         <select asp-for="@mdl.ParentID" name="ParentID" class="form-control" asp-items="ViewBag.Category"></select>
@@ -35,8 +34,7 @@
                             <div class="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label for="inputName">Category Name</label>
-                                    <input type="text" required="" class="form-control"
-                                    id="txtCategoryName" name="CategoryName" placeholder="Enter Category name">
+                                    <input type="text" required="" class="form-control" id="txtCategoryName" name="CategoryName" placeholder="Enter Category name">
                                 </div>
                             </div>
                             <div class="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
@@ -46,8 +44,8 @@
                                 </div>
                             </div>
                         </div>
-                        <input class="btn btn-primary" id="btnSubmit" type="submit" value="Submit">
-                        <input class="btn btn-secondary" type="button" value="Cancel">
+                        <button class="btn btn-primary" id="btnSubmit" type="submit" >Submit</button>
+                        @*<button class="btn btn-secondary" type="button" >Cancel</button>*@
                     </div>
                 </div>
             </div>
@@ -58,13 +56,13 @@
     <!-- Row start -->
     <div class="table-container">
         <div class="t-header">No Search Field</div>
-        <div class="table-responsive">
+        <d          iv class="table-responsive">
             <table id="basicExample" class="table custom-table">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Category Name</th>
-                         <th>Parent Name</th>
+                        <th>Parent Name</th>
                         <th>Icon</th>
                         <th>Action</th>
                     </tr>
@@ -79,43 +77,71 @@
 @section scripts{
 <script>
     $(document).ready(function(){
+         
     BindDropDown();
         loadCategory();
     });
- 
 
-     var frm = $('#frmcat');
-    
-        frm.submit(function (e) {
-            e.preventDefault();
-            let data=frm.serialize();
-            console.log(data);
-            $.ajax({
-                type: frm.attr('method'),
-                url: frm.attr('action'),
-                data: frm.serialize(),
-                success: function (data) {
-                  loadCategory();
-                  BindDropDown();
-                   $("#frmcat").trigger("reset");
-                },
-                error: function (data) {
-                    console.log('An error occurred.');
-                    console.log(data);
-                },
-            });
-        });
+    $('#btnSubmit').click(function(){
+       
+        if($('#txtCategoryName').val()=='')
+            {
+              Q.notify(-1, 'Category Required.');
+              return false;
+            }
+              Q.preloader.load();
+        formData=new  FormData();
+        formData.append("CategoryID", $("#hdncatid").val());
+        formData.append("ParentID", $("#ddlCategory").val());
+        formData.append("CategoryName", $("#txtCategoryName").val());
+        formData.append("Icon", $("#txticon").val());
+         $.ajax({
+             type: 'POST',
+             url: 'Category',
+             processData: false,
+             contentType: false,
+             data: formData,
+             success: result => {
+              if(result.statusCode==1)
+              {
+                   
+                  $('input').val('');
+                  $('.field-validation-valid').remove();
+                    loadCategory();
+                        Q.notify(result.statusCode, result.responseText);
+                       
+              }
+              else
+              {
+                      Q.notify(result.statusCode, result.responseText);
+              }
+                Q.preloader.remove();
+             },
+             error:xhr=>{
+                   Q.preloader.remove();
+                 Q.renderError(xhr);
+                    Q.notify(-1, 'An error occurred.');
+             }
+         })
+    });
+
+
+
      function loadCategory(){
+           Q.preloader.load();
          $.ajax({
                type: 'post',
                 url: 'GetCategory',
-                data: frm.serialize(),
+                data: '',
                 success: function (data) {
                       $('tbody').html(data);
+                        Q.preloader.remove();
                 },
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
+                       Q.notify(-1, 'An error occurred.');
+                         Q.preloader.remove();
                 },
             });
     }
