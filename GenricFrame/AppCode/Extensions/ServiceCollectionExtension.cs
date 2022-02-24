@@ -34,6 +34,7 @@ namespace GenricFrame.AppCode.Extensions
             services.AddSingleton<IRepository<Category>, CategoryRepo>();
             services.AddSingleton<IRepository<Unit>, UnitRepo>();
             services.AddSingleton<IRepository<Product>, ProductRepo>();
+            services.AddSingleton<IRepository<Banners>, BannersRepo>();
             services.AddSingleton<Database>();
             services.AddAutoMapper(typeof(Startup));
             services.AddHangfire(x => x.UseSqlServerStorage(dbConnectionString));

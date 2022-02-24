@@ -204,8 +204,8 @@ namespace GenricFrame.Controllers
         {
             var response = new Response()
             {
-                StatusCode=Status.Failed,
-                ResponseText="Failed"
+                StatusCode = Status.Failed,
+                ResponseText = "Failed"
             };
             try
             {
@@ -233,9 +233,9 @@ namespace GenricFrame.Controllers
                     return Json(fileres);
                 }
             }
-            catch(Exception ex)
-            { 
-            
+            catch (Exception ex)
+            {
+
             }
             return Json(response);
         }
@@ -245,8 +245,6 @@ namespace GenricFrame.Controllers
             var resp = await _banner.GetAllAsync();
             return PartialView("PartialView/_Category", resp);
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> DelBanner(int id)
