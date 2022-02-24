@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using GenricFrame.AppCode.Extensions;
+using GenricFrame.AppCode.Helper;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,17 +18,22 @@ namespace GenricFrame.AppCode.DAL
     public class DapperRepository : IDapperRepository, IDisposable
     {
         private readonly IConfiguration _config;
+        private readonly ILogger<DapperRepository> _logger;
         //private readonly IDbConnection _dbConnection;
 
         private readonly string Connectionstring = "SqlConnection";
-        public DapperRepository(IConfiguration config, string connectionString = "SqlConnection")
+        private readonly IConnectionString _connectionString;
+        //public DapperRepository(IConfiguration config, string connectionString = "SqlConnection")
+        //{
+        //    _config = config;
+        //   // Connectionstring = connectionString;
+        //}
+
+        public DapperRepository(IConfiguration config,IConnectionString connectionString, ILogger<DapperRepository> logger)
         {
             _config = config;
-            Connectionstring = connectionString;
-        }
-        public DapperRepository(string connectionString = "SqlConnection")
-        {
-            Connectionstring = connectionString;
+            Connectionstring = connectionString.connectionString;
+            _logger = logger;
         }
 
         public void Dispose()
@@ -35,17 +42,28 @@ namespace GenricFrame.AppCode.DAL
         }
         public async Task<int> ExecuteAsync(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
         {
+            _logger.LogError(new NotImplementedException(), "Method Not Implemented");
             throw new NotImplementedException();
         }
 
         public async Task<T> GetAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.Text)
         {
+            T result;
             //using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
-            using (IDbConnection db = new SqlConnection(Connectionstring))
+            try
             {
-                var result = await db.QueryAsync<T>(sp, parms, commandType: commandType);
-                return result.FirstOrDefault();
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    var response = await db.QueryAsync<T>(sp, parms, commandType: commandType);
+                    result= response.FirstOrDefault();
+                }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw ex;
+            }
+            return result;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
@@ -61,6 +79,7 @@ namespace GenricFrame.AppCode.DAL
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return new List<T>();
             }
         }
@@ -78,6 +97,7 @@ namespace GenricFrame.AppCode.DAL
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, ex.Message);
                 return new List<T>();
             }
         }
@@ -104,6 +124,7 @@ namespace GenricFrame.AppCode.DAL
                         catch (Exception ex)
                         {
                             tran.Rollback();
+                            _logger.LogError(ex, ex.Message);
                             throw ex;
                         }
                     }
@@ -111,6 +132,7 @@ namespace GenricFrame.AppCode.DAL
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, ex.Message);
                     throw ex;
                 }
                 finally
@@ -144,6 +166,7 @@ namespace GenricFrame.AppCode.DAL
                         catch (Exception ex)
                         {
                             tran.Rollback();
+                            _logger.LogError(ex, ex.Message);
                             throw ex;
                         }
                     }
@@ -151,6 +174,7 @@ namespace GenricFrame.AppCode.DAL
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, ex.Message);
                     throw ex;
                 }
                 finally
@@ -182,7 +206,8 @@ namespace GenricFrame.AppCode.DAL
             }
             catch (Exception ex)
             {
-                throw new NotImplementedException();
+                _logger.LogError(ex, ex.Message);
+                throw ex;
             }
         }
 
@@ -205,7 +230,8 @@ namespace GenricFrame.AppCode.DAL
             }
             catch (Exception ex)
             {
-                throw new NotImplementedException();
+                _logger.LogError(ex, ex.Message);
+                throw ex;
             }
         }
 
@@ -222,7 +248,8 @@ namespace GenricFrame.AppCode.DAL
             }
             catch (Exception ex)
             {
-                throw new NotImplementedException();
+                _logger.LogError(ex, ex.Message);
+                throw ex;
             }
         }
 
@@ -242,7 +269,8 @@ namespace GenricFrame.AppCode.DAL
             }
             catch (Exception ex)
             {
-                throw new NotImplementedException();
+                _logger.LogError(ex, ex.Message);
+                throw ex;
             }
         }
 
@@ -259,7 +287,8 @@ namespace GenricFrame.AppCode.DAL
             }
             catch (Exception ex)
             {
-                throw new NotImplementedException();
+                _logger.LogError(ex, ex.Message);
+                throw ex;
             }
         }
 
@@ -275,7 +304,8 @@ namespace GenricFrame.AppCode.DAL
             }
             catch (Exception ex)
             {
-                throw new NotImplementedException();
+                _logger.LogError(ex, ex.Message);
+                throw ex;
             }
         }
 
@@ -325,7 +355,8 @@ namespace GenricFrame.AppCode.DAL
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex, ex.Message);
+                throw ex;
             }
 
             return result;
