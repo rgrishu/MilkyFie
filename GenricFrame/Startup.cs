@@ -1,6 +1,7 @@
 using FluentMigrator.Runner;
 using GenricFrame.AppCode.DAL;
 using GenricFrame.AppCode.Data;
+using GenricFrame.AppCode.Helper;
 using GenricFrame.AppCode.Interfaces;
 using GenricFrame.AppCode.Middleware;
 using GenricFrame.AppCode.Migrations;
@@ -40,7 +41,10 @@ namespace GenricFrame
             // Read the connection string from appsettings.
             string dbConnectionString = this.Configuration.GetConnectionString("SqlConnection");
             GlobalDiagnosticsContext.Set("connectionString", dbConnectionString);
-            services.AddSingleton<IDapperRepository, DapperRepository>((sp) => new DapperRepository(Configuration, dbConnectionString));
+            IConnectionString ch = new ConnectionString { connectionString = dbConnectionString};
+            services.AddSingleton<IConnectionString>(ch);
+            //services.AddSingleton<IDapperRepository, DapperRepository>((sp) => new DapperRepository(Configuration, dbConnectionString));
+            services.AddSingleton<IDapperRepository, DapperRepository>();
             services.AddHangfire(x => x.UseSqlServerStorage(dbConnectionString));
             services.AddHangfireServer();
             services.AddSingleton<ILog, LogNLog>();
