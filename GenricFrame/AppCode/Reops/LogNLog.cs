@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace GenricFrame.AppCode.Reops
 {
-    public class LogNLog : ILog
+    public class LogNLog : ILog,IDisposable
     {
         private static readonly NLog.ILogger logger = LogManager.GetCurrentClassLogger();
 
@@ -34,6 +34,11 @@ namespace GenricFrame.AppCode.Reops
         public void Error(string message)
         {
             logger.Error(message);
+        }
+
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
         }
     }
 }
