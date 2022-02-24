@@ -63,6 +63,7 @@ namespace GenricFrame.AppCode.Reops
         public async Task<IEnumerable<Product>> GetAllAsync(Product entity = null)
         {
             var dbparams = new DynamicParameters();
+            dbparams.Add("ProductID", entity.ProductID);
             var res = await _dapper.GetAllAsync<Product>("proc_SelectProduct", dbparams, commandType: CommandType.StoredProcedure);
             return res;
         }

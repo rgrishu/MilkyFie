@@ -9,7 +9,7 @@ namespace GenricFrame.Controllers
     [ApiController]
     [Route("api/")]
 
-    public class APIController : ControllerBase
+    public class APIController : Controller
     {
         private IUserService _userService;
         private IHttpContextAccessor _httpContext;
@@ -20,6 +20,16 @@ namespace GenricFrame.Controllers
             _userService = userService;
             _httpContext = httpContext;
             loginResponse = (LoginResponse)_httpContext.HttpContext.Items["User"];
+        }
+
+
+
+        [HttpPost("Registration")]
+        [Route("API/Registration")]
+        public IActionResult UserRegistration([FromBody] RegisterViewModel getIntouch)
+        {
+            
+            return Json("");
         }
 
         [JWTAuthorize]

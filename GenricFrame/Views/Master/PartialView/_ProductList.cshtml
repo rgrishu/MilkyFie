@@ -15,7 +15,7 @@
             <td class="name">@Html.DisplayFor(modelItem => item.Description)</td>
             <td class="name"><img height="60px" width="60px"  src="~/images/Product/@item.ProductImage"/></td>
             <td>
-              @*  <a class="btn-ed-ed" data-id="@item.CategoryID" ><img src="~/img/pencil.png"  class="img-action" /></a>*@
+                <a class="btn-ed-ed" data-id="@item.ProductID" ><img src="~/img/pencil.png"  class="img-action" /></a>
                 <a class="btn-ed-del" data-id="@item.ProductID"><img src="~/img/delete.png" class="img-action" /></a>
             </td>
         </tr>
@@ -30,6 +30,11 @@ else
 }
 
 <script>
+      $('.btn-ed-ed').click(function(){
+         var id = $(this).attr("data-id");
+       getform(id)
+    })
+
        $('.btn-ed-del').click(function(){
          Q.preloader.load();
          var id = $(this).attr("data-id");

@@ -10,16 +10,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GenricFrame.Controllers
 {
-  
+
     public class MasterController : BaseController//Controller
     {
-        public MasterController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit, IRepository<Product> product, IMapper mapper) : base(dapper, category, unit, product,mapper)
+        public MasterController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit, IRepository<Product> product, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
 
         }
@@ -101,10 +103,15 @@ namespace GenricFrame.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> NewProduct()
+        public async Task<IActionResult> NewProduct(int id = 0)
         {
-            Product objpt = new Product();
-            return PartialView("PartialView/_Product", objpt);
+            IEnumerable<Product> lpres = await _product.GetAllAsync(new Product { ProductID = id });
+            Product prres = new Product();
+            if (lpres != null && lpres.Count() > 0)
+            {
+                prres = lpres.FirstOrDefault();
+            }
+            return PartialView("PartialView/_Product", prres);
         }
         [HttpPost]
         public async Task<IActionResult> SaveNewProduct(ProductViewModel model)
@@ -144,7 +151,7 @@ namespace GenricFrame.Controllers
         [HttpPost]
         public async Task<IActionResult> GetProduct()
         {
-            var resp = await _product.GetAllAsync();
+            var resp = await _product.GetAllAsync(new Product { ProductID = 0 });
             return PartialView("PartialView/_ProductList", resp);
         }
 
@@ -179,7 +186,7 @@ namespace GenricFrame.Controllers
             return PartialView("~/Views/Account/PartialView/_Register.cshtml", new RegisterViewModel { IsAdmin = true });
         }
 
-      
+
 
         #endregion
     }
