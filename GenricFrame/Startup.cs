@@ -44,6 +44,7 @@ namespace GenricFrame
             services.AddHangfire(x => x.UseSqlServerStorage(dbConnectionString));
             services.AddHangfireServer();
             services.AddSingleton<ILog, LogNLog>();
+            services.AddSingleton<IRepository<EmailConfig>, EmailConfigRepo>();
             services.AddSingleton<IRepository<Category>, CategoryRepo>();
             services.AddSingleton<IRepository<Unit>, UnitRepo>();
             services.AddSingleton<IRepository<Product>, ProductRepo>();

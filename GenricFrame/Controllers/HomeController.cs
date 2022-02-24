@@ -1,8 +1,10 @@
-﻿using GenricFrame.AppCode.CustomAttributes;
+﻿using AutoMapper;
+using GenricFrame.AppCode.CustomAttributes;
 using GenricFrame.AppCode.Extensions;
 using GenricFrame.AppCode.Helper;
 using GenricFrame.AppCode.Interfaces;
 using GenricFrame.AppCode.Migrations;
+using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Linq;
 using System.Diagnostics;
 
 namespace GenricFrame.Controllers
@@ -23,12 +26,16 @@ namespace GenricFrame.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IServiceProvider IServiceProvider;
         private readonly AppicationUser _user;
-         public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContext, IUserService userService, IServiceProvider ServiceProvider)
+        private readonly IRepository<EmailConfig> _emailConfig;
+        private IMapper _mapper;
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContext, IUserService userService, IServiceProvider ServiceProvider, IRepository<EmailConfig> emailConfig, IMapper mapper)
         {
             _userService = userService;
             _httpContext = httpContext;
             _logger = logger;
+            _emailConfig = emailConfig;
             IServiceProvider = ServiceProvider;
+            _mapper = mapper;
             if (_httpContext!=null && _httpContext.HttpContext != null)
             {
                 _user = (AppicationUser)_httpContext?.HttpContext.Items["User"];
@@ -107,7 +114,10 @@ namespace GenricFrame.Controllers
 
         public void SendWelcomeMail(string userName)
         {
-            AppUtility.O.SendMail(new EmailSettings { EmailTo = "np4652@gmail.com", Subject = "Welcome", Body = "Alert" });
+            var config = _emailConfig.GetAllAsync().Result;
+                config = _emailConfig.GetAllAsync(new EmailConfig { Id = 2 }).Result;
+            var setting= _mapper.Map<EmailSettings>(config.FirstOrDefault());
+            var _ = AppUtility.O.SendMail(setting);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GenricFrame.AppCode.Reops.Entities;
+using GenricFrame.Models;
 using GenricFrame.Models.ViewModel;
 namespace GenricFrame.AppCode.Helper
 {
@@ -9,9 +10,7 @@ namespace GenricFrame.AppCode.Helper
         public AutoMapperProfile()
         {
             CreateMap<Product, ProductViewModel>();
-
+            CreateMap<EmailConfig, EmailSettings>();
         }
-
-
     }
 }
