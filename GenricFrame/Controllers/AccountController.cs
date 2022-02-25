@@ -1,16 +1,17 @@
-﻿using GenricFrame.AppCode.CustomAttributes;
+﻿using AutoMapper;
+using GenricFrame.AppCode.CustomAttributes;
+using GenricFrame.AppCode.Helper;
 using GenricFrame.AppCode.Interfaces;
+using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
-using GenricFrame.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -20,33 +21,38 @@ namespace GenricFrame.Controllers
 {
     public class AccountController : Controller
     {
-        private IConfiguration _config;
+        #region Variables
+        //private IConfiguration _config;
         private readonly AppSettings _appSettings;
         private readonly UserManager<AppicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly SignInManager<AppicationUser> _signInManager;
         private IRepository<AppicationUser> _users;
-        public AccountController(IConfiguration config, IOptions<AppSettings> appSettings,
+        private readonly ILogger<AccountController> _logger;
+        private readonly IRepository<EmailConfig> _emailConfig;
+        private IMapper _mapper;
+        #endregion
+        //IConfiguration config
+        public AccountController(IOptions<AppSettings> appSettings,
             UserManager<AppicationUser> userManager, RoleManager<ApplicationRole> roleManager,
-            SignInManager<AppicationUser> signInManager, IRepository<AppicationUser> users)
+            SignInManager<AppicationUser> signInManager, IRepository<AppicationUser> users,
+            ILogger<AccountController> logger, IRepository<EmailConfig> emailConfig, IMapper mapper)
         {
-            _config = config;
+            //_config = config;
+            _logger = logger;
+            _emailConfig = emailConfig;
+            _mapper = mapper;
             _appSettings = appSettings.Value;
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
             _users = users;
         }
-        //private List<AppicationUser> _users = new List<AppicationUser>
-        // {
-        //     new AppicationUser { Id = 1, UserName = "Amit", PasswordHash = "password" },
-        //     new AppicationUser { Id = 2, UserName = "test", PasswordHash = "test" }
-        // };
 
         [HttpGet]
         public IActionResult Register()
         {
-            
+
             return View(new RegisterViewModel { IsAdmin = false });
         }
 
@@ -54,9 +60,9 @@ namespace GenricFrame.Controllers
         [ValidateAjaxAttribute]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            Response response=new Response();
+            Response response = new Response();
             response.StatusCode = Status.Failed;
-            response.ResponseText ="Registration Failed";
+            response.ResponseText = "Registration Failed";
             if (!ModelState.IsValid)
             {
                 return Json(response);
@@ -98,31 +104,36 @@ namespace GenricFrame.Controllers
             return Json(response);
         }
 
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl)
         {
+            ViewBag.returnUrl = returnUrl;
             return View();
         }
 
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, string ReturnUrl)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, model.RememberMe, false);
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            ReturnUrl = ReturnUrl ?? Url.Content("~/");
+            var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, model.RememberMe, lockoutOnFailure: true);
             if (result.Succeeded)
             {
-
                 var roles = await _userManager.GetRolesAsync(new AppicationUser { Email = model.MobileNo });
                 if (roles != null)
                     if (roles.FirstOrDefault() == "1")
                     {
-                        returnUrl = "/Home";
-                        return LocalRedirect(returnUrl);
+                        ReturnUrl = string.IsNullOrEmpty(ReturnUrl) || ReturnUrl?.Trim() == "/" ? "/Home" : ReturnUrl;
+                        return LocalRedirect(ReturnUrl);
                     }
                     else if (roles.FirstOrDefault() == "3")
                     {
-                        returnUrl = "/Consumer";
-                        return LocalRedirect(returnUrl);
+                        ReturnUrl = string.IsNullOrEmpty(ReturnUrl) || ReturnUrl?.Trim() == "/" ? "/Consumer" : ReturnUrl;
+                        return LocalRedirect(ReturnUrl);
                     }
                     else
                     {
@@ -130,11 +141,19 @@ namespace GenricFrame.Controllers
                         return View();
                     }
             }
-            else
+            else if (result.IsLockedOut)
             {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View();
+                var Scheme = Request.Scheme;
+                var forgotPassLink = Url.Action(nameof(ForgotPassword), "Account", new { }, Request.Scheme);
+                var content = string.Format("Your account is locked out, to reset your password, please click this link: {0}", forgotPassLink);
+                //var message = new Message(new string[] { model.MobileNo }, "Locked out account information", content, null);
+                var config = _emailConfig.GetAllAsync(new EmailConfig { Id = 2 }).Result;
+                var setting = _mapper.Map<EmailSettings>(config.FirstOrDefault());
+                setting.Body = content;
+                setting.Subject = "Locked out account information";
+                var _ = AppUtility.O.SendMail(setting);
             }
+        Finish:
             return View();
         }
 
@@ -143,9 +162,10 @@ namespace GenricFrame.Controllers
         {
             var response = new Response<AuthenticateResponse>
             {
-                StatusCode = Status.Failed
+                StatusCode = Status.Failed,
+                ResponseText = "Invalid Login Attempt"
             };
-            var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, model.RememberMe, false);
+            var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, false, true);
             if (result.Succeeded)
             {
                 var user = _users.GetDetails(model.MobileNo).Result;
@@ -154,17 +174,21 @@ namespace GenricFrame.Controllers
                 response = new Response<AuthenticateResponse>
                 {
                     StatusCode = Status.Success,
+                    ResponseText = Status.Success.ToString(),
                     Result = authResponse
                 };
+                goto Finish;
             }
-            else
-            {
-                response.ResponseText = "Authentication Failed";
-            }
+        Finish:
             return Json(response);
         }
 
-        //[HttpPost]
+        [HttpPost]
+        public IActionResult ForgotPassword()
+        {
+            return Json("");
+        }
+
         public async Task<IActionResult> Logout(string returnUrl = "/")
         {
             await _signInManager.SignOutAsync();
@@ -182,7 +206,7 @@ namespace GenricFrame.Controllers
 
         }
         [HttpPost]
-        public async Task<IActionResult> Users(int id=0)
+        public async Task<IActionResult> Users(int id = 0)
         {
             var users = _userManager.Users.ToList();
             return PartialView("~/Views/Account/PartialView/_UsersList.cshtml", users);

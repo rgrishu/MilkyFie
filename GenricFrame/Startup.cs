@@ -1,3 +1,4 @@
+using GenricFrame.AppCode.Data;
 using GenricFrame.AppCode.Extensions;
 using GenricFrame.AppCode.Interfaces;
 using GenricFrame.AppCode.Middleware;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -52,8 +54,9 @@ namespace GenricFrame
                });
             /* End Jwd */
             services.AddControllersWithViews();
+            services.AddMvc();
             #region Identity
-            
+
             services.AddIdentity<AppicationUser, ApplicationRole>(options =>
             {
                 options.Password.RequireDigit = false;
@@ -61,13 +64,16 @@ namespace GenricFrame
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
-            });
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
+                options.Lockout.AllowedForNewUsers = true;
+            }).AddUserStore<UserStore>()
+                   .AddRoleStore<RoleStore>();
+            //       .AddDefaultTokenProviders();
             services.ConfigureApplicationCookie(options =>
             {
                 // Cookie settings
                 options.Cookie.HttpOnly = true;
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
-
                 options.LoginPath = "/Account/Login";
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;
