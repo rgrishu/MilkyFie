@@ -1,12 +1,10 @@
 ﻿@model GenricFrame.Models.LoginViewModel
-
 @{
     ViewData["Title"] = "Login";
     Layout = "_LoginLayout";
 }
 <div class="container">
-
-    <form asp-action="Login">
+    <form asp-action="Login" asp-route-ReturnUrl="@ViewBag.returnUrl">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="row justify-content-md-center">
             <div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
@@ -31,10 +29,10 @@
                         </div>
                         <div class="actions mb-4">
                             <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="remember_pwd">
-                                <input class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
+                                @*<input type="checkbox" class="custom-control-input" id="remember_pwd">*@
+                                <input type="checkbox" class="form-check-input" asp-for="RememberMe" /> @Html.DisplayNameFor(model => model.RememberMe)
                             </div>
-                            <input type="submit" id="btnsubmit" value="Login" class="btn btn-primary" />
+                            <button type="submit" id="btnsubmit" class="btn btn-primary">Login</button>
                         </div>
                         @*<div class="forgot-pwd">
                             <a class="link" href="forgot-pwd.html">Forgot password?</a>
@@ -51,31 +49,23 @@
     </form>
 </div>
 
-
-
-
-
 @section Scripts {
 <script>
         $(document).ready(function(){
-        $('#btnsubmit').click(function(e){
-            debugger;
-    if($('#txtemail').val()=='')
-    {
-        e.preventDefault();
-
-           Q.notify(-1, 'Email Required');
-           return false;
-    }
-    if($('#txtpassord').val()=='')
-    {
-         e.preventDefault();
-          Q.notify(-1, 'Password Required');
-          return;
-          return false;
-    }
-        })
-
+            $('#btnsubmit').click(function (e) {
+                if ($('#txtemail').val() == '')
+                {
+                    e.preventDefault();
+                    Q.notify(-1, 'Email Required');
+                    return false;
+                }
+                if ($('#txtpassord').val() == '')
+                {
+                    e.preventDefault();
+                    Q.notify(-1, 'Password Required');
+                    return false;
+                }
+            })
         })
 </script>
 }

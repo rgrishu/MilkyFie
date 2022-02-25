@@ -9,7 +9,6 @@ namespace GenricFrame.Models
     public class LoginViewModel
     {
         [Required]
-
         [Phone]
         public string MobileNo { get; set; }
         //[EmailAddress]
