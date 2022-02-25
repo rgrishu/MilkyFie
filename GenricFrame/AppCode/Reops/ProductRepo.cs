@@ -25,8 +25,8 @@ namespace GenricFrame.AppCode.Reops
         public async Task<Response> AddAsync(Product entity)
         {
             var dbparams = new DynamicParameters();
-            dbparams.Add("CategoryID", entity.Category!=null?entity.Category.CategoryID:0);
-            dbparams.Add("UnitID", entity.Unit != null? entity.Unit.UnitID:0) ;
+            dbparams.Add("CategoryID", entity.Category != null ? entity.Category.CategoryID : 0);
+            dbparams.Add("UnitID", entity.Unit != null ? entity.Unit.UnitID : 0);
             dbparams.Add("ProductName", entity.ProductName);
             dbparams.Add("Quantity", entity.Quantity);
             dbparams.Add("MRP", entity.MRP);
@@ -53,14 +53,12 @@ namespace GenricFrame.AppCode.Reops
                 var dbparams = new DynamicParameters();
                 dbparams.Add("ProductID", id);
                 res = await _dapper.GetAsync<Response>("proc_DeleteProduct", dbparams, commandType: CommandType.StoredProcedure);
-                
             }
             catch (Exception ex)
             {
                 res.Exception = ex;
             }
             return res;
-            //throw new System.NotImplementedException();
         }
 
         //public async Task<IEnumerable<Product>> GetAllAsync(Product entity = null)
@@ -78,28 +76,28 @@ namespace GenricFrame.AppCode.Reops
             try
             {
                 var dbparams = new DynamicParameters();
-                dbparams.Add("ProductID", entity!=null?entity.ProductID:0);
-                dbparams.Add("ParentCategoryID", entity != null && entity.Category!=null && entity.Category.Parent!=null? entity.Category.Parent.ParentID:0);
-                dbparams.Add("CategoryID", entity != null && entity.Category !=null? entity.Category.CategoryID:0);
+                dbparams.Add("ProductID", entity != null ? entity.ProductID : 0);
+                dbparams.Add("ParentCategoryID", entity != null && entity.Category != null && entity.Category.Parent != null ? entity.Category.Parent.ParentID : 0);
+                dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
                 string sqlQuery = @"proc_SelectProduct";
                 Product cc = new Product();
-                var res = await _dapper.GetAllAsyncProc<Product, Unit, Category,Parent, Product>(entity ?? new Product(), sqlQuery, dbparams, (product, unit, category, parent) =>
-                {
-                    product.Unit = unit;
-                    product.Category = category;
-                    product.Category.Parent = parent;
-                    return product;
-                }, splitOn: "ProductID,UnitID,CategoryID,ParentID");
+                var res = await _dapper.GetAllAsyncProc<Product, Unit, Category, Parent, Product>(entity ?? new Product(), sqlQuery, dbparams, (product, unit, category, parent) =>
+                 {
+                     product.Unit = unit;
+                     product.Category = category;
+                     product.Category.Parent = parent;
+                     return product;
+                 }, splitOn: "ProductID,UnitID,CategoryID,ParentID");
                 product = res;
             }
             catch (Exception ex)
             {
-            
+
             }
             return product;
         }
 
-        
+
 
 
         public async Task<IEnumerable<Category>> GetAllAsync(Category entity = null)

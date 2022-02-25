@@ -43,7 +43,8 @@ else
             url: 'DelProduct',
             data: {id:id},
             success: function (data) {
-                if(data.statusCode==1 || data.statusCode=='Successs')
+                console.log(data)
+                if(data.statusCode==1)
                 {
                  loadProduct();  
                  Q.notify(1, data.responseText);

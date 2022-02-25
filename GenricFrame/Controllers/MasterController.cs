@@ -169,7 +169,7 @@ namespace GenricFrame.Controllers
         [HttpPost]
         public async Task<IActionResult> DelProduct(int id)
         {
-
+          
             var resp = await _product.DeleteAsync(id);
             return Json(resp);
         }
