@@ -92,6 +92,15 @@ namespace GenricFrame.Controllers
                 ModelState.Clear();
                 response.StatusCode = Status.Success;
                 response.ResponseText = "Register Successfully";
+                var Scheme = Request.Scheme;
+                var forgotPassLink = Url.Action(nameof(ForgotPassword), "Account", new { }, Request.Scheme);
+                var content = string.Format("Your account is locked out, to reset your password, please click this link: {0}", forgotPassLink);
+                //var message = new Message(new string[] { model.MobileNo }, "Locked out account information", content, null);
+                var config = _emailConfig.GetAllAsync(new EmailConfig { Id = 2 }).Result;
+                var setting = _mapper.Map<EmailSettings>(config.FirstOrDefault());
+                setting.Body = content;
+                setting.Subject = "Locked out account information";
+                var _ = AppUtility.O.SendMail(setting);
             }
             else
             {
