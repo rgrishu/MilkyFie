@@ -72,6 +72,12 @@ namespace GenricFrame.AppCode.Reops
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<Product> GetDetails(object id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IReadOnlyList<Product>> GetDropdownAsync(Product entity)
         {
             throw new System.NotImplementedException();

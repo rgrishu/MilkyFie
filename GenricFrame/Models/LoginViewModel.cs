@@ -9,8 +9,11 @@ namespace GenricFrame.Models
     public class LoginViewModel
     {
         [Required]
-        [EmailAddress]
-        public string EmailId { get; set; }
+
+        [Phone]
+        public string MobileNo { get; set; }
+        //[EmailAddress]
+        //public string EmailId { get; set; }
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }

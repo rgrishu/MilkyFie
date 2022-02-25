@@ -10,5 +10,6 @@ namespace GenricFrame.Models
         public string FileName { get; set; }
         public string FilePath { get; set; }
         public int Id { get; set; }
+        public bool IsThumbnailRequired { get; set; }
     }
 }

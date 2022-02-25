@@ -59,6 +59,12 @@ namespace GenricFrame.AppCode.Data
             return user;
         }
 
+        //public async Task<AppicationUser> FindByMobileAsync(string normalizedUserName, CancellationToken cancellationToken)
+        //{
+        //    var user = await _context.FindByMobileAsync(normalizedUserName);
+        //    return user;
+        //}
+
         public Task<string> GetEmailAsync(AppicationUser user, CancellationToken cancellationToken)
         {
             if (user == null)

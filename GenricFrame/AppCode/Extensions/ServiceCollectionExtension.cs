@@ -7,6 +7,7 @@ using GenricFrame.AppCode.Migrations;
 using GenricFrame.AppCode.Reops;
 using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
+using GenricFrame.Models.ViewModel;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -35,6 +36,8 @@ namespace GenricFrame.AppCode.Extensions
             services.AddSingleton<IRepository<Unit>, UnitRepo>();
             services.AddSingleton<IRepository<Product>, ProductRepo>();
             services.AddSingleton<IRepository<Banners>, BannersRepo>();
+            services.AddSingleton<IRepository<News>, NewsRepo>();
+            services.AddSingleton<IRepository<AppicationUser>, UsersRepo>();
             services.AddSingleton<Database>();
             services.AddAutoMapper(typeof(Startup));
             services.AddHangfire(x => x.UseSqlServerStorage(dbConnectionString));

@@ -1,5 +1,6 @@
 ﻿using GenricFrame.AppCode.Interfaces;
 using GenricFrame.Models;
+using GenricFrame.Models.ViewModel;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -11,9 +12,9 @@ using System.Text;
 
 namespace GenricFrame.AppCode.Reops
 {
-    public class UserService:IUserService
+    public class UserService : IUserService
     {
-         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
+        // users hardcoded for simplicity, store in a db with hashed passwords in production applications
         private List<AppicationUser> _users = new List<AppicationUser>
         {
             new AppicationUser { Id = 1, UserName = "test", PasswordHash = "test" }
@@ -29,14 +30,19 @@ namespace GenricFrame.AppCode.Reops
         public AuthenticateResponse Authenticate(LoginRequest model)
         {
             var user = _users.SingleOrDefault(x => x.UserName == model.UserName && x.PasswordHash == model.Password);
-
+            var userinfo = new AppicationUser()
+            {
+                Id = user.Id,
+                UserName = user.UserName,
+                Role = user.Role
+            };
             // return null if user not found
-            if (user == null) return null;
+            if (userinfo == null) return null;
 
             // authentication successful so generate jwt token
-            var token = generateJwtToken(user);
+            var token = generateJwtToken(userinfo);
 
-            return new AuthenticateResponse(user, token);
+            return new AuthenticateResponse(userinfo, token);
         }
 
         public IEnumerable<AppicationUser> GetAll()
@@ -58,8 +64,8 @@ namespace GenricFrame.AppCode.Reops
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             /* Claims */
             var claims = new[] {
-                new Claim("id", user.Id.ToString()),
-                new Claim("role", "Admin"),
+                new Claim("id", user.UserId.ToString()),
+                new Claim("role", user.Role),
                 new Claim("userName", user.UserName),
                // new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
                // new Claim(JwtRegisteredClaimNames.Email, userInfo.EmailAddress),
@@ -70,7 +76,7 @@ namespace GenricFrame.AppCode.Reops
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 //Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString()) }),
-                Subject = new ClaimsIdentity(claims),                
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddMinutes(10),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

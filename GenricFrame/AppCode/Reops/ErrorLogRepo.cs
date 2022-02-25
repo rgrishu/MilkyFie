@@ -41,6 +41,11 @@ namespace GenricFrame.AppCode.Reops
             throw new NotImplementedException();
         }
 
+        public Task<ErrorLog> GetDetails(object id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IReadOnlyList<ErrorLog>> GetDropdownAsync(ErrorLog entity)
         {
             throw new NotImplementedException();

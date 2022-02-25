@@ -34,6 +34,12 @@ namespace GenricFrame.AppCode.Reops
         {
             throw new System.NotImplementedException();
         }
+
+        public Task<Unit> GetDetails(object id)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task<IReadOnlyList<Unit>> GetDropdownAsync(Unit entity)
         {
             var dbparams = new DynamicParameters();

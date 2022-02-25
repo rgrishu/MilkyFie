@@ -13,6 +13,9 @@ namespace GenricFrame.AppCode.Interfaces
         Task<Response> AddAsync(T entity);
         Task<Response> DeleteAsync(int id);
         Task<IReadOnlyList<T>> GetDropdownAsync(T entity);
+
+        Task<T> GetDetails(object id);
+
         //Task GetByIdAsync(object id);
     }
 }

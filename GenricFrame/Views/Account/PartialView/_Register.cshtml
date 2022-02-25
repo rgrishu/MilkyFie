@@ -110,24 +110,42 @@
              success: result => {
               if(result.statusCode==1)
               {
-
+                    Q.preloader.remove()
+                     Q.notify(result.statusCode, result.responseText);
                   $('input').val('');
                   $('.field-validation-valid').remove();
-                    getUsers();
-                    Q.preloader.remove()
-                        Q.notify(result.statusCode, result.responseText);
+                    getUserss();
               }
               else
               {
+                     Q.preloader.remove();
                       Q.notify(result.statusCode, result.responseText);
               }
              },
              error:xhr=>{
+                  Q.preloader.remove();
                  Q.renderError(xhr);
                     Q.notify(-1, 'An error occurred.');
              }
          })
+        
      });
 
+      function getUserss(){
+         Q.preloader.load();
+         $.ajax({
+               type: 'post',
+                url: 'Users',
+                success: function (data) {
+                      $('tbody').html(data);
+                },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                       Q.notify(-1, 'An error occurred.');
+                },
+          });
+          Q.preloader.remove();
+    }
 
 </script>

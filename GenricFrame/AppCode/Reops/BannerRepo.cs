@@ -23,6 +23,7 @@ namespace GenricFrame.AppCode.Reops
         {
             var dbparams = new DynamicParameters();
             dbparams.Add("BannerID", entity.BannerID);
+            dbparams.Add("BackLink", entity.BackLink);
             dbparams.Add("Banner", entity.Banner);
             dbparams.Add("IsActive", entity.IsActive);
             dbparams.Add("QueryType", entity.BannerID == 0 ? "I" : "U");
@@ -36,7 +37,8 @@ namespace GenricFrame.AppCode.Reops
             try
             {
                 var dbparams = new DynamicParameters();
-                dbparams.Add("BannerID", 0);
+                dbparams.Add("BannerID", id);
+                dbparams.Add("BackLink", "");
                 dbparams.Add("Banner","");
                 dbparams.Add("IsActive", true);
                 dbparams.Add("QueryType", "D");
@@ -53,6 +55,7 @@ namespace GenricFrame.AppCode.Reops
         {
             var dbparams = new DynamicParameters();
             dbparams.Add("BannerID",0);
+            dbparams.Add("BackLink", "");
             dbparams.Add("Banner","");
             dbparams.Add("IsActive", 1);
             dbparams.Add("QueryType","A");
@@ -61,6 +64,11 @@ namespace GenricFrame.AppCode.Reops
         }
 
         public Task<Response<Banners>> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Banners> GetDetails(object id)
         {
             throw new NotImplementedException();
         }

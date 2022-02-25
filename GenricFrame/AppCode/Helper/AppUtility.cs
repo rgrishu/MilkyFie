@@ -3,7 +3,10 @@ using GenricFrame.AppCode.CustomAttributes;
 using GenricFrame.AppCode.Reops;
 using GenricFrame.AppCode.Reops.Entities;
 using GenricFrame.Models;
+using Microsoft.AspNetCore.Http;
 using System;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -51,7 +54,13 @@ namespace GenricFrame.AppCode.Helper
                     {
                         request.file.CopyTo(fs);
                         fs.Flush();
+                        if (request.IsThumbnailRequired)
+                        {
+                            GenrateThumbnail(request.file, request.FileName,20L);
+                        }
                     }
+
+                   
                     response.StatusCode = Status.Success;
                     response.ResponseText = "File uploaded successfully";
                 }
@@ -63,7 +72,38 @@ namespace GenricFrame.AppCode.Helper
             }
             return response;
         }
-
+        public bool GenrateThumbnail(IFormFile file, string fileName, long quality = 20L)
+        {
+            string tempImgNameWithPath = string.Concat(FileDirectories.Thumbnail,fileName);
+            var newimg = new Bitmap(file.OpenReadStream());
+            ImageCodecInfo jgpEncoder = GetEncoderInfo("image/jpeg");
+            // for the Quality parameter category.
+            System.Drawing.Imaging.Encoder myEncoder = System.Drawing.Imaging.Encoder.Quality;
+            EncoderParameters myEncoderParameters = new EncoderParameters(1);
+            EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, quality);
+            myEncoderParameters.Param[0] = myEncoderParameter;
+            try
+            {
+                if (File.Exists(tempImgNameWithPath))
+                {
+                    File.Delete(tempImgNameWithPath);
+                }
+                newimg.Save(tempImgNameWithPath, jgpEncoder, myEncoderParameters);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        private static ImageCodecInfo GetEncoderInfo(string mimeType)
+        {
+            ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
+            for (int i = 0; i < codecs.Length; i++)
+                if (codecs[i].MimeType == mimeType)
+                    return codecs[i];
+            return null;
+        }
         public async Task SendMail(EmailSettings setting)
         {
             await Task.Delay(0);

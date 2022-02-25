@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace GenricFrame.AppCode.Data
 {
-    public class ApplicationDbContext 
+    public class ApplicationDbContext
     {
         private readonly IConfiguration _configuration;
         private IDbConnection _dbConnection;
@@ -63,13 +63,23 @@ namespace GenricFrame.AppCode.Data
 
         public IdentityResult AddUser(AppicationUser user)
         {
-            if (_dbConnection.Execute("AddUser", user, commandType: CommandType.StoredProcedure) > 0)
+            var res = _dbConnection.Execute("AddUser", user, commandType: CommandType.StoredProcedure);
+            if (res > 0)
             {
                 return IdentityResult.Success;
             }
+            else if (res < 0)
+            {
+                var v = new IdentityError()
+                {
+                    Code = "-1",
+                    Description = res == -1 ? "Mobile Or EmailID Allready Exists." : res == -2 ? "Email Allready Exists." : "Some Thin Is Wrong Try Again Later."
+                };
+                var resp = IdentityResult.Failed(v);
+                return resp;
+            }
             else
             {
-
                 return IdentityResult.Failed();
             }
         }
@@ -94,6 +104,11 @@ namespace GenricFrame.AppCode.Data
             return Task.FromResult(_dbConnection.Query<AppicationUser>("select * from Users where NormalizedUserName='" + normalizedUserName + "'", null, commandType: CommandType.Text).FirstOrDefault());
         }
 
+        //public async Task<AppicationUser> FindByMobileAsync(string mobileNumber)
+        //{
+        //    string sqlQuery = string.Concat("select * from Users(nolock) where PhoneNumber='", mobileNumber, "'");
+        //    return await _dbConnection.QueryAsync<AppicationUser>(sqlQuery, null, commandType: CommandType.Text);
+        //}
         public Task<List<string>> GetRolesAsync(AppicationUser user)
         {
 

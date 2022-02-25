@@ -86,6 +86,11 @@ namespace GenricFrame.AppCode.Reops
             return response;
         }
 
+        public Task<EmailConfig> GetDetails(object id)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IReadOnlyList<EmailConfig>> GetDropdownAsync(EmailConfig entity)
         {
             throw new System.NotImplementedException();

@@ -23,10 +23,12 @@ namespace GenricFrame.Controllers
     public class MasterController : BaseController//Controller
     {
         protected IRepository<Banners> _banner;
+        protected IRepository<News> _news;
         public MasterController(IDapperRepository dapper, IRepository<Category> category,
-            IRepository<Unit> unit, IRepository<Product> product, IRepository<Banners> banner, IMapper mapper) : base(dapper, category, unit, product, mapper)
+            IRepository<Unit> unit, IRepository<Product> product, IRepository<Banners> banner, IRepository<News> news, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
             _banner = banner;
+            _news = news;
         }
         #region Category
         public async Task<IActionResult> Category()
@@ -200,13 +202,19 @@ namespace GenricFrame.Controllers
             //var resp = await _category.GetAllAsync(null);
             return View();
         }
-        public async Task<IActionResult> UploadBanner(IFormFile file)
+        public async Task<IActionResult> UploadBanner(IFormFile file,string backlink)
         {
+           
             var response = new Response()
             {
                 StatusCode = Status.Failed,
                 ResponseText = "Failed"
             };
+            if (file == null)
+            {
+                response.ResponseText = "Select a file to Upload.";
+                return Json(response);
+            }
             try
             {
                 StringBuilder sb = new StringBuilder("B_");
@@ -216,13 +224,15 @@ namespace GenricFrame.Controllers
                 {
                     FilePath = FileDirectories.BannerImage,
                     file = file,
-                    FileName = sb.ToString()
+                    FileName = sb.ToString(),
+                    IsThumbnailRequired = true
                 });
                 if (fileres.StatusCode == Status.Success)
                 {
                     var banner = new Banners()
                     {
                         Banner = sb.ToString(),
+                        BackLink = backlink,
                         IsActive = true
                     };
                     var resp = await _banner.AddAsync(banner);
@@ -243,7 +253,7 @@ namespace GenricFrame.Controllers
         public async Task<IActionResult> GetBanner()
         {
             var resp = await _banner.GetAllAsync();
-            return PartialView("PartialView/_Category", resp);
+            return PartialView("PartialView/_Banner", resp);
         }
 
         [HttpPost]
@@ -264,8 +274,73 @@ namespace GenricFrame.Controllers
             {
                 response.ResponseText = resp.ResponseText;
             }
+
+         
             return Json(resp);
         }
         #endregion
+
+
+        #region News
+        public async Task<IActionResult> News()
+        {
+
+            //var resp = await _category.GetAllAsync(null);
+            return View();
+        }
+        public async Task<IActionResult> AddNews(News model)
+        {
+            var response = new Response()
+            {
+                StatusCode = Status.Failed,
+                ResponseText = "Failed"
+            };
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+            var resp = await _news.AddAsync(model);
+            if (resp.StatusCode == Status.Success)
+            {
+                response.StatusCode = Status.Success;
+                response.ResponseText = resp.ResponseText;
+            }
+            else
+            {
+                response.ResponseText = resp.ResponseText;
+            }
+            return Json(response);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetNews()
+        {
+            var resp = await _news.GetAllAsync();
+            return PartialView("PartialView/_News", resp);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DelNews(int id)
+        {
+            var response = new Response()
+            {
+                StatusCode = Status.Failed,
+                ResponseText = "Failed"
+            };
+            var resp = await _news.DeleteAsync(id);
+            if (resp.StatusCode == Status.Success)
+            {
+                response.StatusCode = Status.Success;
+                response.ResponseText = resp.ResponseText;
+            }
+            else
+            {
+                response.ResponseText = resp.ResponseText;
+            }
+
+
+            return Json(resp);
+        }
+        #endregion
+
     }
 }

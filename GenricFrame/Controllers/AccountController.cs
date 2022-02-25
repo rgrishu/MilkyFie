@@ -1,5 +1,7 @@
 ﻿using GenricFrame.AppCode.CustomAttributes;
+using GenricFrame.AppCode.Interfaces;
 using GenricFrame.Models;
+using GenricFrame.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,19 +25,23 @@ namespace GenricFrame.Controllers
         private readonly UserManager<AppicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly SignInManager<AppicationUser> _signInManager;
-        public AccountController(IConfiguration config, IOptions<AppSettings> appSettings, UserManager<AppicationUser> userManager, RoleManager<ApplicationRole> roleManager, SignInManager<AppicationUser> signInManager)
+        private IRepository<AppicationUser> _users;
+        public AccountController(IConfiguration config, IOptions<AppSettings> appSettings,
+            UserManager<AppicationUser> userManager, RoleManager<ApplicationRole> roleManager,
+            SignInManager<AppicationUser> signInManager, IRepository<AppicationUser> users)
         {
             _config = config;
             _appSettings = appSettings.Value;
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
+            _users = users;
         }
-        private List<AppicationUser> _users = new List<AppicationUser>
-         {
-             new AppicationUser { Id = 1, UserName = "Amit", PasswordHash = "password" },
-             new AppicationUser { Id = 2, UserName = "test", PasswordHash = "test" }
-         };
+        //private List<AppicationUser> _users = new List<AppicationUser>
+        // {
+        //     new AppicationUser { Id = 1, UserName = "Amit", PasswordHash = "password" },
+        //     new AppicationUser { Id = 2, UserName = "test", PasswordHash = "test" }
+        // };
 
         [HttpGet]
         public IActionResult Register()
@@ -50,6 +56,7 @@ namespace GenricFrame.Controllers
         {
             Response response=new Response();
             response.StatusCode = Status.Failed;
+            response.ResponseText ="Registration Failed";
             if (!ModelState.IsValid)
             {
                 return Json(response);
@@ -77,14 +84,15 @@ namespace GenricFrame.Controllers
                 model.Password = String.Empty;
                 model.EmailId = String.Empty;
                 ModelState.Clear();
-                ModelState.AddModelError("", "Register Successfully.");
                 response.StatusCode = Status.Success;
+                response.ResponseText = "Register Successfully";
             }
             else
             {
                 foreach (var error in res.Errors)
                 {
                     ModelState.TryAddModelError("", error.Description);
+                    response.ResponseText = error.Description;
                 }
             }
             return Json(response);
@@ -97,13 +105,14 @@ namespace GenricFrame.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null, bool IsAPIRequest = false)
+        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            var result = await _signInManager.PasswordSignInAsync(model.EmailId, model.Password, model.RememberMe, false);
+            var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, model.RememberMe, false);
             if (result.Succeeded)
             {
-                var roles = await _userManager.GetRolesAsync(new AppicationUser { Email = model.EmailId });
+
+                var roles = await _userManager.GetRolesAsync(new AppicationUser { Email = model.MobileNo });
                 if (roles != null)
                     if (roles.FirstOrDefault() == "1")
                     {
@@ -127,6 +136,32 @@ namespace GenricFrame.Controllers
                 return View();
             }
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApiLogin(LoginViewModel model)
+        {
+            var response = new Response<AuthenticateResponse>
+            {
+                StatusCode = Status.Failed
+            };
+            var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, model.RememberMe, false);
+            if (result.Succeeded)
+            {
+                var user = _users.GetDetails(model.MobileNo).Result;
+                var token = generateJwtToken(user);
+                var authResponse = new AuthenticateResponse(user, token);
+                response = new Response<AuthenticateResponse>
+                {
+                    StatusCode = Status.Success,
+                    Result = authResponse
+                };
+            }
+            else
+            {
+                response.ResponseText = "Authentication Failed";
+            }
+            return Json(response);
         }
 
         //[HttpPost]
@@ -154,35 +189,35 @@ namespace GenricFrame.Controllers
         }
         /* JWT */
         #region JWT
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] LoginRequest model)
-        {
-            var response = Authenticate(model.UserName, model.Password);
-            if (response == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
-            return Ok(response);
-        }
-        // helper methods
-        private AuthenticateResponse Authenticate(string userName, string password)
-        {
-            var user = _users.SingleOrDefault(x => x.UserName == userName && x.PasswordHash == password);
+        //[HttpPost("authenticate")]
+        //public IActionResult Authenticate([FromBody] LoginRequest model)
+        //{
+        //    var response = Authenticate(model.UserName, model.Password);
+        //    if (response == null)
+        //        return BadRequest(new { message = "Username or password is incorrect" });
+        //    return Ok(response);
+        //}
+        //// helper methods
+        //private AuthenticateResponse Authenticate(string userName, string password)
+        //{
+        //    var user = _users.SingleOrDefault(x => x.UserName == userName && x.PasswordHash == password);
 
-            // return null if user not found
-            if (user == null) return null;
+        //    // return null if user not found
+        //    if (user == null) return null;
 
-            // authentication successful so generate jwt token
-            var token = generateJwtToken(user);
+        //    // authentication successful so generate jwt token
+        //    var token = generateJwtToken(user);
 
-            return new AuthenticateResponse(user, token);
-        }
+        //    return new AuthenticateResponse(user, token);
+        //}
         private string generateJwtToken(AppicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             /* Claims */
             var claims = new[] {
-                new Claim("id", user.Id.ToString()),
-                new Claim("role", "Admin"),
+                new Claim("id", user.UserId.ToString()),
+                new Claim("role", user.Role),
                 new Claim("userName", user.UserName),
                // new Claim(JwtRegisteredClaimNames.Sub, userInfo.Username),
                // new Claim(JwtRegisteredClaimNames.Email, userInfo.EmailAddress),

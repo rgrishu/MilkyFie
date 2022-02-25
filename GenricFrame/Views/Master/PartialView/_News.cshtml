@@ -1,5 +1,5 @@
 ﻿@using GenricFrame.AppCode.Reops.Entities;
-@model List<Banners>
+@model List<News>
 
     @if (Model != null && Model.Any())
 {
@@ -7,20 +7,18 @@
 
     @foreach (var item in Model)
     {
-        <tr data-id="@item.BannerID">
+        <tr data-id="@item.NewsID">
             <td>@i</td>
-            @*<td style="display:none">@Html.DisplayFor(modelItem => item.ParentID)</td>*@
-            <td class="name@(item.BannerID)"><img height="45px"  src="/images/thumbnail/@item.Banner" /></td>
-             <td >@item.BackLink</td>
-           
-              @{
+            <td>@Html.DisplayFor(modelItem => item.NewsTitle)</td>
+            <td>@Html.DisplayFor(modelItem => item.NewsDescription)</td>
+            @{
                 string act = @item.IsActive == true ? "checked" : "";
             }
-            <td class="parent@(item.IsActive)"><input type="checkbox" @act disabled> </td>
+            <td class="p    arent@(item.IsActive)"><input type="checkbox" @act  disabled> </td>
 
             <td>
                 @*                <a class="btn-ed-ed" data-id="@item.CategoryID" data-pid="@item.Parent.ParentID"><img src="~/img/pencil.png" class="img-action" /></a>
-                *@                <a class="btn-ed-del" data-id="@item.BannerID"><img src="~/img/delete.png" class="img-action" /></a>
+                *@                <a class="btn-ed-del" data-id="@item.NewsID"><img src="~/img/delete.png" class="img-action" /></a>
             </td>
         </tr>
         i++;
@@ -41,13 +39,13 @@ else
 
         $.ajax({
            type: 'post',
-            url: 'DelBanner',
+            url: 'DelNews',
             data: {id:id},
             success: function (data) {
                 if(data.statusCode==1)
               {
 
-                loadBanner();
+                loadNews();
                         Q.notify(data.statusCode, data.responseText);
               }
               else
