@@ -6,10 +6,10 @@ namespace GenricFrame.AppCode.Reops.Entities
     public class Product 
     {
         public int ProductID { get; set; }
-        public int CategoryID { get; set; }
-        public Category Category { get; set; }
-        public int UnitID { get; set; }
-        public Unit Unit { get; set; }
+       // public int CategoryID { get; set; }
+        
+     //   public int UnitID { get; set; }
+        
         public string ProductName { get; set; }
         public string Quantity { get; set; }
         public decimal MRP { get; set; }
@@ -21,7 +21,10 @@ namespace GenricFrame.AppCode.Reops.Entities
         public string ProductIcon { get; set; }
         public string Description { get; set; }
         public string Remark { get; set; }
-        
+
+        public Category Category { get; set; }
+        public Unit Unit { get; set; }
+
     }
     //public class ProductCategory
     //{

@@ -21,6 +21,11 @@ namespace GenricFrame.AppCode.DAL
         Task<dynamic> GetMultipleAsync<T1, T2, T3>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure);
         IEnumerable<TReturn> Get<T1, T2, TReturn>(string sqlQuery, Func<T1, T2, TReturn> p, string splitOn, DynamicParameters parms = null, CommandType commandType = CommandType.StoredProcedure);
         Task<IEnumerable<TReturn>> GetAllAsync<T1, T2, TReturn>(T1 entity, string sqlQuery, Func<T1, T2, TReturn> p, string splitOn);
+
+        Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, TReturn>(T1 entity, string sqlQuery, Func<T1, T2, TReturn> p, string splitOn);
+        Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, TReturn>(T1 entity, string sqlQuery, Func<T1, T2, TReturn> p, string splitOn);
+        Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, T4, TReturn>(T1 entity, string sqlQuery, DynamicParameters parms, Func<T1, T2, T3, T4, TReturn> p, string splitOn);
+
         Parameters PrepareParameters(string sqlQuery, Dictionary<string, dynamic> args = null);
     }
 }

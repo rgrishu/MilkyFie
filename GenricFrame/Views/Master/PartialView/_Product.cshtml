@@ -1,5 +1,5 @@
 ﻿@using GenricFrame.AppCode.Reops.Entities;
-@model  Product
+@model Product
 
 
 <!-- Row start -->
@@ -57,7 +57,7 @@
                                    id="txtSellingPrice" autocomplete="off" name="SellingPrice" placeholder="Enter Selling Price">
                         </div>
                     </div>
-                   
+
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Discount Type</label>
@@ -72,14 +72,14 @@
                                    id="txtdiscount" autocomplete="off" name="Discount" placeholder="Enter Discount">
                         </div>
                     </div>
-                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Is Discount</label>
                             <br />
                             <input type="checkbox" name="IsDiscount" value="@Model.IsDiscount" id="chekdiscount" value="true" />
                         </div>
                     </div>
-                  
+
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Product Icon</label>
@@ -87,7 +87,7 @@
                                    id="txtProducticon" autocomplete="off" value="@Model.ProductIcon" name="ProductIcon" placeholder="Enter Product Icon">
                         </div>
                     </div>
-                      <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Product Image</label>
                             <input type="file" name="file" id="productimage" />
@@ -97,8 +97,7 @@
                         <div class="form-group">
                             <label for="inputName">Discription</label>
                             <textarea type="text" required="" class="form-control"
-                                      id="txtDiscription" autocomplete="off"  name="Description" placeholder="Enter Discription">
-                                  @Model.Description</textarea>
+                                      id="txtDiscription" autocomplete="off" name="Description" placeholder="Enter Discription">@Model.Description</textarea>
                         </div>
                     </div>
                     <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
@@ -112,7 +111,7 @@
 
                 </div>
                 <input class="btn btn-primary" id="btnSubmit" type="submit" value="Submit">
-               
+
             </div>
         </div>
     </div>
@@ -125,9 +124,13 @@
           var isdiscount = $('#chekdiscount').is(':checked') == true ? true : false;
           var files = fileupload.files;
           var formData = new FormData();
+          
           formData.append("file", files[0]);
-          formData.append("CategoryID", $("#ddlCategory").val());
-          formData.append("UnitID", $("#ddlUnit").val());
+         // formData.append("Category",cat);
+          formData.append("Category.CategoryID", $("#ddlCategory").val());
+          formData.append("Category.CategoryName","-");
+          formData.append("Unit.UnitID", $("#ddlUnit").val());
+         // formData.append("Unit.UnitID", $("#ddlUnit").val());
           formData.append("ProductName", $("#txtProductName").val());
           formData.append("Quantity", $("#txtQuantity").val());
           formData.append("MRP", $("#txtMRP").val());
@@ -145,9 +148,10 @@
               contentType: false,
               data: formData,
               success: result => {
-                    console.log(result);
+
                   if(result.statusCode==1)
                   {
+                      loadProduct();
                   $('input').val('');
                   $('.field-validation-valid').remove();
                  Q.notify(result.statusCode, result.responseText);

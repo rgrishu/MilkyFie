@@ -37,12 +37,6 @@ namespace GenricFrame.Controllers
             _signInManager = signInManager;
             _users = users;
         }
-        //private List<AppicationUser> _users = new List<AppicationUser>
-        // {
-        //     new AppicationUser { Id = 1, UserName = "Amit", PasswordHash = "password" },
-        //     new AppicationUser { Id = 2, UserName = "test", PasswordHash = "test" }
-        // };
-
         [HttpGet]
         public IActionResult Register()
         {

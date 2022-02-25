@@ -23,7 +23,7 @@ namespace GenricFrame.AppCode.Reops
             var dbparams = new DynamicParameters();
             dbparams.Add("CategoryID", entity.CategoryID);
             dbparams.Add("CategoryName", entity.CategoryName);
-            dbparams.Add("ParentID", entity.ParentID);
+            dbparams.Add("ParentID", entity.Parent!=null?entity.Parent.ParentID:0);
             dbparams.Add("Icon", entity.Icon);
             dbparams.Add("QueryType", entity.CategoryID == 0 ? "I" : "U");
             var res = await _dapper.InsertAsync<Response>("proc_Category", dbparams, commandType: CommandType.StoredProcedure);
@@ -74,8 +74,8 @@ namespace GenricFrame.AppCode.Reops
 
         public async Task<IEnumerable<Category>> GetAllAsync(Category entity = null)
         {
-            string sqlQuery = @"select 1 [Status],'Success' ResponseText,c.CategoryID,c.CategoryName,c.Icon,c.IsActive,c.ParentID,
-                                        p.CategoryName ParentName 
+            string sqlQuery = @"select c.CategoryID,c.CategoryName,c.Icon,c.IsActive,c.ParentID,
+                                        p.CategoryName ParentCategory 
                                  from Category c Left join Category p on c.ParentID = p.CategoryId";
             Category cc = new Category();
             var dbparams = new DynamicParameters();

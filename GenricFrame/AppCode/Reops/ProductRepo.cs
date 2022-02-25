@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace GenricFrame.AppCode.Reops
 {
-  
 
-   public class ProductRepo:IRepository<Product>
+
+    public class ProductRepo : IRepository<Product>
     {
         private IDapperRepository _dapper;
         public ProductRepo(IDapperRepository dapper)
@@ -25,8 +25,8 @@ namespace GenricFrame.AppCode.Reops
         public async Task<Response> AddAsync(Product entity)
         {
             var dbparams = new DynamicParameters();
-            dbparams.Add("CategoryID", entity.CategoryID);
-            dbparams.Add("UnitID", entity.UnitID);
+            dbparams.Add("CategoryID", entity.Category!=null?entity.Category.CategoryID:0);
+            dbparams.Add("UnitID", entity.Unit != null? entity.Unit.UnitID:0) ;
             dbparams.Add("ProductName", entity.ProductName);
             dbparams.Add("Quantity", entity.Quantity);
             dbparams.Add("MRP", entity.MRP);
@@ -46,11 +46,14 @@ namespace GenricFrame.AppCode.Reops
         public async Task<Response> DeleteAsync(int id)
         {
             Response res = new Response();
+            res.StatusCode = Status.Failed;
+            res.ResponseText = Status.Failed.ToString();
             try
             {
                 var dbparams = new DynamicParameters();
-                dbparams.Add("ProductID", id);  
+                dbparams.Add("ProductID", id);
                 res = await _dapper.GetAsync<Response>("proc_DeleteProduct", dbparams, commandType: CommandType.StoredProcedure);
+                
             }
             catch (Exception ex)
             {
@@ -60,13 +63,60 @@ namespace GenricFrame.AppCode.Reops
             //throw new System.NotImplementedException();
         }
 
+        //public async Task<IEnumerable<Product>> GetAllAsync(Product entity = null)
+        //{
+        //    var dbparams = new DynamicParameters();
+        //    dbparams.Add("ProductID", entity.ProductID);
+        //    var res = await _dapper.GetAllAsync<Product>("proc_SelectProduct", dbparams, commandType: CommandType.StoredProcedure);
+        //    return res;
+        //}
+
+
         public async Task<IEnumerable<Product>> GetAllAsync(Product entity = null)
         {
+            IEnumerable<Product> product = new List<Product>();
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("ProductID", entity!=null?entity.ProductID:0);
+                dbparams.Add("ParentCategoryID", entity != null && entity.Category!=null && entity.Category.Parent!=null? entity.Category.Parent.ParentID:0);
+                dbparams.Add("CategoryID", entity != null && entity.Category !=null? entity.Category.CategoryID:0);
+                string sqlQuery = @"proc_SelectProduct";
+                Product cc = new Product();
+                var res = await _dapper.GetAllAsyncProc<Product, Unit, Category,Parent, Product>(entity ?? new Product(), sqlQuery, dbparams, (product, unit, category, parent) =>
+                {
+                    product.Unit = unit;
+                    product.Category = category;
+                    product.Category.Parent = parent;
+                    return product;
+                }, splitOn: "ProductID,UnitID,CategoryID,ParentID");
+                product = res;
+            }
+            catch (Exception ex)
+            {
+            
+            }
+            return product;
+        }
+
+        
+
+
+        public async Task<IEnumerable<Category>> GetAllAsync(Category entity = null)
+        {
+            string sqlQuery = @"select 1 [Status],'Success' ResponseText,c.CategoryID,c.CategoryName,c.Icon,c.IsActive,c.ParentID,
+                                        p.CategoryName ParentName 
+                                 from Category c Left join Category p on c.ParentID = p.CategoryId";
+            Category cc = new Category();
             var dbparams = new DynamicParameters();
-            dbparams.Add("ProductID", entity.ProductID);
-            var res = await _dapper.GetAllAsync<Product>("proc_SelectProduct", dbparams, commandType: CommandType.StoredProcedure);
+            var res = await _dapper.GetAllAsync<Category, Parent, Category>(entity ?? new Category(), sqlQuery, (category, parent) =>
+            {
+                category.Parent = parent;
+                return category;
+            }, splitOn: "ParentID");
             return res;
         }
+
 
         public Task<Response<Product>> GetByIdAsync(int id)
         {

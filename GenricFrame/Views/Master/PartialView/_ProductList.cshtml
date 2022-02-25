@@ -7,7 +7,7 @@
 
     @foreach (var item in Model)
     {
-        <tr data-id="@item.CategoryID">
+        <tr data-id="@item.Category.CategoryID">
             <td>@i</td>
             <td class="name">@Html.DisplayFor(modelItem => item.ProductName)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.MRP)</td>
@@ -43,9 +43,10 @@ else
             url: 'DelProduct',
             data: {id:id},
             success: function (data) {
-                if(data.statusCode==1)
+                if(data.statusCode==1 || data.statusCode=='Successs')
                 {
-                 loadProduct();   Q.notify(-1, 'An error occurred.');
+                 loadProduct();  
+                 Q.notify(1, data.responseText);
                 }
                 else
                 { 

@@ -11,7 +11,7 @@
             <td>@i</td>
             @*<td style="display:none">@Html.DisplayFor(modelItem => item.ParentID)</td>*@
             <td class="name@(item.CategoryID)">@Html.DisplayFor(modelItem => item.CategoryName)</td>
-            <td class="parent@(item.CategoryID)">@Html.DisplayFor(modelItem => item.Parent.ParentName)</td>
+            <td class="parent@(item.CategoryID)">@Html.DisplayFor(modelItem => item.Parent.ParentCategory)</td>
             <td class="icon@(item.CategoryID)">@Html.DisplayFor(modelItem => item.Icon)</td>
             <td>
                 <a class="btn-ed-ed" data-id="@item.CategoryID" data-pid="@item.Parent.ParentID"><img src="~/img/pencil.png" class="img-action" /></a>

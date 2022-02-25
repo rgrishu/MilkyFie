@@ -47,7 +47,7 @@ namespace GenricFrame.Controllers
             };
             if (!ModelState.IsValid)
             {
-                return View();
+                return Json(response);
             }
             var resp = await _category.AddAsync(model);
             if (resp.StatusCode == Status.Success)
@@ -110,17 +110,21 @@ namespace GenricFrame.Controllers
         [HttpPost]
         public async Task<IActionResult> NewProduct(int id = 0)
         {
-            IEnumerable<Product> lpres = await _product.GetAllAsync(new Product { ProductID = id });
             Product prres = new Product();
-            if (lpres != null && lpres.Count() > 0)
+            if (id != 0)
             {
-                prres = lpres.FirstOrDefault();
+                IEnumerable<Product> lpres = await _product.GetAllAsync(new Product { ProductID = id });
+                if (lpres != null && lpres.Count() > 0)
+                {
+                    prres = lpres.FirstOrDefault();
+                }
             }
             return PartialView("PartialView/_Product", prres);
         }
         [HttpPost]
         public async Task<IActionResult> SaveNewProduct(ProductViewModel model)
         {
+           
             var retRes = new Response()
             {
                 StatusCode = Status.Failed,
@@ -202,9 +206,9 @@ namespace GenricFrame.Controllers
             //var resp = await _category.GetAllAsync(null);
             return View();
         }
-        public async Task<IActionResult> UploadBanner(IFormFile file,string backlink)
+        public async Task<IActionResult> UploadBanner(IFormFile file, string backlink)
         {
-           
+
             var response = new Response()
             {
                 StatusCode = Status.Failed,
@@ -275,7 +279,7 @@ namespace GenricFrame.Controllers
                 response.ResponseText = resp.ResponseText;
             }
 
-         
+
             return Json(resp);
         }
         #endregion
