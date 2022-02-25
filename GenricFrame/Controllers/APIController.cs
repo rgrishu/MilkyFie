@@ -76,29 +76,18 @@ namespace GenricFrame.Controllers
         }
 
         [HttpPost(nameof(CategoryDetails))]
-        public IActionResult CategoryDetails(int ProductID = 0, int CategoryID = 0, int ParentCatID = 0)
+        public IActionResult CategoryDetails()
         {
-            var res = new Response<List<Product>>()
+            var res = new Response<List<Category>>()
             {
                 StatusCode = Status.Failed,
                 ResponseText = Status.Failed.ToString()
             };
-            var req = new Product()
-            {
-                ProductID = ProductID,
-                Category = new Category()
-                {
-                    CategoryID = CategoryID,
-                    Parent = new Parent()
-                    {
-                        ParentID = ParentCatID
-                    }
-                },
-            };
-            var resp = _product.GetAllAsync(req).Result;
+           
+            var resp = _category.GetAllAsync().Result;
             if (resp != null && resp.Count() > 0)
             {
-                res = new Response<List<Product>>()
+                res = new Response<List<Category>>()
                 {
                     StatusCode = Status.Success,
                     ResponseText = Status.Success.ToString(),
