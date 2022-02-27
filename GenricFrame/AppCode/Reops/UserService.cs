@@ -1,6 +1,5 @@
 ﻿using GenricFrame.AppCode.Interfaces;
 using GenricFrame.Models;
-using GenricFrame.Models.ViewModel;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -15,9 +14,9 @@ namespace GenricFrame.AppCode.Reops
     public class UserService : IUserService
     {
         // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        private List<AppicationUser> _users = new List<AppicationUser>
+        private List<ApplicationUser> _users = new List<ApplicationUser>
         {
-            new AppicationUser { Id = 1, UserName = "test", PasswordHash = "test" }
+            new ApplicationUser { Id = 1, UserName = "test", PasswordHash = "test" }
         };
 
         private readonly AppSettings _appSettings;
@@ -30,7 +29,7 @@ namespace GenricFrame.AppCode.Reops
         public AuthenticateResponse Authenticate(LoginRequest model)
         {
             var user = _users.SingleOrDefault(x => x.UserName == model.UserName && x.PasswordHash == model.Password);
-            var userinfo = new AppicationUser()
+            var userinfo = new ApplicationUser()
             {
                 Id = user.Id,
                 UserName = user.UserName,
@@ -45,19 +44,19 @@ namespace GenricFrame.AppCode.Reops
             return new AuthenticateResponse(userinfo, token);
         }
 
-        public IEnumerable<AppicationUser> GetAll()
+        public IEnumerable<ApplicationUser> GetAll()
         {
             return _users;
         }
 
-        public AppicationUser GetById(int id)
+        public ApplicationUser GetById(int id)
         {
             return _users.FirstOrDefault(x => x.Id == id);
         }
 
         // helper methods
 
-        private string generateJwtToken(AppicationUser user)
+        private string generateJwtToken(ApplicationUser user)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();

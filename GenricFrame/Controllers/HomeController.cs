@@ -25,7 +25,7 @@ namespace GenricFrame.Controllers
         private IHttpContextAccessor _httpContext;
         private readonly ILogger<HomeController> _logger;
         private readonly IServiceProvider IServiceProvider;
-        private readonly AppicationUser _user;
+        private readonly ApplicationUser _user;
         private readonly IRepository<EmailConfig> _emailConfig;
         private IMapper _mapper;
         public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContext, IUserService userService, IServiceProvider ServiceProvider, IRepository<EmailConfig> emailConfig, IMapper mapper)
@@ -38,7 +38,7 @@ namespace GenricFrame.Controllers
             _mapper = mapper;
             if (_httpContext!=null && _httpContext.HttpContext != null)
             {
-                _user = (AppicationUser)_httpContext?.HttpContext.Items["User"];
+                _user = (ApplicationUser)_httpContext?.HttpContext.Items["User"];
             }
         }
 

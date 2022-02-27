@@ -1,37 +1,67 @@
-﻿using GenricFrame.Models;
+﻿using GenricFrame.AppCode.DAL;
+using GenricFrame.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 namespace GenricFrame.AppCode.Data
 {
-    public class UserStore : IUserStore<AppicationUser>, IUserPasswordStore<AppicationUser>, IUserEmailStore<AppicationUser>, IUserRoleStore<AppicationUser>, IQueryableUserStore<AppicationUser>
+    public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>, IUserEmailStore<ApplicationUser>, IUserRoleStore<ApplicationUser>, IQueryableUserStore<ApplicationUser>
     {
-        private readonly ApplicationDbContext _context;
+        // private readonly ApplicationDbContext _context;
         private readonly RoleManager<ApplicationRole> _roleManager;
-        public UserStore(ApplicationDbContext context, RoleManager<ApplicationRole> roleManager)
+        private readonly IDapperRepository _dapperRepository;
+        private readonly ILogger<UserStore> _logger;
+        public UserStore(ApplicationDbContext context, RoleManager<ApplicationRole> roleManager, IDapperRepository dapperRepository, ILogger<UserStore> logger)
         {
-            _context = context;
+            //_context = context;
             _roleManager = roleManager;
+            _dapperRepository = dapperRepository;
+            _logger = logger;
         }
+        public IQueryable<ApplicationUser> AllUsers()
+        {
+            var res = _dapperRepository.GetAllAsync<ApplicationUser>("select * from Users where ID<>1", null, commandType: CommandType.Text).Result;
+            return res.AsQueryable();
+        }
+        //public IQueryable<ApplicationUser> Users => _context.Users();
+        public IQueryable<ApplicationUser> Users => AllUsers();
 
-        public IQueryable<AppicationUser> Users => _context.Users();
-
-        public Task AddToRoleAsync(AppicationUser user, string roleName, CancellationToken cancellationToken)
+        public async Task AddToRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
         {
             int roleid = _roleManager.FindByNameAsync(roleName).Result.Id;
-            _context.AddToRoleAsync(user.Id, roleid);
-            return Task.FromResult(0);
+            await _dapperRepository.ExecuteAsync("insert into UserRoles values('" + user.Id + "','" + roleid + "')", null, commandType: CommandType.Text);
         }
 
-        public Task<IdentityResult> CreateAsync(AppicationUser user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_context.AddUser(user));
+            var res = await _dapperRepository.ExecuteAsync("AddUser", user, commandType: CommandType.StoredProcedure);
+            if (res > 0)
+            {
+                return IdentityResult.Success;
+            }
+            else if (res < 0)
+            {
+                var v = new IdentityError()
+                {
+                    Code = "-1",
+                    Description = res == -1 ? "Mobile Or EmailID Allready Exists." : res == -2 ? "Email Allready Exists." : "Some Thin Is Wrong Try Again Later."
+                };
+                var resp = IdentityResult.Failed(v);
+                return resp;
+            }
+            else
+            {
+                return IdentityResult.Failed();
+            }
+            //return Task.FromResult(_context.AddUser(user));
         }
 
-        public Task<IdentityResult> DeleteAsync(AppicationUser user, CancellationToken cancellationToken)
+        public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
@@ -41,31 +71,26 @@ namespace GenricFrame.AppCode.Data
             GC.SuppressFinalize(this);
         }
 
-        public Task<AppicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        public async Task<ApplicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
-            var user = _context.FindByEmailAsync(normalizedEmail);
+            var sqlQuery = @"select * from Users where NormalizedEmail='" + normalizedEmail + "'";
+            var user = await _dapperRepository.GetAsync<ApplicationUser>(sqlQuery, null, commandType: CommandType.Text);
             return user;
         }
 
-        public Task<AppicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public async Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
-            var user = _context.FindByIdAsync(userId);
+            var user = await _dapperRepository.GetAsync<ApplicationUser>("select * from Users where Id='" + userId + "'", null, commandType: CommandType.Text);
             return user;
         }
 
-        public Task<AppicationUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public Task<ApplicationUser> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            var user = _context.FindByNameAsync(normalizedUserName);
+            var user = _dapperRepository.GetAsync<ApplicationUser>("select * from Users where NormalizedUserName='" + normalizedUserName + "'", null, commandType: CommandType.Text);
             return user;
         }
 
-        //public async Task<AppicationUser> FindByMobileAsync(string normalizedUserName, CancellationToken cancellationToken)
-        //{
-        //    var user = await _context.FindByMobileAsync(normalizedUserName);
-        //    return user;
-        //}
-
-        public Task<string> GetEmailAsync(AppicationUser user, CancellationToken cancellationToken)
+        public Task<string> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
             if (user == null)
             {
@@ -74,7 +99,7 @@ namespace GenricFrame.AppCode.Data
             return Task.FromResult(user.Email);
         }
 
-        public Task<bool> GetEmailConfirmedAsync(AppicationUser user, CancellationToken cancellationToken)
+        public Task<bool> GetEmailConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
             if (user == null)
             {
@@ -83,7 +108,7 @@ namespace GenricFrame.AppCode.Data
             return Task.FromResult(user.EmailConfirmed);
         }
 
-        public Task<string> GetNormalizedEmailAsync(AppicationUser user, CancellationToken cancellationToken)
+        public Task<string> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
             if (user == null)
             {
@@ -92,12 +117,13 @@ namespace GenricFrame.AppCode.Data
             return Task.FromResult(user.NormalizedEmail);
         }
 
-        public Task<string> GetNormalizedUserNameAsync(AppicationUser user, CancellationToken cancellationToken)
+        public async Task<string> GetNormalizedUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_context.GetNormalizedUserName(user));
+            var normalizedUserName = await _dapperRepository.GetAsync<string>("select NormalizedUserName from Users where Email='" + user.Email + "'", null, commandType: CommandType.Text);
+            return normalizedUserName;
         }
 
-        public Task<string> GetPasswordHashAsync(AppicationUser user, CancellationToken cancellationToken)
+        public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
             if (user == null)
             {
@@ -106,22 +132,32 @@ namespace GenricFrame.AppCode.Data
             return Task.FromResult(user.PasswordHash);
         }
 
-        public Task<IList<string>> GetRolesAsync(AppicationUser user, CancellationToken cancellationToken)
+        public async Task<IList<string>> GetRolesAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            var userRoles = (IList<string>)_context.GetRolesAsync(user).Result;
-            return Task.FromResult(userRoles);
-        }
-
-        public Task<string> GetUserIdAsync(AppicationUser user, CancellationToken cancellationToken)
-        {
-            if (user == null)
+            try
             {
-                throw new ArgumentNullException(nameof(user));
+                var userRoles = await _dapperRepository.GetAllAsync<string>("proc_getUserRole", new { user.Id, user.Email, mobileNo = user.PhoneNumber }, commandType: CommandType.StoredProcedure);
+                return userRoles.ToList();
             }
-            return Task.FromResult(user.Id.ToString());
+            catch (Exception ex)
+            {
+                // _logger.LogError(ex.Message, ex);
+                throw ex;
+            }
         }
 
-        public Task<string> GetUserNameAsync(AppicationUser user, CancellationToken cancellationToken)
+        public async Task<string> GetUserIdAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            if (user != null && user?.Id != null && user?.Id.ToString() != "0")
+                return await Task.FromResult(user.Id.ToString());
+            else
+            {
+                string sqlQuery = @"select Id from Users(nolock) where Email=Email or PhoneNumber=@mobileNo";
+                return await _dapperRepository.GetAsync<string>(sqlQuery, new { user.Email, mobileNo = user.PhoneNumber }, commandType: CommandType.Text);
+            }
+        }
+
+        public Task<string> GetUserNameAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
 
             if (user == null)
@@ -131,69 +167,73 @@ namespace GenricFrame.AppCode.Data
             return Task.FromResult(user.UserName);
         }
 
-        public Task<IList<AppicationUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        public Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> HasPasswordAsync(AppicationUser user, CancellationToken cancellationToken)
+        public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsInRoleAsync(AppicationUser user, string roleName, CancellationToken cancellationToken)
+        public async Task<bool> IsInRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
         {
+            bool result = false;
             int roleid = _roleManager.FindByNameAsync(roleName).Result.Id;
-            return _context.IsInRoleAsync(user, roleid);
+            string sqlQuery = @"IF (select Count(1) from UserRoles(nolock) where RoleId=@roleid and UserId=@Id)>0 select 1 else select 0";
+            result = await _dapperRepository.GetAsync<bool>(sqlQuery, new { roleid, user.Id }, commandType: CommandType.Text);
+            return result;
         }
 
-        public Task RemoveFromRoleAsync(AppicationUser user, string roleName, CancellationToken cancellationToken)
+        public Task RemoveFromRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }
 
-        public Task SetEmailAsync(AppicationUser user, string email, CancellationToken cancellationToken)
+        public Task SetEmailAsync(ApplicationUser user, string email, CancellationToken cancellationToken)
         {
             user.Email = email;
             return Task.FromResult(0);
 
         }
 
-        public Task SetEmailConfirmedAsync(AppicationUser user, bool confirmed, CancellationToken cancellationToken)
+        public Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken)
         {
             user.EmailConfirmed = confirmed;
             return Task.FromResult(0);
         }
 
-        public Task SetNormalizedEmailAsync(AppicationUser user, string normalizedEmail, CancellationToken cancellationToken)
+        public Task SetNormalizedEmailAsync(ApplicationUser user, string normalizedEmail, CancellationToken cancellationToken)
         {
             user.NormalizedEmail = normalizedEmail;
             return Task.FromResult(0);
         }
 
-        public Task SetNormalizedUserNameAsync(AppicationUser user, string normalizedName, CancellationToken cancellationToken)
+        public Task SetNormalizedUserNameAsync(ApplicationUser user, string normalizedName, CancellationToken cancellationToken)
         {
             user.NormalizedUserName = normalizedName;
             return Task.FromResult(0);
 
         }
 
-        public Task SetPasswordHashAsync(AppicationUser user, string passwordHash, CancellationToken cancellationToken)
+        public Task SetPasswordHashAsync(ApplicationUser user, string passwordHash, CancellationToken cancellationToken)
         {
             user.PasswordHash = passwordHash;
             return Task.FromResult(0);
         }
 
-        public Task SetUserNameAsync(AppicationUser user, string userName, CancellationToken cancellationToken)
+        public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken)
         {
             user.UserName = userName;
             return Task.FromResult(0);
 
         }
 
-        public Task<IdentityResult> UpdateAsync(AppicationUser user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
         {
-            return _context.UpdateUser(user);
+            var result = await _dapperRepository.ExecuteAsync("UpdateUser", user, commandType: CommandType.StoredProcedure);
+            return result > 0 ? IdentityResult.Success : IdentityResult.Failed();
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿using GenricFrame.Models;
+﻿using GenricFrame.AppCode.DAL;
+using GenricFrame.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
-using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,17 +10,27 @@ namespace GenricFrame.AppCode.Data
 {
     public class RoleStore : IRoleStore<ApplicationRole>, IQueryableRoleStore<ApplicationRole>
     {
-        private readonly ApplicationDbContext _context;
-        public RoleStore(ApplicationDbContext context)
+        //private readonly ApplicationDbContext _context;
+        private readonly IDapperRepository _dapperRepository;
+        public RoleStore(ApplicationDbContext context, IDapperRepository dapperRepository)
         {
-            _context = context;
+            //_context = context;
+            _dapperRepository = dapperRepository;
         }
 
-        public IQueryable<ApplicationRole> Roles => _context.Roles();
+        // public IQueryable<ApplicationRole> Roles => _context.Roles();
+        public IQueryable<ApplicationRole> Roles => AllRoles();
 
-        public Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
+        public IQueryable<ApplicationRole> AllRoles()
         {
-            return _context.CreateRole(role);
+            var result = _dapperRepository.GetAsQueryable<ApplicationRole>("select * from ApplicationRole", null, commandType: CommandType.Text);
+            return result;
+        }
+
+        public async Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken)
+        {
+            int i = await _dapperRepository.ExecuteAsync("AddRole", role, commandType: CommandType.StoredProcedure);
+            return i > 0 ? IdentityResult.Success : IdentityResult.Failed();
         }
 
         public Task<IdentityResult> DeleteAsync(ApplicationRole role, CancellationToken cancellationToken)
@@ -32,14 +43,16 @@ namespace GenricFrame.AppCode.Data
             GC.SuppressFinalize(this);
         }
 
-        public Task<ApplicationRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
+        public async Task<ApplicationRole> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            return _context.FindRoleByIdAsync(roleId);
+            var role = await _dapperRepository.GetAsync<ApplicationRole>("select * from ApplicationRole where Id='" + roleId + "'", null, commandType: CommandType.Text);
+            return role;
         }
 
-        public Task<ApplicationRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
+        public async Task<ApplicationRole> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            return _context.FindRoleByNameAsync(normalizedRoleName);
+            var role = await _dapperRepository.GetAsync<ApplicationRole>("select * from ApplicationRole where NormalizedName='" + normalizedRoleName + "'", null, commandType: CommandType.Text);
+            return role;
         }
 
         public Task<string> GetNormalizedRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken)

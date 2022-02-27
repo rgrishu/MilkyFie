@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using GenricFrame.AppCode.CustomAttributes;
+using GenricFrame.AppCode.Data;
+using GenricFrame.AppCode.Extensions;
 using GenricFrame.AppCode.Helper;
 using GenricFrame.AppCode.Interfaces;
 using GenricFrame.AppCode.Reops.Entities;
@@ -24,18 +26,19 @@ namespace GenricFrame.Controllers
         #region Variables
         //private IConfiguration _config;
         private readonly AppSettings _appSettings;
-        private readonly UserManager<AppicationUser> _userManager;
+        //private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ApplicationUserManager _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
-        private readonly SignInManager<AppicationUser> _signInManager;
-        private IRepository<AppicationUser> _users;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private IRepository<ApplicationUser> _users;
         private readonly ILogger<AccountController> _logger;
         private readonly IRepository<EmailConfig> _emailConfig;
         private IMapper _mapper;
         #endregion
         //IConfiguration config
         public AccountController(IOptions<AppSettings> appSettings,
-            UserManager<AppicationUser> userManager, RoleManager<ApplicationRole> roleManager,
-            SignInManager<AppicationUser> signInManager, IRepository<AppicationUser> users,
+            ApplicationUserManager userManager, RoleManager<ApplicationRole> roleManager,
+            SignInManager<ApplicationUser> signInManager, IRepository<ApplicationUser> users,
             ILogger<AccountController> logger, IRepository<EmailConfig> emailConfig, IMapper mapper)
         {
             //_config = config;
@@ -51,7 +54,6 @@ namespace GenricFrame.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-
             return View(new RegisterViewModel { IsAdmin = false });
         }
 
@@ -70,7 +72,7 @@ namespace GenricFrame.Controllers
             {
                 model.RoleName = "Consumer";
             }
-            var user = new AppicationUser
+            var user = new ApplicationUser
             {
                 UserId = Guid.NewGuid().ToString(),
                 UserName = model.EmailId,
@@ -122,16 +124,18 @@ namespace GenricFrame.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, model.RememberMe, lockoutOnFailure: true);
             if (result.Succeeded)
             {
-                var roles = await _userManager.GetRolesAsync(new AppicationUser { Email = model.MobileNo });
+
+                var roles = await _userManager.GetRolesAsync(new ApplicationUser { Email = model.MobileNo });
+                _userManager.AddToRoleAsync(new ApplicationUser { Email = model.MobileNo }, roles?.FirstOrDefault());
                 if (roles != null)
-                    if (roles.FirstOrDefault() == "1")
+                    if (roles.FirstOrDefault().Equals("1") || roles.FirstOrDefault().Equals("admin",StringComparison.OrdinalIgnoreCase))
                     {
-                        ReturnUrl = string.IsNullOrEmpty(ReturnUrl) || ReturnUrl?.Trim() == "/" ? "/Home" : ReturnUrl;
+                        ReturnUrl = ReturnUrl?.Trim() == "/" ? "/Home" : ReturnUrl;
                         return LocalRedirect(ReturnUrl);
                     }
-                    else if (roles.FirstOrDefault() == "3")
+                    else if (roles.FirstOrDefault().Equals("3") || roles.FirstOrDefault().Equals("consumer",StringComparison.OrdinalIgnoreCase))
                     {
-                        ReturnUrl = string.IsNullOrEmpty(ReturnUrl) || ReturnUrl?.Trim() == "/" ? "/Consumer" : ReturnUrl;
+                        ReturnUrl = ReturnUrl?.Trim() == "/" ? "/Consumer" : ReturnUrl;
                         return LocalRedirect(ReturnUrl);
                     }
                     else
@@ -198,9 +202,8 @@ namespace GenricFrame.Controllers
         [Authorize]
         public IActionResult Users()
         {
-
+            var _ = _userManager.FindByMobileNoAsync("").Result;
             var users = _userManager.Users.ToList();
-
             return View(users);
 
         }
@@ -233,7 +236,7 @@ namespace GenricFrame.Controllers
 
         //    return new AuthenticateResponse(user, token);
         //}
-        private string generateJwtToken(AppicationUser user)
+        private string generateJwtToken(ApplicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);

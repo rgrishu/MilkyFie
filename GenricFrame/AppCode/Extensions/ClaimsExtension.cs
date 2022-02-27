@@ -56,5 +56,23 @@ namespace GenricFrame.AppCode.Extensions
 
             return principal.FindFirstValue(ClaimTypes.Email);
         }
+
+        public static string GetLoggedInUserRoles(this ClaimsPrincipal principal)
+        {
+            if (principal == null)
+                throw new ArgumentNullException(nameof(principal));
+
+            return principal.FindFirstValue(ClaimTypes.Role);
+            
+        }
+
+        public static object GetLoggedInUserRolesList(this ClaimsPrincipal principal)
+        {
+            if (principal == null)
+                throw new ArgumentNullException(nameof(principal));
+
+            var roles = principal.FindAll(ClaimTypes.Role);
+            return roles;
+        }
     }
 }

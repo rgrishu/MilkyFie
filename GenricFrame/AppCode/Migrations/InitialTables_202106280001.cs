@@ -29,7 +29,7 @@ namespace GenricFrame.AppCode.Migrations
 
             /* Users */
             Create.Table("Users")
-                .WithColumn("Id").AsInt64().NotNullable().Identity()
+               .WithColumn("Id").AsInt64().NotNullable().Identity()
                .WithColumn("UserId").AsString(1000).NotNullable().PrimaryKey()
                .WithColumn("AccessFailedCount").AsInt64()
                .WithColumn("ConcurrencyStamp").AsString(1000)

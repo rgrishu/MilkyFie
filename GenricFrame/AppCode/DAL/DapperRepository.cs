@@ -19,17 +19,9 @@ namespace GenricFrame.AppCode.DAL
     {
         private readonly IConfiguration _config;
         private readonly ILogger<DapperRepository> _logger;
-        //private readonly IDbConnection _dbConnection;
-
         private readonly string Connectionstring = "SqlConnection";
-        private readonly IConnectionString _connectionString;
-        //public DapperRepository(IConfiguration config, string connectionString = "SqlConnection")
-        //{
-        //    _config = config;
-        //   // Connectionstring = connectionString;
-        //}
 
-        public DapperRepository(IConfiguration config,IConnectionString connectionString, ILogger<DapperRepository> logger)
+        public DapperRepository(IConfiguration config, IConnectionString connectionString, ILogger<DapperRepository> logger)
         {
             _config = config;
             Connectionstring = connectionString.connectionString;
@@ -40,10 +32,15 @@ namespace GenricFrame.AppCode.DAL
         {
             GC.SuppressFinalize(this);
         }
-        public async Task<int> ExecuteAsync(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
+
+        public async Task<int> ExecuteAsync(string sp, object param = null, CommandType commandType = CommandType.StoredProcedure)
         {
-            _logger.LogError(new NotImplementedException(), "Method Not Implemented");
-            throw new NotImplementedException();
+            int i = 0;
+            using (IDbConnection db = new SqlConnection(Connectionstring))
+            {
+                i = await db.ExecuteAsync(sp, param, commandType: commandType);
+            }
+            return i;
         }
 
         public async Task<T> GetAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.Text)
@@ -55,7 +52,47 @@ namespace GenricFrame.AppCode.DAL
                 using (IDbConnection db = new SqlConnection(Connectionstring))
                 {
                     var response = await db.QueryAsync<T>(sp, parms, commandType: commandType);
-                    result= response.FirstOrDefault();
+                    result = response.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw ex;
+            }
+            return result;
+        }
+
+        public async Task<T> GetAsync<T>(string sp, object parms = null, CommandType commandType = CommandType.Text)
+        {
+            T result;
+            //using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+            try
+            {
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    var response = await db.QueryAsync<T>(sp, parms, commandType: commandType);
+                    result = response.FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw ex;
+            }
+            return result;
+        }
+
+        public IQueryable<T> GetAsQueryable<T>(string sp, object parms = null, CommandType commandType = CommandType.Text)
+        {
+            IQueryable<T> result;
+            //using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+            try
+            {
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    var response = db.Query<T>(sp, parms, commandType: commandType);
+                    result = response.AsQueryable();
                 }
             }
             catch (Exception ex)
@@ -67,6 +104,24 @@ namespace GenricFrame.AppCode.DAL
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
+        {
+            try
+            {
+                //using (IDbConnection db = new SqlConnection(_config.GetConnectionString(Connectionstring)))
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    var result = await db.QueryAsync<T>(sp, parms, commandType: commandType);
+                    return result.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return new List<T>();
+            }
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync<T>(string sp, object parms = null, CommandType commandType = CommandType.StoredProcedure)
         {
             try
             {
