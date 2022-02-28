@@ -9,7 +9,7 @@ namespace Milkyfie.Models
     public class LoginViewModel
     {
         [Required]
-        //[Phone]
+        [Phone]
         public string MobileNo { get; set; }
         //[EmailAddress]
         //public string EmailId { get; set; }

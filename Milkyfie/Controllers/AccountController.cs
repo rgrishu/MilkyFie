@@ -126,7 +126,6 @@ namespace Milkyfie.Controllers
             {
 
                 var roles = await _userManager.GetRolesAsync(new ApplicationUser { Email = model.MobileNo });
-                _userManager.AddToRoleAsync(new ApplicationUser { Email = model.MobileNo }, roles?.FirstOrDefault());
                 if (roles != null)
                     if (roles.FirstOrDefault().Equals("1") || roles.FirstOrDefault().Equals("admin",StringComparison.OrdinalIgnoreCase))
                     {

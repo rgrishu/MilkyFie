@@ -15,7 +15,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
-
 namespace Milkyfie
 {
     public class Startup
