@@ -1,7 +1,7 @@
-﻿using GenricFrame.Models;
+﻿using Milkyfie.Models;
 using Microsoft.AspNetCore.Http;
 
-namespace GenricFrame.AppCode.Reops.Entities
+namespace Milkyfie.AppCode.Reops.Entities
 {
     public class Product 
     {

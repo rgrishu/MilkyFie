@@ -1,10 +1,10 @@
-﻿using GenricFrame.Models;
+﻿using Milkyfie.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.Interfaces
+namespace Milkyfie.AppCode.Interfaces
 {
     public interface IRepository<T> where T : class
     {

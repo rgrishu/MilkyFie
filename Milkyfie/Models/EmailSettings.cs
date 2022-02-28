@@ -1,6 +1,6 @@
-﻿using GenricFrame.AppCode.Reops.Entities;
+﻿using Milkyfie.AppCode.Reops.Entities;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class EmailSettings: EmailConfig
     {

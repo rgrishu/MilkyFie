@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class FileUploadModel
     {

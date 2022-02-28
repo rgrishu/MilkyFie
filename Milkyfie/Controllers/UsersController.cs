@@ -1,11 +1,11 @@
-﻿using GenricFrame.AppCode.CustomAttributes;
-using GenricFrame.AppCode.Interfaces;
-using GenricFrame.Models;
+﻿using Milkyfie.AppCode.CustomAttributes;
+using Milkyfie.AppCode.Interfaces;
+using Milkyfie.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GenricFrame.Controllers
+namespace Milkyfie.Controllers
 {
     [ApiController]
     [Route("[controller]")]

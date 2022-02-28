@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class Employee
     {

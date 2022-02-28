@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class DemoViewModel
     {

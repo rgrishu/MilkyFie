@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class ApplicationUser:IdentityUser<int>
     {

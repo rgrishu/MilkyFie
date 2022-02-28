@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using GenricFrame.AppCode.DAL;
-using GenricFrame.AppCode.Interfaces;
-using GenricFrame.AppCode.Reops.Entities;
+using Milkyfie.AppCode.DAL;
+using Milkyfie.AppCode.Interfaces;
+using Milkyfie.AppCode.Reops.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GenricFrame.Controllers
+namespace Milkyfie.Controllers
 {
     [Authorize]
     public class BaseController : Controller

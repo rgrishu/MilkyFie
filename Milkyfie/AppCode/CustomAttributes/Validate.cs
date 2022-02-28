@@ -1,4 +1,4 @@
-﻿using GenricFrame.Models;
+﻿using Milkyfie.Models;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 using System;
@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace GenricFrame.AppCode.CustomAttributes
+namespace Milkyfie.AppCode.CustomAttributes
 {
     public class Validate
     {

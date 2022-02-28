@@ -1,5 +1,5 @@
-﻿using GenricFrame.AppCode.Interfaces;
-using GenricFrame.Models;
+﻿using Milkyfie.AppCode.Interfaces;
+using Milkyfie.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-namespace GenricFrame.AppCode.Reops
+namespace Milkyfie.AppCode.Reops
 {
     public class UserService : IUserService
     {

@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace GenricFrame.AppCode.Helper
+namespace Milkyfie.AppCode.Helper
 {
     public class FileDirectories
     {

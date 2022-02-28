@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class LoginResponse : Response<ApplicationUser>
     {

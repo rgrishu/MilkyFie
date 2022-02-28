@@ -4,7 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.Extensions
+namespace Milkyfie.AppCode.Extensions
 {
     public static class ObjectToDictionay
     {

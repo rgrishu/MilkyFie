@@ -1,4 +1,4 @@
-﻿namespace GenricFrame.Models
+﻿namespace Milkyfie.Models
 {
     public class JWT
     {

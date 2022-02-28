@@ -1,12 +1,12 @@
-﻿using GenricFrame.AppCode.DAL;
-using GenricFrame.Models;
+﻿using Milkyfie.AppCode.DAL;
+using Milkyfie.Models;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-namespace GenricFrame.AppCode.Data
+namespace Milkyfie.AppCode.Data
 {
     public class RoleStore : IRoleStore<ApplicationRole>, IQueryableRoleStore<ApplicationRole>
     {

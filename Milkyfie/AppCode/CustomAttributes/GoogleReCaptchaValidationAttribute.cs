@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.IO;
 
 //Refrece: https://dejanstojanovic.net/aspnet/2018/may/using-google-recaptcha-v2-in-aspnet-core-web-application/
-namespace GenricFrame.AppCode.CustomAttributes
+namespace Milkyfie.AppCode.CustomAttributes
 {
     public class GoogleReCaptchaValidationAttribute : ValidationAttribute
     {

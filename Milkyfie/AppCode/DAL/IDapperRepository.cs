@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.DAL
+namespace Milkyfie.AppCode.DAL
 {
     public interface IDapperRepository
     {

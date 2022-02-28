@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class ApplicationRole : IdentityRole<int>
     {

@@ -1,8 +1,8 @@
 ﻿using FluentMigrator;
-using GenricFrame.Models;
+using Milkyfie.Models;
 using System;
 
-namespace GenricFrame.AppCode.Migrations
+namespace Milkyfie.AppCode.Migrations
 {
     [Migration(202106280002)]
     public class InitialSeed_202106280002 : Migration

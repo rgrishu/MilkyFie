@@ -1,5 +1,5 @@
-﻿using GenricFrame.AppCode.Interfaces;
-using GenricFrame.Models;
+﻿using Milkyfie.AppCode.Interfaces;
+using Milkyfie.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.Middleware
+namespace Milkyfie.AppCode.Middleware
 {
     public static class ExceptionMiddlewareExtension
     {

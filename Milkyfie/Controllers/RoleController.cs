@@ -1,4 +1,4 @@
-﻿using GenricFrame.Models;
+﻿using Milkyfie.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GenricFrame.Controllers
+namespace Milkyfie.Controllers
 {
     public class RoleController : Controller
     {

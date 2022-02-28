@@ -1,7 +1,7 @@
 ﻿using Dapper;
 using System.Collections.Generic;
 
-namespace GenricFrame.AppCode.DAL
+namespace Milkyfie.AppCode.DAL
 {
     public class Parameters
     {

@@ -1,8 +1,8 @@
-using GenricFrame.AppCode.Data;
-using GenricFrame.AppCode.Extensions;
-using GenricFrame.AppCode.Interfaces;
-using GenricFrame.AppCode.Middleware;
-using GenricFrame.Models;
+using Milkyfie.AppCode.Data;
+using Milkyfie.AppCode.Extensions;
+using Milkyfie.AppCode.Interfaces;
+using Milkyfie.AppCode.Middleware;
+using Milkyfie.Models;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -16,7 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 
-namespace GenricFrame
+namespace Milkyfie
 {
     public class Startup
     {

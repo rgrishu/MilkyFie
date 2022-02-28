@@ -1,8 +1,8 @@
 ﻿using Dapper;
-using GenricFrame.AppCode.DAL;
+using Milkyfie.AppCode.DAL;
 using System.Linq;
 
-namespace GenricFrame.AppCode.Migrations
+namespace Milkyfie.AppCode.Migrations
 {
     public class Database
     {

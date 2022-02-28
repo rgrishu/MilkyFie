@@ -1,6 +1,6 @@
 ﻿using Dapper;
-using GenricFrame.AppCode.Extensions;
-using GenricFrame.AppCode.Helper;
+using Milkyfie.AppCode.Extensions;
+using Milkyfie.AppCode.Helper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static Dapper.SqlMapper;
 
-namespace GenricFrame.AppCode.DAL
+namespace Milkyfie.AppCode.DAL
 {
     public class DapperRepository : IDapperRepository, IDisposable
     {

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using GenricFrame.AppCode.Reops.Entities;
-using GenricFrame.Models;
-using GenricFrame.Models.ViewModel;
-namespace GenricFrame.AppCode.Helper
+using Milkyfie.AppCode.Reops.Entities;
+using Milkyfie.Models;
+using Milkyfie.Models.ViewModel;
+namespace Milkyfie.AppCode.Helper
 {
     public class AutoMapperProfile : Profile
     {

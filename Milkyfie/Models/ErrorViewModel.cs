@@ -1,6 +1,6 @@
 using System;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class ErrorViewModel
     {

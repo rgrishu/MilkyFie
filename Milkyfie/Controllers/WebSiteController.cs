@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace GenricFrame.Controllers
+namespace Milkyfie.Controllers
 {
     public class WebSiteController : Controller
     {

@@ -1,14 +1,14 @@
 ﻿using Dapper;
-using GenricFrame.AppCode.DAL;
-using GenricFrame.AppCode.Interfaces;
-using GenricFrame.AppCode.Reops.Entities;
-using GenricFrame.Models;
+using Milkyfie.AppCode.DAL;
+using Milkyfie.AppCode.Interfaces;
+using Milkyfie.AppCode.Reops.Entities;
+using Milkyfie.Models;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace GenricFrame.AppCode.Reops
+namespace Milkyfie.AppCode.Reops
 {
     public class UnitRepo: IRepository<Unit>
     {

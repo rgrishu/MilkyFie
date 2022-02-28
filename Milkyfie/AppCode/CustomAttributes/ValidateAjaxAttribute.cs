@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using System.Linq;
 using System.Net;
 
-namespace GenricFrame.AppCode.CustomAttributes
+namespace Milkyfie.AppCode.CustomAttributes
 {
     public class ValidateAjaxAttribute : ActionFilterAttribute
     {

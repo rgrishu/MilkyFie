@@ -1,4 +1,4 @@
-﻿namespace GenricFrame.AppCode.Reops.Entities
+﻿namespace Milkyfie.AppCode.Reops.Entities
 {
     public class Unit
     {

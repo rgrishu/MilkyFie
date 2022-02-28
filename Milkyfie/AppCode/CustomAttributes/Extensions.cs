@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.CustomAttributes
+namespace Milkyfie.AppCode.CustomAttributes
 {
     public static class Extensions
     {

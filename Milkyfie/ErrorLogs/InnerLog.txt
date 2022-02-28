@@ -727,6 +727,6 @@ Error Number:2812,State:62,Class:16
    at NLog.Config.Factory`2.CreateInstance(String itemName)
    at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
 2022-02-27 12:45:37.2770 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
->>>>>>> 02a52f75b1aec7d53b54b69806b76c20fde6fc1a:GenricFrame/ErrorLogs/InnerLog.txt
+>>>>>>> 02a52f75b1aec7d53b54b69806b76c20fde6fc1a:Milkyfie/ErrorLogs/InnerLog.txt
    at NLog.Config.Factory`2.CreateInstance(String itemName)
    at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)

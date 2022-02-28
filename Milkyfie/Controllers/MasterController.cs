@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using GenricFrame.AppCode.DAL;
-using GenricFrame.AppCode.Helper;
-using GenricFrame.AppCode.Interfaces;
-using GenricFrame.AppCode.Reops;
-using GenricFrame.AppCode.Reops.Entities;
-using GenricFrame.Models;
-using GenricFrame.Models.ViewModel;
+using Milkyfie.AppCode.DAL;
+using Milkyfie.AppCode.Helper;
+using Milkyfie.AppCode.Interfaces;
+using Milkyfie.AppCode.Reops;
+using Milkyfie.AppCode.Reops.Entities;
+using Milkyfie.Models;
+using Milkyfie.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GenricFrame.Controllers
+namespace Milkyfie.Controllers
 {
 
     public class MasterController : BaseController//Controller

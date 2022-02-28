@@ -1,4 +1,4 @@
-﻿namespace GenricFrame.Models.ViewModel
+﻿namespace Milkyfie.Models.ViewModel
 {
     public class UsersViewModel
     {

@@ -1,4 +1,4 @@
-﻿using GenricFrame.Models;
+﻿using Milkyfie.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.Data
+namespace Milkyfie.AppCode.Data
 {
     public class ApplicationUserManager : UserManager<ApplicationUser>
     {

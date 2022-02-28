@@ -1,10 +1,10 @@
-﻿using GenricFrame.Models;
+﻿using Milkyfie.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 
-namespace GenricFrame.AppCode.CustomAttributes
+namespace Milkyfie.AppCode.CustomAttributes
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
     public class JWTAuthorizeAttribute : Attribute, IAuthorizationFilter

@@ -1,9 +1,9 @@
-﻿using GenricFrame.Models;
+﻿using Milkyfie.Models;
 using LinqToDB;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.Extensions
+namespace Milkyfie.AppCode.Extensions
 {
     public static class UserManagerExtensions
     {

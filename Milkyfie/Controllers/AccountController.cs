@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using GenricFrame.AppCode.CustomAttributes;
-using GenricFrame.AppCode.Data;
-using GenricFrame.AppCode.Extensions;
-using GenricFrame.AppCode.Helper;
-using GenricFrame.AppCode.Interfaces;
-using GenricFrame.AppCode.Reops.Entities;
-using GenricFrame.Models;
+using Milkyfie.AppCode.CustomAttributes;
+using Milkyfie.AppCode.Data;
+using Milkyfie.AppCode.Extensions;
+using Milkyfie.AppCode.Helper;
+using Milkyfie.AppCode.Interfaces;
+using Milkyfie.AppCode.Reops.Entities;
+using Milkyfie.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-namespace GenricFrame.Controllers
+namespace Milkyfie.Controllers
 {
     public class AccountController : Controller
     {

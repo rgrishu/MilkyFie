@@ -1,4 +1,4 @@
-﻿using GenricFrame.AppCode.Interfaces;
+﻿using Milkyfie.AppCode.Interfaces;
 using Microsoft.Extensions.Logging;
 using NLog;
 using System;
@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.Reops
+namespace Milkyfie.AppCode.Reops
 {
     public class LogNLog : ILog,IDisposable
     {

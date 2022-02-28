@@ -1,13 +1,13 @@
-﻿using GenricFrame.AppCode.CustomAttributes;
-using GenricFrame.AppCode.Interfaces;
-using GenricFrame.AppCode.Reops.Entities;
-using GenricFrame.Models;
+﻿using Milkyfie.AppCode.CustomAttributes;
+using Milkyfie.AppCode.Interfaces;
+using Milkyfie.AppCode.Reops.Entities;
+using Milkyfie.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace GenricFrame.Controllers
+namespace Milkyfie.Controllers
 {
     [JWTAuthorize]
     [ApiController]

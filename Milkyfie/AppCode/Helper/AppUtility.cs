@@ -1,8 +1,8 @@
 ﻿
-using GenricFrame.AppCode.CustomAttributes;
-using GenricFrame.AppCode.Reops;
-using GenricFrame.AppCode.Reops.Entities;
-using GenricFrame.Models;
+using Milkyfie.AppCode.CustomAttributes;
+using Milkyfie.AppCode.Reops;
+using Milkyfie.AppCode.Reops.Entities;
+using Milkyfie.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Drawing;
@@ -15,7 +15,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.Helper
+namespace Milkyfie.AppCode.Helper
 {
 
     public class AppUtility

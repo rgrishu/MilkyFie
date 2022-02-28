@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class RegisterViewModel
     {

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class LoginViewModel
     {

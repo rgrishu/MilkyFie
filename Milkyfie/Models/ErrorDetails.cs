@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace GenricFrame.Models
+namespace Milkyfie.Models
 {
     public class ErrorDetails
     {

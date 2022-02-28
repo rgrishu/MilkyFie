@@ -1,12 +1,12 @@
 ﻿using FluentMigrator.Runner;
-using GenricFrame.AppCode.DAL;
-using GenricFrame.AppCode.Data;
-using GenricFrame.AppCode.Helper;
-using GenricFrame.AppCode.Interfaces;
-using GenricFrame.AppCode.Migrations;
-using GenricFrame.AppCode.Reops;
-using GenricFrame.AppCode.Reops.Entities;
-using GenricFrame.Models;
+using Milkyfie.AppCode.DAL;
+using Milkyfie.AppCode.Data;
+using Milkyfie.AppCode.Helper;
+using Milkyfie.AppCode.Interfaces;
+using Milkyfie.AppCode.Migrations;
+using Milkyfie.AppCode.Reops;
+using Milkyfie.AppCode.Reops.Entities;
+using Milkyfie.Models;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NLog;
 using System.Reflection;
 
-namespace GenricFrame.AppCode.Extensions
+namespace Milkyfie.AppCode.Extensions
 {
     public static class ServiceCollectionExtension
     {

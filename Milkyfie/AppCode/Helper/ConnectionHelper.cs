@@ -1,5 +1,5 @@
 ﻿
-namespace GenricFrame.AppCode.Helper
+namespace Milkyfie.AppCode.Helper
 {
     public interface IConnectionString
     {

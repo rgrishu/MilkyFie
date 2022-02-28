@@ -1,7 +1,7 @@
-﻿using GenricFrame.Models;
+﻿using Milkyfie.Models;
 using System;
 
-namespace GenricFrame.AppCode.Interfaces
+namespace Milkyfie.AppCode.Interfaces
 {
     public interface IResponse<T>
     {

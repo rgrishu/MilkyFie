@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using GenricFrame.Models;
+using Milkyfie.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -9,7 +9,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GenricFrame.AppCode.Data
+namespace Milkyfie.AppCode.Data
 {
     public class ApplicationDbContext
     {

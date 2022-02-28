@@ -1,6 +1,6 @@
 ﻿using FluentMigrator;
 
-namespace GenricFrame.AppCode.Migrations
+namespace Milkyfie.AppCode.Migrations
 {
     [Migration(202106280001)]
     public class InitialTables_202106280001 : Migration

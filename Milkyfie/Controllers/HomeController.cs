@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using GenricFrame.AppCode.CustomAttributes;
-using GenricFrame.AppCode.Extensions;
-using GenricFrame.AppCode.Helper;
-using GenricFrame.AppCode.Interfaces;
-using GenricFrame.AppCode.Migrations;
-using GenricFrame.AppCode.Reops.Entities;
-using GenricFrame.Models;
+using Milkyfie.AppCode.CustomAttributes;
+using Milkyfie.AppCode.Extensions;
+using Milkyfie.AppCode.Helper;
+using Milkyfie.AppCode.Interfaces;
+using Milkyfie.AppCode.Migrations;
+using Milkyfie.AppCode.Reops.Entities;
+using Milkyfie.Models;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +15,7 @@ using System;
 using System.Linq;
 using System.Diagnostics;
 
-namespace GenricFrame.Controllers
+namespace Milkyfie.Controllers
 {
     [Authorize]
     //[JWTAuthorize]
