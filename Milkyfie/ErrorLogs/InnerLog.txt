@@ -383,3 +383,6 @@ Error Number:-2,State:0,Class:11
 2022-02-25 18:51:56.7678 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
    at NLog.Config.Factory`2.CreateInstance(String itemName)
    at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-02-28 10:19:43.5208 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
