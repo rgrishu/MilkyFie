@@ -18,7 +18,7 @@ namespace GenricFrame.Controllers
         private IUserService _userService;
         private IHttpContextAccessor _httpContext;
         private LoginResponse loginResponse;
-        private readonly AppicationUser _user;
+        private readonly ApplicationUser _user;
         protected IRepository<Product> _product;
         protected IRepository<Category> _category;
         public APIController(IHttpContextAccessor httpContext, IUserService userService, IRepository<Product> product, IRepository<Category> category)

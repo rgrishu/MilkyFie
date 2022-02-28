@@ -53,17 +53,17 @@ namespace GenricFrame.AppCode.Middleware
                 var claims = jwtToken.Claims.ToList();
                 var loginResponse = new LoginResponse
                 {
-                    StatusCode=Status.Success,
-                    ResponseText=nameof(Status.Success),
+                    StatusCode = Status.Success,
+                    ResponseText = nameof(Status.Success),
                     IsAuthenticate = true,
                     Token = token,
-                    Result = new AppicationUser
+                    Result = new ApplicationUser
                     {
                         Id = int.Parse(claims.First(x => x.Type == "id").Value),
                         Role = Convert.ToString(claims.First(x => x.Type == "role").Value),
                         UserName = Convert.ToString(claims.First(x => x.Type == "userName").Value)
                     }
-                };                
+                };
                 context.Items["User"] = loginResponse;
             }
             catch

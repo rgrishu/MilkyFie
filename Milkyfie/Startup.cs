@@ -57,7 +57,7 @@ namespace GenricFrame
             services.AddMvc();
             #region Identity
 
-            services.AddIdentity<AppicationUser, ApplicationRole>(options =>
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 3;
@@ -66,8 +66,10 @@ namespace GenricFrame
                 options.Password.RequireNonAlphanumeric = false;
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(2);
                 options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 3;
             }).AddUserStore<UserStore>()
-                   .AddRoleStore<RoleStore>();
+            .AddRoleStore<RoleStore>()
+            .AddUserManager<ApplicationUserManager>();
             //       .AddDefaultTokenProviders();
             services.ConfigureApplicationCookie(options =>
             {

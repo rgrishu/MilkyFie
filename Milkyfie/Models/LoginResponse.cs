@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace GenricFrame.Models
 {
-    public class LoginResponse : Response<AppicationUser>
+    public class LoginResponse : Response<ApplicationUser>
     {
         public bool IsAuthenticate { get; set; }        
         public Guid Guid { get; set; }
