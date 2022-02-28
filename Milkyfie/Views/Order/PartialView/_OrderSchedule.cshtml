@@ -1,0 +1,39 @@
+﻿@using Milkyfie.AppCode.Reops.Entities;
+@model OrderSchedule
+
+
+<!-- Row start -->
+<div class="row gutters">
+    @* <form id="frmproduct" >*@
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row gutters">
+                    <input type="hidden" id="hdnProductID" />
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Select Category</label>
+                            <select class="form-control" name="CategoryID" id="ddlCategory">
+                                <option id="Option" name="CatgoryID" value="0">:: Category ::</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Unit</label>
+                            <select class="form-control" name="UnitID" id="ddlUnit">
+                                <option id="Option" name="UnitID" value="0">:: Unit ::</option>
+                            </select>
+                        </div>
+                    </div>
+                
+
+
+                </div>
+                <input class="btn btn-primary" id="btnSubmit" type="submit" value="Submit">
+
+            </div>
+        </div>
+    </div>
+    @*</form>*@
+</div>
