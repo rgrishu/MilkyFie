@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 namespace Milkyfie.AppCode.Data
 {
-    public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>, IUserEmailStore<ApplicationUser>, IUserRoleStore<ApplicationUser>, IQueryableUserStore<ApplicationUser>
+    public class UserStore : IUserStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>, IUserEmailStore<ApplicationUser>, IUserRoleStore<ApplicationUser>, IQueryableUserStore<ApplicationUser>, IUserLockoutStore<ApplicationUser>
     {
         // private readonly ApplicationDbContext _context;
         private readonly RoleManager<ApplicationRole> _roleManager;
@@ -234,6 +234,44 @@ namespace Milkyfie.AppCode.Data
         {
             var result = await _dapperRepository.ExecuteAsync("UpdateUser", user, commandType: CommandType.StoredProcedure);
             return result > 0 ? IdentityResult.Success : IdentityResult.Failed();
+        }
+
+        public async Task<int> GetAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(user.AccessFailedCount);
+        }
+
+        public async Task<bool> GetLockoutEnabledAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(user.LockoutEnabled);
+        }
+
+        //Note : if GetLockoutEnabledAsync will false GetLockoutEndDateAsync will not hit;
+        public async Task<DateTimeOffset?> GetLockoutEndDateAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            return await Task.FromResult(user.LockoutEnd);
+        }
+
+        public async Task<int> IncrementAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+           return await _dapperRepository.ExecuteAsync("update [dbo].[Users] set AccessFailedCount=AccessFailedCount + 1 where Id=@Id", new { user.Id }, commandType: CommandType.Text);
+        }
+
+        public async Task ResetAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken)
+        {
+            await _dapperRepository.ExecuteAsync("update [dbo].[Users] set AccessFailedCount = 0  where Id = @Id", new { user.Id }, commandType: CommandType.Text);
+
+        }
+
+        public Task SetLockoutEnabledAsync(ApplicationUser user, bool enabled, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task SetLockoutEndDateAsync(ApplicationUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
+        {
+
+            await _dapperRepository.ExecuteAsync("update [dbo].[Users] set lockoutEnd=@lockoutEnd where Id=@Id", new { user.Id, lockoutEnd }, commandType: CommandType.Text);
         }
     }
 }

@@ -119,41 +119,40 @@ namespace Milkyfie.Controllers
             {
                 return View();
             }
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            ModelState.AddModelError(String.Empty, "Invalid login attempt.");
             ReturnUrl = ReturnUrl ?? Url.Content("~/");
             var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, model.RememberMe, lockoutOnFailure: true);
             if (result.Succeeded)
             {
-
                 var roles = await _userManager.GetRolesAsync(new ApplicationUser { Email = model.MobileNo });
                 if (roles != null)
-                    if (roles.FirstOrDefault().Equals("1") || roles.FirstOrDefault().Equals("admin",StringComparison.OrdinalIgnoreCase))
+                    if (roles.FirstOrDefault().Equals("1") || roles.FirstOrDefault().Equals("admin", StringComparison.OrdinalIgnoreCase))
                     {
                         ReturnUrl = ReturnUrl?.Trim() == "/" ? "/Home" : ReturnUrl;
                         return LocalRedirect(ReturnUrl);
                     }
-                    else if (roles.FirstOrDefault().Equals("3") || roles.FirstOrDefault().Equals("consumer",StringComparison.OrdinalIgnoreCase))
+                    else if (roles.FirstOrDefault().Equals("3") || roles.FirstOrDefault().Equals("consumer", StringComparison.OrdinalIgnoreCase))
                     {
                         ReturnUrl = ReturnUrl?.Trim() == "/" ? "/Consumer" : ReturnUrl;
                         return LocalRedirect(ReturnUrl);
                     }
-                    else
-                    {
-                        ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                        return View();
-                    }
             }
             else if (result.IsLockedOut)
             {
+                ModelState.Remove(string.Empty);
+                ModelState.AddModelError(string.Empty, "Your account is locked out.");
                 var Scheme = Request.Scheme;
                 var forgotPassLink = Url.Action(nameof(ForgotPassword), "Account", new { }, Request.Scheme);
                 var content = string.Format("Your account is locked out, to reset your password, please click this link: {0}", forgotPassLink);
                 //var message = new Message(new string[] { model.MobileNo }, "Locked out account information", content, null);
                 var config = _emailConfig.GetAllAsync(new EmailConfig { Id = 2 }).Result;
-                var setting = _mapper.Map<EmailSettings>(config.FirstOrDefault());
+                if (config == null || config.Count() == 0)
+                    _logger.LogError("No Email configuration found", new { this.GetType().Name, fn = nameof(this.Login) });
+                var setting = _mapper.Map<EmailSettings>(config?.Count() > 0 ? config.FirstOrDefault() : new EmailConfig());
                 setting.Body = content;
                 setting.Subject = "Locked out account information";
                 var _ = AppUtility.O.SendMail(setting);
+
             }
         Finish:
             return View();
