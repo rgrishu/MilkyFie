@@ -9,7 +9,7 @@ var serviceProperty = {
 };
 
 ((services) => {
- 
+
     services.Dropdown = {
         Category: param => new Promise((resolve, reject) => {
             if (!param) {
@@ -29,10 +29,18 @@ var serviceProperty = {
             }
             $.post('/Master/Unit', param).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
         }),
-    
+        Products: param => new Promise((resolve, reject) => {
+            $.post('/Master/GetProductDrop', { categoryid: param }).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
+        }),
+        Frequency: param => new Promise((resolve, reject) => {
+            $.post('/Master/GetFrequency', param).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
+        }),
+        Users: param => new Promise((resolve, reject) => {
+            $.post('/Account/UsersDropdown', param).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
+        }),
     };
-   
-   
+
+
 })(services || (services = serviceProperty));
 
 var s = services;

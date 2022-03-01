@@ -24,11 +24,13 @@ namespace Milkyfie.Controllers
     {
         protected IRepository<Banners> _banner;
         protected IRepository<News> _news;
+        protected IRepository<Frequency> _frequency;
         public MasterController(IDapperRepository dapper, IRepository<Category> category,
-            IRepository<Unit> unit, IRepository<Product> product, IRepository<Banners> banner, IRepository<News> news, IMapper mapper) : base(dapper, category, unit, product, mapper)
+            IRepository<Unit> unit, IRepository<Product> product, IRepository<Banners> banner, IRepository<News> news, IRepository<Frequency> frequency, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
             _banner = banner;
             _news = news;
+            _frequency = frequency;
         }
         #region Category
         public async Task<IActionResult> Category()
@@ -163,7 +165,12 @@ namespace Milkyfie.Controllers
             var resp = await _product.GetAllAsync(new Product { ProductID = 0 });
             return PartialView("PartialView/_ProductList", resp);
         }
-
+        [HttpPost]
+        public async Task<IActionResult> GetProductDrop(int categoryid=0)
+        {
+            var resp = await _product.GetAllAsync(new Product { Category = new Category { CategoryID= categoryid } });
+            return Json(resp);
+        }
 
 
         [HttpPost]
@@ -190,9 +197,9 @@ namespace Milkyfie.Controllers
 
         #region Users
         [HttpPost]
-        public async Task<IActionResult> UserForm()
+        public async Task<IActionResult> UserForm(string role)
         {
-            return PartialView("~/Views/Account/PartialView/_Register.cshtml", new RegisterViewModel { IsAdmin = true });
+            return PartialView("~/Views/Account/PartialView/_Register.cshtml", new RegisterViewModel { IsAdmin = true,RoleType= role });
         }
 
 
@@ -346,5 +353,19 @@ namespace Milkyfie.Controllers
         }
         #endregion
 
+
+
+        #region Frequency
+       
+        
+        [HttpPost]
+        public async Task<IActionResult> GetFrequency()
+        {
+            var resp = await _frequency.GetAllAsync();
+            return Json(resp);
+        }
+
+       
+        #endregion
     }
 }

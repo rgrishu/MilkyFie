@@ -400,6 +400,24 @@ namespace Milkyfie.AppCode.DAL
             }
         }
 
+        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, T4,T5,T6,T7, TReturn>(T1 entity, string sqlQuery, DynamicParameters parms, Func<T1, T2, T3, T4, T5,T6, T7, TReturn> p, string splitOn)
+        {
+            try
+            {
+                //var prepared = PrepareParameters(sqlQuery, entity.ToDictionary());
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    var result = await db.QueryAsync<T1, T2, T3, T4, T5,T6, T7, TReturn>(sqlQuery, p, splitOn: splitOn, param: parms, commandType: CommandType.StoredProcedure);
+                    return result;
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw ex;
+            }
+        }
+
         #endregion
 
         public async Task<IEnumerable<TReturn>> GetAsync<T1, T2, TReturn>(string sqlQuery, Func<T1, T2, TReturn> p, string splitOn, DynamicParameters parms = null, CommandType commandType = CommandType.StoredProcedure)

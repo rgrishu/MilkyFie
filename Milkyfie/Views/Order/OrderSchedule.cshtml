@@ -3,7 +3,7 @@
 <div class="main-container">
     <!-- Row start -->
     <div class="row gutters">
-       
+
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
                 <div class="card-header bg-primary text-white h6">
@@ -19,14 +19,16 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                          <th>Customer Name</th>
                                         <th>Category Name</th>
                                         <th>Product Name</th>
-                                        <th>Quantity</th>
+                                      
                                         <th>Frequency</th>
-                                        <th>Frequency Value</th>
+                                       <th>Quantity</th>
                                         <th>From Date</th>
-                                        <th>To Date</th>
+                                     @*   <th>To Date</th>*@
                                         <th>Status</th>
+                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -48,25 +50,26 @@
 @section scripts{
 <script>
     $(document).ready(function(){
-       loadProduct();
+       loadScheduleOrders();
         $('#btnNew').click(function(){
              getform(id=0)
         });
     });
 
-    
+
      function getform(id=0){
           Q.preloader.load();
              // var id=$('#hdnProductID').val();
               $.ajax({
                 type: 'post',
-                url: 'ScheduleOrder',
+                url: 'OrderSchedule',
                 data:{id:id},
                 success: function (data) {
-                      BindDropDowncat();
-             BindDropDownUnit();
+                    BindDropDownUsers();
+                    BindDropDowncat();
+                       BindDDFrequency();
                 Q.alert({
-                  
+
                     title: "Schedule Order",
                     body:data,
                     width : '900px',
@@ -81,25 +84,39 @@
             });
     }
 
-     function BindDropDowncat(){
+
+
+
+      function BindDropDowncat(){
           var categorylist=s.Dropdown.Category();
       categorylist.then(result=>
         {
             $('#ddlCategory').empty().append('<option id="Option" name="ParentID" value="0">:: Category ::</option>').append(result.map(x=>`<option value="${x.categoryID}">${x.categoryName}</option>`));
         });
     }
-     function BindDropDownUnit(){
-          var unitlist=s.Dropdown.Unit();
-      unitlist.then(result=>
+     function BindDDFrequency(){
+          var frequenclist=s.Dropdown.Frequency();
+      frequenclist.then(result=>
         {
-            $('#ddlUnit').empty().append('<option id="Option" name="UnitID" value="0">:: Unit ::</option>').append(result.map(x=>`<option value="${x.unitID}">${x.unitName}</option>`));
+            $('#ddlFrequncy').empty().append('<option id="Option" name="FrequencyID" value="0">:: Select ::</option>').append(result.map(x=>`<option value="${x.frequencyID}">${x.frequencyName}</option>`));
         });
     }
+
+     function BindDropDownUsers(){
+          var userslist=s.Dropdown.Users();
+      userslist.then(result=>
+        {
+            console.log(result)
+            $('#ddlUser').empty().append('<option id="Option" name="UserID" value="0">:: User ::</option>').append(result.map(x=>`<option value="${x.id}">${x.name}</option>`));
+        });
+    }
+
     function loadScheduleOrders(){
          $.ajax({
                type: 'post',
-                url: 'GetScheduleOrder',
+                url: 'GetScheduleOrders',
                 success: function (data) {
+                   
                       $('tbody').html(data);
                 },
                 error: function (data) {

@@ -1,7 +1,6 @@
 ﻿@using Milkyfie.AppCode.Reops.Entities;
 @model OrderSchedule
 
-
 <!-- Row start -->
 <div class="row gutters">
     @* <form id="frmproduct" >*@
@@ -9,31 +8,146 @@
         <div class="card">
             <div class="card-body">
                 <div class="row gutters">
-                    <input type="hidden" id="hdnProductID" />
-                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Select User</label>
+                            <select class="form-control Category" name="CategoryID" id="ddlUser">
+                                <option id="Option" name="CatgoryID" value="0">:: Users ::</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label for="inputName">Select Category</label>
-                            <select class="form-control" name="CategoryID" id="ddlCategory">
+                            <select class="form-control Category" name="CategoryID" id="ddlCategory">
                                 <option id="Option" name="CatgoryID" value="0">:: Category ::</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
-                            <label for="inputName">Unit</label>
-                            <select class="form-control" name="UnitID" id="ddlUnit">
-                                <option id="Option" name="UnitID" value="0">:: Unit ::</option>
+                            <label for="inputName">Select Product</label>
+                            <select class="form-control" name="CategoryID" id="ddlProduct">
+                                <option id="Option" name="ProductID" value="0">:: Products ::</option>
                             </select>
                         </div>
                     </div>
-                
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Frequncy</label>
+                            <select class="form-control" name="CategoryID" id="ddlFrequncy">
+                                <option id="Option" name="CatgoryID" value="0">:: Select ::</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Other Frequncy</label>
+                            <input type="text" placeholder="Other Frequency" id="txtotherFrequncy" disabled class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Quantity</label>
+                            <input type="text" placeholder="Quantity" id="txtQuantity" class="form-control" />
+                        </div>
+                    </div>
 
 
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Start Date</label>
+                            <input type="text" placeholder="Start Date" readonly="readonly" value="@DateTime.Now.ToString(" dd MMM yyyy")" id="txtStartDate" class="form-control" />
+                        </div>
+                    </div>
+
+
+                 @*   <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <label for="inputName">End Date</label>
+                            <input type="text" placeholder="End Date" readonly="readonly" value="@DateTime.Now.ToString(" dd MMM yyyy")" id="txtEndDate" class="form-control" />
+                        </div>
+                    </div>*@
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Description</label>
+                            <textarea type="text" placeholder="Description" id="txtDescription" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Remark</label>
+                            <textarea type="text" placeholder="Remark" id="txtRemark" class="form-control"></textarea>
+                        </div>
+                    </div>
                 </div>
                 <input class="btn btn-primary" id="btnSubmit" type="submit" value="Submit">
-
             </div>
         </div>
     </div>
     @*</form>*@
 </div>
+<script>
+        $( function() {
+            $('#txtStartDate').datepicker({ dateFormat: 'dd M yy' }).val();
+            //$('#txtEndDate').datepicker({ dateFormat: 'dd M yy' }).val();
+    });
+      $("#ddlCategory").change(function() {
+          BindDropDownProduct($('option:selected', this).val())
+      });
+       $("#ddlFrequncy").change(function() {
+          $('option:selected', this).val()==1?$("#txtotherFrequncy").removeAttr("disabled"):$("#txtotherFrequncy").attr("disabled", "disabled");
+      });
+       function BindDropDownProduct(catid){
+       var Productlist=s.Dropdown.Products(catid);
+        Productlist.then(result=>
+          {
+              $('#ddlProduct').empty().append('<option id="Option" name="ProductID" value="0">:: Products ::</option>').append(result.map(x=>`<option value="${x.productID}">${x.productName}</option>`));
+          });
+      }
+
+
+      $('#btnSubmit').click(function () {
+        Q.preloader.load();
+          var formData = new FormData();
+          formData.append("User.Id", $("#ddlUser").val());
+          formData.append("Frequency.FrequencyID", $("#ddlFrequncy").val());
+           formData.append("Product.ProductID", $("#ddlProduct").val());
+          formData.append("OtherFrequency", $("#txtotherFrequncy").val());
+          formData.append("Category.CategoryID", $("#ddlCategory").val());
+          formData.append("Quantity", $("#txtQuantity").val());
+          formData.append("StartFromDate", $("#txtStartDate").val());
+          formData.append("EndToDate", $("#txtEndDate").val());
+          formData.append("Description",$("#txtDescription").val());
+           formData.append("Remark", $("#txtRemark").val());
+          $.ajax({
+              type: 'POST',
+              url: 'SaveOrderSchedule',
+              processData: false,
+              contentType: false,
+              data: formData,
+              success: result => {
+                  console.log(result)
+                  if(result.statusCode==1)
+                  {
+                      loadScheduleOrders();
+                  $('input').val('');
+                  $('.field-validation-valid').remove();
+                 Q.notify(result.statusCode, result.responseText);
+                  }
+                  else
+                  {
+                   Q.notify(result.statusCode, result.responseText);
+                  }
+                  Q.preloader.remove();
+              },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                    Q.preloader.remove();
+                },
+          })
+      });
+
+</script>

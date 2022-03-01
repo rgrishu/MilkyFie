@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Milkyfie.Models.ApplicationUser
+@{
     ViewData["Title"] = "Users";
     Layout = "_LayOut";
 }
@@ -9,7 +10,8 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
                     <div class="card-header bg-primary text-white h6">
-                        Users
+                        @Model.Role
+                        <input type="hidden" value="@Model.Role" id="hdnroleid" />
                         <div class="float-right">  <button id="btnNew" class="btnaddUser btn btn-info">New</button></div>
                     </div>
                     <div class="card-body">
@@ -20,15 +22,24 @@
                                         <th>
                                             #
                                         </th>
-
-                                        <th>
+                                          <th>
                                             User Name
                                         </th>
-                                          <th>
-                                            EmailID
+                                       
+                                        <th>
+                                            Name
                                         </th>
                                         <th>
                                             Mobile
+                                        </th>
+                                         <th>
+                                            EmailID
+                                        </th>
+                                         <th>
+                                            Address
+                                        </th>
+                                         <th>
+                                            Pincode
                                         </th>
                                     </tr>
                                 </thead>
@@ -44,15 +55,18 @@
 </div>
 @section scripts{
 <script>
+
     $(document).ready(function(){
-     getUsers();
+
+    getUsers();
     })
-   
+
      $('.btnaddUser').click(function(){
            Q.preloader.load();
               $.ajax({
                 type: 'post',
                 url: '/Master/UserForm',
+                 data:{role:$('#hdnroleid').val()},
                 success: function (data) {
                     console.log(data)
                 Q.alert({
@@ -71,10 +85,12 @@
             });
     });
     function getUsers(){
+        debugger;
          Q.preloader.load();
          $.ajax({
                type: 'post',
-                url: 'Users',
+                url: '/Account/UsersDetails',
+               data:{role:$('#hdnroleid').val()},
                 success: function (data) {
                       $('tbody').html(data);
                 },

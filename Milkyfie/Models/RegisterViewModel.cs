@@ -29,5 +29,6 @@ namespace Milkyfie.Models
         [Compare("Password", ErrorMessage = "Password and compare password do not match..")]
         public string ConfirmPassword { get; set; }
         public bool IsAdmin { get; set; }
+        public string RoleType { get; set; }
     }
 }

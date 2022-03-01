@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Milkyfie.AppCode.Reops
@@ -30,10 +31,23 @@ namespace Milkyfie.AppCode.Reops
             throw new NotImplementedException();
         }
 
+
         public async Task<IEnumerable<ApplicationUser>> GetAllAsync(ApplicationUser entity = null)
         {
-            throw new NotImplementedException();
+            List<ApplicationUser> res = new List<ApplicationUser>();
+             
+            try
+            {
+                var dbparams = new DynamicParameters();
+
+               var ires = await _dapper.GetAllAsync<ApplicationUser>("proc_users", dbparams, commandType: CommandType.StoredProcedure);
+                res = ires.ToList();
+            }
+            catch (Exception ex)
+            { }
+            return res;
         }
+
 
         public Task<Response<ApplicationUser>> GetByIdAsync(int id)
         {
@@ -42,13 +56,10 @@ namespace Milkyfie.AppCode.Reops
 
         public async Task<ApplicationUser> GetDetails(object id)
         {
-            var dbparams = new DynamicParameters();
-            dbparams.Add("UserName", id);
-            var res = await _dapper.GetAsync<ApplicationUser>("proc_users", dbparams, commandType: CommandType.StoredProcedure);
-            return res;
+            throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyList<ApplicationUser>> GetDropdownAsync(ApplicationUser entity)
+        public async Task<IReadOnlyList<ApplicationUser>> GetDropdownAsync(ApplicationUser entity = null)
         {
             throw new NotImplementedException();
         }

@@ -1,0 +1,46 @@
+﻿@using Milkyfie.AppCode.Reops.Entities;
+ @model List<OrderSchedule>
+
+@if (Model != null && Model.Any())
+{
+    int i = 1;
+
+    @foreach (var item in Model)
+    {
+
+        <tr data-id="@item.Category.CategoryID">
+            <td>@i</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.User.Name)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+            @if (item.Frequency.FrequencyID == 1)
+            {
+                <td class="name">Other ~( @Html.DisplayFor(modelItem => item.OtherFrequency))</td>
+            }
+            else
+            {
+                <td class="name">@Html.DisplayFor(modelItem => item.Frequency.FrequencyName)</td>
+            }
+            <td class="name">@Html.DisplayFor(modelItem => item.Quantity)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.StartFromDate)</td>
+           @* <td class="name">@Html.DisplayFor(modelItem => item.EndToDate)</td>*@
+            @{
+                string stat = item.Status == "P" ? "Pending" : "Reject";
+            }
+            <td class="name"><span class="badge badge-warning"><h6> @stat </h6></span> </td>
+
+            <td>
+                <a class="btn-ed-ed" data-id="@item.ScheduleID"><img src="~/img/accept.png" class="img-action" /></a>
+                <a class="btn-ed-del" data-id="@item.ScheduleID"><img src="~/img/rejected.png" class="img-action" /></a>
+            </td>
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="5">No Records Found</td>
+    </tr>
+}
+

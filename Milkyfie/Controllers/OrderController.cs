@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Milkyfie.AppCode.Extensions;
 
 namespace Milkyfie.Controllers
 {
@@ -34,6 +35,35 @@ namespace Milkyfie.Controllers
         {
             //var resp = await _category.GetAllAsync(null);
             return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> OrderSchedule(int id = 0)
+        {
+            OrderSchedule orderres = new OrderSchedule();
+            if (id != 0)
+            {
+                IEnumerable<OrderSchedule> lpres = await _orderschedule.GetAllAsync(new OrderSchedule { ScheduleID = id });
+                if (lpres != null && lpres.Count() > 0)
+                {
+                    orderres = lpres.FirstOrDefault();
+                }
+            }
+            return PartialView("PartialView/_OrderSchedule", orderres);
+        }
+        public async Task<IActionResult> SaveOrderSchedule(OrderSchedule model)
+        {
+            var userId = User.GetLoggedInUserId<int>();
+            model.LoginID = userId;
+            var resp = await _orderschedule.AddAsync(model);
+            return Json(resp);
+        }
+        [HttpPost]
+
+        [HttpPost]
+        public async Task<IActionResult> GetScheduleOrders()
+        {
+            var resp = await _orderschedule.GetAllAsync(new OrderSchedule { ScheduleID = 0 });
+            return PartialView("PartialView/_OrderScheduleList", resp);
         }
         #endregion
 

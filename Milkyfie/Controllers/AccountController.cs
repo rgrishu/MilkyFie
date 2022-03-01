@@ -198,19 +198,33 @@ namespace Milkyfie.Controllers
             return LocalRedirect(returnUrl);
 
         }
-        [Authorize]
-        public IActionResult Users()
+        [Route("Account/Users/{role}")]
+        public IActionResult Users(string role)
         {
-            var _ = _userManager.FindByMobileNoAsync("").Result;
-            var users = _userManager.Users.ToList();
-            return View(users);
-
+            ApplicationUser au = new ApplicationUser();
+            au.Role = role;
+            return View("Users", au);
         }
         [HttpPost]
-        public async Task<IActionResult> Users(int id = 0)
+
+        public async Task<IActionResult> UsersDetails(string role)
         {
-            var users = _userManager.Users.ToList();
+            if (role.Trim() != "Fos" && role.Trim() != "Consumer")
+            {
+                role = string.Empty;
+            }
+            var users = _users.GetAllAsync().Result;
+            if (users.Count() > 0)
+            {
+                users = users.Where(x => x.Role == role);
+            }
             return PartialView("~/Views/Account/PartialView/_UsersList.cshtml", users);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UsersDropdown()
+        {
+            var users = _users.GetAllAsync().Result;
+            return Json(users);
         }
         /* JWT */
         #region JWT
