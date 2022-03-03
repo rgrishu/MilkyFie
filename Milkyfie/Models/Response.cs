@@ -5,7 +5,7 @@ namespace Milkyfie.Models
 {
     public class Response<T> : IResponse<T>
     {
-        public Status StatusCode { get; set; }
+        public ResponseStatus StatusCode { get; set; }
         public string ResponseText { get; set; }
         public Exception Exception { get; set; }
         public T Result { get; set; }
@@ -13,7 +13,7 @@ namespace Milkyfie.Models
 
     public class Response : IResponse
     {
-        public Status StatusCode { get; set; }
+        public ResponseStatus StatusCode { get; set; }
         public string ResponseText { get; set; }
         public Exception Exception { get; set; }
     }
@@ -24,7 +24,7 @@ namespace Milkyfie.Models
         public T Param { get; set; }
     }
 
-    public enum Status
+    public enum ResponseStatus
     {
         Failed = -1,
         Success = 1,

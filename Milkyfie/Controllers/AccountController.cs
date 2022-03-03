@@ -62,7 +62,7 @@ namespace Milkyfie.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             Response response = new Response();
-            response.StatusCode = Status.Failed;
+            response.StatusCode = ResponseStatus.Failed;
             response.ResponseText = "Registration Failed";
             if (!ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace Milkyfie.Controllers
                 model.Password = String.Empty;
                 model.EmailId = String.Empty;
                 ModelState.Clear();
-                response.StatusCode = Status.Success;
+                response.StatusCode = ResponseStatus.Success;
                 response.ResponseText = "Register Successfully";
             }
             else
@@ -163,7 +163,7 @@ namespace Milkyfie.Controllers
         {
             var response = new Response<AuthenticateResponse>
             {
-                StatusCode = Status.Failed,
+                StatusCode = ResponseStatus.Failed,
                 ResponseText = "Invalid Login Attempt"
             };
             var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, false, true);
@@ -174,8 +174,8 @@ namespace Milkyfie.Controllers
                 var authResponse = new AuthenticateResponse(user, token);
                 response = new Response<AuthenticateResponse>
                 {
-                    StatusCode = Status.Success,
-                    ResponseText = Status.Success.ToString(),
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
                     Result = authResponse
                 };
                 goto Finish;

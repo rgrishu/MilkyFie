@@ -69,20 +69,30 @@
                             <input type="text" placeholder="End Date" readonly="readonly" value="@DateTime.Now.ToString(" dd MMM yyyy")" id="txtEndDate" class="form-control" />
                         </div>
                     </div>*@
-                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-3">
+                        <div class="form-group">
+                            <label for="inputName">Shift</label>
+                             <select class="form-control" name="CategoryID" id="ddlshift">
+                                <option id="Option" name="CatgoryID" value="Morning">Morning</option>
+                                <option id="Option" name="CatgoryID" value="Evening">Evening</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
                         <div class="form-group">
                             <label for="inputName">Description</label>
                             <textarea type="text" placeholder="Description" id="txtDescription" class="form-control"></textarea>
                         </div>
                     </div>
-                    <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
+                   @* <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
                         <div class="form-group">
                             <label for="inputName">Remark</label>
                             <textarea type="text" placeholder="Remark" id="txtRemark" class="form-control"></textarea>
                         </div>
-                    </div>
+                    </div>*@
                 </div>
-                <input class="btn btn-primary" id="btnSubmit" type="submit" value="Submit">
+                <button class="btn btn-primary" id="btnSubmit">Submit</button>
+              
             </div>
         </div>
     </div>
@@ -96,9 +106,9 @@
       $("#ddlCategory").change(function() {
           BindDropDownProduct($('option:selected', this).val())
       });
-       $("#ddlFrequncy").change(function() {
-          $('option:selected', this).val()==1?$("#txtotherFrequncy").removeAttr("disabled"):$("#txtotherFrequncy").attr("disabled", "disabled");
-      });
+      // $("#ddlFrequncy").change(function() {
+      //    $('option:selected', this).val()==1?$("#txtotherFrequncy").removeAttr("disabled"):$("#txtotherFrequncy").attr("disabled", "disabled");
+      //});
        function BindDropDownProduct(catid){
        var Productlist=s.Dropdown.Products(catid);
         Productlist.then(result=>
@@ -120,7 +130,7 @@
           formData.append("StartFromDate", $("#txtStartDate").val());
           formData.append("EndToDate", $("#txtEndDate").val());
           formData.append("Description",$("#txtDescription").val());
-           formData.append("Remark", $("#txtRemark").val());
+           formData.append("ScheduleShift", $("#ddlshift").val());
           $.ajax({
               type: 'POST',
               url: 'SaveOrderSchedule',

@@ -47,8 +47,8 @@ namespace Milkyfie.Controllers
         {
             var res = new Response<List<Product>>()
             {
-                StatusCode = Status.Failed,
-                ResponseText = Status.Failed.ToString()
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
             };
             var req = new Product()
             {
@@ -67,8 +67,8 @@ namespace Milkyfie.Controllers
             {
                 res = new Response<List<Product>>()
                 {
-                    StatusCode = Status.Success,
-                    ResponseText = Status.Success.ToString(),
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
                     Result = resp.ToList()
                 };
             }
@@ -80,8 +80,8 @@ namespace Milkyfie.Controllers
         {
             var res = new Response<List<Category>>()
             {
-                StatusCode = Status.Failed,
-                ResponseText = Status.Failed.ToString()
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
             };
            
             var resp = _category.GetAllAsync().Result;
@@ -89,8 +89,8 @@ namespace Milkyfie.Controllers
             {
                 res = new Response<List<Category>>()
                 {
-                    StatusCode = Status.Success,
-                    ResponseText = Status.Success.ToString(),
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
                     Result = resp.ToList()
                 };
             }

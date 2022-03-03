@@ -44,7 +44,7 @@ namespace Milkyfie.Controllers
         {
             var response = new Response()
             {
-                StatusCode = Status.Failed,
+                StatusCode = ResponseStatus.Failed,
                 ResponseText = "Failed"
             };
             if (!ModelState.IsValid)
@@ -52,9 +52,9 @@ namespace Milkyfie.Controllers
                 return Json(response);
             }
             var resp = await _category.AddAsync(model);
-            if (resp.StatusCode == Status.Success)
+            if (resp.StatusCode == ResponseStatus.Success)
             {
-                response.StatusCode = Status.Success;
+                response.StatusCode = ResponseStatus.Success;
                 response.ResponseText = resp.ResponseText;
             }
             else
@@ -85,13 +85,13 @@ namespace Milkyfie.Controllers
         {
             var response = new Response()
             {
-                StatusCode = Status.Failed,
+                StatusCode = ResponseStatus.Failed,
                 ResponseText = "Failed"
             };
             var resp = await _category.DeleteAsync(id);
-            if (resp.StatusCode == Status.Success)
+            if (resp.StatusCode == ResponseStatus.Success)
             {
-                response.StatusCode = Status.Success;
+                response.StatusCode = ResponseStatus.Success;
                 response.ResponseText = resp.ResponseText;
             }
             else
@@ -129,7 +129,7 @@ namespace Milkyfie.Controllers
            
             var retRes = new Response()
             {
-                StatusCode = Status.Failed,
+                StatusCode = ResponseStatus.Failed,
                 ResponseText = "Failed"
             };
             if (!ModelState.IsValid)
@@ -147,13 +147,13 @@ namespace Milkyfie.Controllers
                 FileName = sb.ToString()
             });
             model.ProductImage = sb.ToString();
-            if (fileres.StatusCode == Status.Success)
+            if (fileres.StatusCode == ResponseStatus.Success)
             {
                 Product product = _mapper.Map<Product>(model);
                 var resp = await _product.AddAsync(product);
                 if (resp.ResponseText == "Success")
                 {
-                    retRes.StatusCode = Status.Success;
+                    retRes.StatusCode = ResponseStatus.Success;
                     retRes.ResponseText = "Product Added Successfull.";
                 }
             }
@@ -218,7 +218,7 @@ namespace Milkyfie.Controllers
 
             var response = new Response()
             {
-                StatusCode = Status.Failed,
+                StatusCode = ResponseStatus.Failed,
                 ResponseText = "Failed"
             };
             if (file == null)
@@ -238,7 +238,7 @@ namespace Milkyfie.Controllers
                     FileName = sb.ToString(),
                     IsThumbnailRequired = true
                 });
-                if (fileres.StatusCode == Status.Success)
+                if (fileres.StatusCode == ResponseStatus.Success)
                 {
                     var banner = new Banners()
                     {
@@ -272,13 +272,13 @@ namespace Milkyfie.Controllers
         {
             var response = new Response()
             {
-                StatusCode = Status.Failed,
+                StatusCode = ResponseStatus.Failed,
                 ResponseText = "Failed"
             };
             var resp = await _banner.DeleteAsync(id);
-            if (resp.StatusCode == Status.Success)
+            if (resp.StatusCode == ResponseStatus.Success)
             {
-                response.StatusCode = Status.Success;
+                response.StatusCode = ResponseStatus.Success;
                 response.ResponseText = resp.ResponseText;
             }
             else
@@ -303,7 +303,7 @@ namespace Milkyfie.Controllers
         {
             var response = new Response()
             {
-                StatusCode = Status.Failed,
+                StatusCode = ResponseStatus.Failed,
                 ResponseText = "Failed"
             };
             if (!ModelState.IsValid)
@@ -311,9 +311,9 @@ namespace Milkyfie.Controllers
                 return View();
             }
             var resp = await _news.AddAsync(model);
-            if (resp.StatusCode == Status.Success)
+            if (resp.StatusCode == ResponseStatus.Success)
             {
-                response.StatusCode = Status.Success;
+                response.StatusCode = ResponseStatus.Success;
                 response.ResponseText = resp.ResponseText;
             }
             else
@@ -334,13 +334,13 @@ namespace Milkyfie.Controllers
         {
             var response = new Response()
             {
-                StatusCode = Status.Failed,
+                StatusCode = ResponseStatus.Failed,
                 ResponseText = "Failed"
             };
             var resp = await _news.DeleteAsync(id);
-            if (resp.StatusCode == Status.Success)
+            if (resp.StatusCode == ResponseStatus.Success)
             {
-                response.StatusCode = Status.Success;
+                response.StatusCode = ResponseStatus.Success;
                 response.ResponseText = resp.ResponseText;
             }
             else

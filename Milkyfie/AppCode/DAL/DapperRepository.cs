@@ -346,15 +346,16 @@ namespace Milkyfie.AppCode.DAL
                 throw ex;
             }
         }
-        #region t1 To t4 Using Proc
-        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, TReturn>(T1 entity, string sqlQuery, Func<T1, T2, TReturn> p, string splitOn)
+        #region t1 To t7 Using Proc
+        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, TReturn>(T1 entity, string sqlQuery,
+            DynamicParameters parms, Func<T1, T2, TReturn> p, string splitOn)
         {
             try
             {
                 var prepared = PrepareParameters(sqlQuery, entity.ToDictionary());
                 using (IDbConnection db = new SqlConnection(Connectionstring))
                 {
-                    var result = await db.QueryAsync<T1, T2, TReturn>(sqlQuery, p, splitOn: splitOn, param: prepared.dynamicParameters, commandType: CommandType.StoredProcedure);
+                    var result = await db.QueryAsync<T1, T2, TReturn>(sqlQuery, p, splitOn: splitOn, param: parms, commandType: CommandType.StoredProcedure);
                     return result;
                 };
             }
@@ -364,14 +365,15 @@ namespace Milkyfie.AppCode.DAL
                 throw ex;
             }
         }
-        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, TReturn>(T1 entity, string sqlQuery, Func<T1, T2, T3, TReturn> p, string splitOn)
+        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, TReturn>(T1 entity, string sqlQuery,
+            DynamicParameters parms, Func<T1, T2, T3, TReturn> p, string splitOn)
         {
             try
             {
                 var prepared = PrepareParameters(sqlQuery, entity.ToDictionary());
                 using (IDbConnection db = new SqlConnection(Connectionstring))
                 {
-                    var result = await db.QueryAsync<T1, T2, T3, TReturn>(sqlQuery, p, splitOn: splitOn, param: prepared.dynamicParameters, commandType: CommandType.StoredProcedure);
+                    var result = await db.QueryAsync<T1, T2, T3, TReturn>(sqlQuery, p, splitOn: splitOn, param: parms, commandType: CommandType.StoredProcedure);
                     return result;
                 };
             }
@@ -382,7 +384,8 @@ namespace Milkyfie.AppCode.DAL
             }
         }
 
-        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, T4, TReturn>(T1 entity, string sqlQuery, DynamicParameters parms, Func<T1, T2, T3, T4, TReturn> p, string splitOn)
+        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, T4, TReturn>(T1 entity, string sqlQuery
+            , DynamicParameters parms, Func<T1, T2, T3, T4, TReturn> p, string splitOn)
         {
             try
             {
@@ -400,7 +403,8 @@ namespace Milkyfie.AppCode.DAL
             }
         }
 
-        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, T4,T5,T6,T7, TReturn>(T1 entity, string sqlQuery, DynamicParameters parms, Func<T1, T2, T3, T4, T5,T6, T7, TReturn> p, string splitOn)
+        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, T4,T5,T6,T7, TReturn>(T1 entity, string sqlQuery,
+            DynamicParameters parms, Func<T1, T2, T3, T4, T5,T6, T7, TReturn> p, string splitOn)
         {
             try
             {

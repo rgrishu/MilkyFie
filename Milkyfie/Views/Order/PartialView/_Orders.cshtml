@@ -1,0 +1,56 @@
+﻿@using Milkyfie.AppCode.Reops.Entities;
+ @model List<OrderSummary>
+
+@if (Model != null && Model.Any())
+{
+    int i = 1;
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@i</td>
+            <td class="name"><a onclick="loadOrderDetails(@item.OrderID)">@Html.DisplayFor(modelItem => item.OrderID)</a></td>
+            <td class="name">@Html.DisplayFor(modelItem => item.User.Name)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.OrderDate)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.TotalItem)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.TotalCost)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.TotalDiscount)</td>
+           <td class="name"><h6><span class="badge badge-warning"> @item.Status.ToString()</span> </h6> </td>
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="5">No Records Found</td>
+    </tr>
+}
+<script>
+
+       function loadOrderDetails(id){
+           
+            Q.preloader.load();
+         $.ajax({
+               type: 'post',
+                url: 'OrderDetailList',
+                data:{id:id},
+                success: function (data) {
+                      Q.preloader.remove();
+                       Q.alert({
+                    title: "Order Details",
+                    body:data,
+                    width : '900px',
+                    });
+                    
+                },
+                error: function (data) {
+                     Q.preloader.remove();
+                    console.log('An error occurred.');
+                    console.log(data);
+                       Q.notify(-1, 'An error occurred.');
+                },
+               
+          });
+    }
+</script>

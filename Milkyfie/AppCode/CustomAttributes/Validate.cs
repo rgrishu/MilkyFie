@@ -275,7 +275,7 @@ namespace Milkyfie.AppCode.CustomAttributes
         {
             var res = new Response
             {
-                StatusCode = Status.Failed,
+                StatusCode = ResponseStatus.Failed,
                 ResponseText = "Temperory Error"
             };
             if (file != null)
@@ -302,7 +302,7 @@ namespace Milkyfie.AppCode.CustomAttributes
                     res.ResponseText = "File size exceeded! Not more than 1 MB is allowed";
                 else
                 {
-                    res.StatusCode = Status.Success;
+                    res.StatusCode = ResponseStatus.Success;
                     res.ResponseText = "it is a valid file";
                 }
               

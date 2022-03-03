@@ -53,8 +53,8 @@ namespace Milkyfie.AppCode.Middleware
                 var claims = jwtToken.Claims.ToList();
                 var loginResponse = new LoginResponse
                 {
-                    StatusCode = Status.Success,
-                    ResponseText = nameof(Status.Success),
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = nameof(ResponseStatus.Success),
                     IsAuthenticate = true,
                     Token = token,
                     Result = new ApplicationUser

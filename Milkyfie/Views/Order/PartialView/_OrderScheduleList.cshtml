@@ -23,15 +23,26 @@
             }
             <td class="name">@Html.DisplayFor(modelItem => item.Quantity)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.StartFromDate)</td>
-           @* <td class="name">@Html.DisplayFor(modelItem => item.EndToDate)</td>*@
-            @{
-                string stat = item.Status == "P" ? "Pending" : "Reject";
-            }
-            <td class="name"><span class="badge badge-warning"><h6> @stat </h6></span> </td>
-
+            <td class="name">
+                <h6>
+                    @{
+                        string colr = item.Status == Status.Approved ? "success" : item.Status == Status.Reject ? "danger" : "warning";
+                    }
+                    <span class="badge badge-@colr"> @item.Status.ToString()</span>
+                </h6>
+            </td>
             <td>
-                <a class="btn-ed-ed" data-id="@item.ScheduleID"><img src="~/img/accept.png" class="img-action" /></a>
-                <a class="btn-ed-del" data-id="@item.ScheduleID"><img src="~/img/rejected.png" class="img-action" /></a>
+
+                @if (item.Status == Status.Pending)
+                {
+                    <a class="btn-ed-ed" onclick="ASchedule(@item.ScheduleID,'A')"><img src="~/img/accept.png" class="img-action" /></a>
+                    <a class="btn-ed-del" onclick="ASchedule(@item.ScheduleID,'R')"><img src="~/img/rejected.png" class="img-action" /></a>
+                }
+                else if (item.Status == Status.Approved)
+                {
+                    <input type="checkbox" id="chkapprove" >
+                }
+
             </td>
         </tr>
         i++;
@@ -44,3 +55,38 @@ else
     </tr>
 }
 
+<script>
+    function ASchedule(id,type){
+          //  Q.preloader.load();
+          var formData = new FormData();
+            formData.append("ID", id);
+            formData.append("Type",type);
+            $.ajax({
+              type: 'POST',
+              url: 'UpdateOrderSchedule',
+              processData: false,
+              contentType: false,
+              data: formData,
+              success: result => {
+
+                  if(result.statusCode==1)
+                  {
+                      Q.notify(result.statusCode, result.responseText);
+                      loadScheduleOrders();
+                  }
+                  else
+                  {
+                   Q.notify(result.statusCode, result.responseText);
+                  }
+                  Q.preloader.remove();
+              },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                    Q.preloader.remove();
+                },
+          })
+    }
+
+
+</script>

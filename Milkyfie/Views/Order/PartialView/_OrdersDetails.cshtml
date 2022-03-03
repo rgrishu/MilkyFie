@@ -1,0 +1,32 @@
+﻿@using Milkyfie.AppCode.Reops.Entities;
+ @model List<OrderDetail>
+
+
+                @if (Model != null && Model.Any())
+                {
+                    int i = 1;
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@i</td>
+                            @*     <td class="name">@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>*@
+                            <td class="name">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+                            <td class="name"><img height="60px" width="60px" src="~/images/Product/@item.Product.ProductImage" /></td>
+                            <td class="name">@Html.DisplayFor(modelItem => item.Quantity)</td>
+                            <td class="name">@Html.DisplayFor(modelItem => item.Cost)</td>
+                            <td class="name">@Html.DisplayFor(modelItem => item.Discount)</td>
+                            <td class="name">@Html.DisplayFor(modelItem => item.OrderShift)</td>
+                            <td class="name"><h6><span class="badge badge-warning"> @item.Status.ToString()</span> </h6> </td>
+                        </tr>
+                        i++;
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7">No Records Found</td>
+                    </tr>
+                }
+
+         

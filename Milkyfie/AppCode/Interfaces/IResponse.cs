@@ -5,7 +5,7 @@ namespace Milkyfie.AppCode.Interfaces
 {
     public interface IResponse<T>
     {
-        Status StatusCode { get; set; }
+        ResponseStatus StatusCode { get; set; }
         string ResponseText { get; set; }
         Exception Exception { get; set; }
         T Result { get; set; }
@@ -13,7 +13,7 @@ namespace Milkyfie.AppCode.Interfaces
 
     public interface IResponse
     {
-        Status StatusCode { get; set; }
+        ResponseStatus StatusCode { get; set; }
         string ResponseText { get; set; }
         Exception Exception { get; set; }
     }

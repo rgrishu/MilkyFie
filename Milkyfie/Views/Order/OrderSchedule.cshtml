@@ -13,7 +13,7 @@
                 <div class="card-body">
 
                     <div class="table-container">
-                        <div class="t-header">No Search Field</div>
+                         
                         <div class="table-responsive">
                             <table id="basicExample" class="table custom-table">
                                 <thead>
@@ -112,6 +112,7 @@
     }
 
     function loadScheduleOrders(){
+         Q.preloader.load();
          $.ajax({
                type: 'post',
                 url: 'GetScheduleOrders',
@@ -125,6 +126,7 @@
                        Q.notify(-1, 'An error occurred.');
                 },
           });
+           Q.preloader.remove();
     }
 
 </script>

@@ -69,7 +69,7 @@ namespace Milkyfie.AppCode.Reops
         {
             var response = new Response<EmailConfig>
             {
-                StatusCode = Status.Failed
+                StatusCode = ResponseStatus.Failed
             };
             var dbparams = new DynamicParameters();
             dbparams.Add("ID", id);
@@ -79,7 +79,7 @@ namespace Milkyfie.AppCode.Reops
             {
                 response = new Response<EmailConfig>
                 {
-                    StatusCode = Status.Success,
+                    StatusCode = ResponseStatus.Success,
                     Result = result
                 };
             }

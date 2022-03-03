@@ -46,8 +46,8 @@ namespace Milkyfie.AppCode.Reops
         public async Task<Response> DeleteAsync(int id)
         {
             Response res = new Response();
-            res.StatusCode = Status.Failed;
-            res.ResponseText = Status.Failed.ToString();
+            res.StatusCode = ResponseStatus.Failed;
+            res.ResponseText = ResponseStatus.Failed.ToString();
             try
             {
                 var dbparams = new DynamicParameters();

@@ -26,7 +26,7 @@ namespace Milkyfie.AppCode.Helper
         public Response UploadFile(FileUploadModel request)
         {
             var response = Validate.O.IsFileValid(request.file);
-            if (response.StatusCode == Status.Success)
+            if (response.StatusCode == ResponseStatus.Success)
             {
                 try
                 {
@@ -61,7 +61,7 @@ namespace Milkyfie.AppCode.Helper
                     }
 
                    
-                    response.StatusCode = Status.Success;
+                    response.StatusCode = ResponseStatus.Success;
                     response.ResponseText = "File uploaded successfully";
                 }
                 catch (Exception ex)

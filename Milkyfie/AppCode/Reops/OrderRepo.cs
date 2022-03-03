@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Milkyfie.AppCode.Reops
 {
-    public class OrderRepo : IRepository<OrderSchedule>
+    public class OrderRepo : IOrder
     {
         private IDapperRepository _dapper;
         public OrderRepo(IDapperRepository dapper)
@@ -23,15 +23,15 @@ namespace Milkyfie.AppCode.Reops
         {
             var response = new Response()
             {
-                StatusCode = Status.Failed,
-                ResponseText = Status.Failed.ToString(),
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString(),
             };
             try
             {
 
                 var dbparams = new DynamicParameters();
                 dbparams.Add("ScheduleID", entity.ScheduleID);
-                dbparams.Add("UserID", entity.Product!=null?entity.User.Id:0);
+                dbparams.Add("UserID", entity.Product != null ? entity.User.Id : 0);
                 dbparams.Add("LoginID", entity.LoginID);
                 dbparams.Add("ProductID", entity.Product != null ? entity.Product.ProductID : 0);
                 dbparams.Add("CategoryID", entity.Category != null ? entity.Category.CategoryID : 0);
@@ -39,9 +39,30 @@ namespace Milkyfie.AppCode.Reops
                 dbparams.Add("OtherFrequency", entity.OtherFrequency);
                 dbparams.Add("Quantity", entity.Quantity);
                 dbparams.Add("StartFromDate", entity.StartFromDate);
-                dbparams.Add("Remark", entity.Remark);
+                dbparams.Add("ScheduleShift", entity.ScheduleShift);
                 dbparams.Add("Description", entity.Description);
                 response = await _dapper.InsertAsync<Response>("proc_AddOrderSchedule", dbparams, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return response;
+        }
+        public async Task<Response> ChangeStatus(StatusChangeReq screq)
+        {
+            var response = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString(),
+            };
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("ScheduleID", screq.ID);
+                dbparams.Add("Status", screq.Status);
+                dbparams.Add("Remark",screq.Remark);
+                response = await _dapper.InsertAsync<Response>("proc_UpdateScheduleOrderStatus", dbparams, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
             {
@@ -65,8 +86,9 @@ namespace Milkyfie.AppCode.Reops
                 //dbparams.Add("ParentCategoryID", entity != null && entity.Category != null && entity.Category.Parent != null ? entity.Category.Parent.ParentID : 0);
                 //dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
                 string sqlQuery = @"proc_GetOrderSchedule";
-                Product cc = new Product();
-                var res = await _dapper.GetAllAsyncProc <OrderSchedule, ApplicationUser, Product, Frequency,Unit, Category, Parent, OrderSchedule > (entity ?? new OrderSchedule(), sqlQuery, dbparams, (oderschedule, applicationuser, product, frequency, unit, category, parent) =>
+                var res = await _dapper.GetAllAsyncProc<OrderSchedule, ApplicationUser, Product, Frequency, Unit,
+                    Category, Parent, OrderSchedule>(entity ?? new OrderSchedule(), sqlQuery,
+                    dbparams, (oderschedule, applicationuser, product, frequency, unit, category, parent) =>
                       {
                           oderschedule.User = applicationuser;
                           oderschedule.Product = product;
@@ -85,6 +107,60 @@ namespace Milkyfie.AppCode.Reops
             return oderschedule;
 
         }
+        public async Task<IEnumerable<OrderSummary>> GetAllAsync(OrderSummary entity = null)
+        {
+            IEnumerable<OrderSummary> oderssummary = new List<OrderSummary>();
+            try
+            {
+                var dbparams = new DynamicParameters();
+                string sqlQuery = @"proc_GetOrderSummary";
+              
+                var res = await _dapper.GetAllAsyncProc<OrderSummary, ApplicationUser, OrderSummary>(entity ?? new OrderSummary(), sqlQuery,
+                      dbparams, (oderssummary, applicationuser) =>
+                      {
+                          oderssummary.User = applicationuser;
+                          
+                         return oderssummary;
+                      }, splitOn: "OrderID,UserID");
+                oderssummary = res;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return oderssummary;
+
+        }
+
+        public async Task<IEnumerable<OrderDetail>> GetAllAsync(OrderDetail entity)
+        {
+            IEnumerable<OrderDetail> orderdetail = new List<OrderDetail>();
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("OrderID", entity.OrderSummary.OrderID);
+                string sqlQuery = @"proc_GetOrderDetails";
+
+                var res = await _dapper.GetAllAsyncProc<OrderDetail, Product, OrderDetail>(entity ?? new OrderDetail(), sqlQuery,
+                      dbparams, (orderdetail, product) =>
+                      {
+                          orderdetail.Product = product;
+
+                          return orderdetail;
+                      }, splitOn:"OrderDetailID,ProductID");
+                orderdetail = res;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return orderdetail;
+        }
+
+
+
+     
+
 
         public Task<Response<OrderSchedule>> GetByIdAsync(int id)
         {

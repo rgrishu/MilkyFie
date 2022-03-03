@@ -9,6 +9,7 @@
     {
         <tr data-id="@item.Category.CategoryID">
             <td>@i</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.ProductName)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.MRP)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.SellingPrice)</td>

@@ -17,15 +17,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Milkyfie.AppCode.Extensions;
+using Milkyfie.AppCode.CustomAttributes;
 
 namespace Milkyfie.Controllers
 {
 
     public class OrderController : BaseController//Controller
     {
-        protected IRepository<OrderSchedule> _orderschedule;
+        protected IOrder _orderschedule;
         public OrderController(IDapperRepository dapper, IRepository<Category> category,
-            IRepository<Unit> unit, IRepository<Product> product, IRepository<OrderSchedule> orderschedule, IMapper mapper) : base(dapper, category, unit, product, mapper)
+            IRepository<Unit> unit, IRepository<Product> product, IOrder orderschedule, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
             _orderschedule = orderschedule;
         }
@@ -50,6 +51,7 @@ namespace Milkyfie.Controllers
             }
             return PartialView("PartialView/_OrderSchedule", orderres);
         }
+        [HttpPost]
         public async Task<IActionResult> SaveOrderSchedule(OrderSchedule model)
         {
             var userId = User.GetLoggedInUserId<int>();
@@ -58,12 +60,67 @@ namespace Milkyfie.Controllers
             return Json(resp);
         }
         [HttpPost]
+        public async Task<IActionResult> UpdateOrderSchedule(StatusChangeReq scr,string type)
+        {
+
+            var response = new Response()
+            {
+                StatusCode=ResponseStatus.Failed,
+                ResponseText= ResponseStatus.Failed.ToString(),
+            };
+
+            if (type == "A")
+            {
+                scr.Status = Status.Approved;
+            }
+            else if (type == "R")
+            {
+                scr.Status = Status.Reject;
+            }
+            else
+            {
+                response.ResponseText = "Invalid Status.!";
+                return Json(response);
+            }
+            response = await _orderschedule.ChangeStatus(scr);
+            return Json(response);
+        }
 
         [HttpPost]
         public async Task<IActionResult> GetScheduleOrders()
         {
             var resp = await _orderschedule.GetAllAsync(new OrderSchedule { ScheduleID = 0 });
             return PartialView("PartialView/_OrderScheduleList", resp);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Orders()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> OrderSummaryList(OrderSummary entity = null)
+        {
+            var res = await _orderschedule.GetAllAsync(entity);
+            return PartialView("PartialView/_Orders", res);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderDetail()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> OrderDetailList(int id)
+        {
+            var entity = new OrderDetail()
+            {
+                OrderSummary = new OrderSummary()
+                {
+                    OrderID = id,
+                },
+            };
+            var res = await _orderschedule.GetAllAsync(entity);
+            return PartialView("PartialView/_OrdersDetails", res);
         }
         #endregion
 
