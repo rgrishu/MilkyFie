@@ -26,7 +26,7 @@ namespace Milkyfie.Controllers
         {
             // var res = _report.GetAllLedger(entity).Result;
             List<Ledger> ledger = new List<Ledger>();
-            var res = (JDataTable<Ledger>)_report.GetMultiSplits().Result;
+            var res = (JDataTable<Ledger>)_report.Ledger().Result;
             ledger = res.Data;
             return PartialView("PartialView/_Ledger", ledger);
         }
@@ -34,7 +34,8 @@ namespace Milkyfie.Controllers
         [HttpPost]
         public IActionResult LedgerFilter(jsonAOData jsonAOData)
         {
-            var res = (JDataTable<Ledger>)_report.GetMultiSplits().Result;
+            jsonAOData.param = new Ledger { LedgerID = 1 };
+            var res = (JDataTable<Ledger>)_report.Ledger(jsonAOData).Result;
             res.Data = res.Data.Where(x => x.LedgerID > 9).ToList();
             res.recordsTotal = 17;
             res.recordsFiltered = 17;
