@@ -1,5 +1,5 @@
 ﻿var Q;
-const ajaxvalidationerror = xhr => {
+var ajaxvalidationerror = xhr => {
     let validationerrors = xhr.responsejson;
     for (var i = 0; i < validationerrors.length; i++) {
         $('span[validation-error-for="' + validationerrors[i].key + '"]').text(validationerrors[i].errors[0]);

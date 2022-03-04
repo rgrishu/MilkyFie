@@ -4,40 +4,52 @@ using Milkyfie.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using Milkyfie.AppCode.Extensions;
 
 namespace Milkyfie.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class UsersController : ControllerBase
+   
+    public class UsersController : Controller
     {
         private IUserService _userService;
         private IHttpContextAccessor _httpContext;
         private ApplicationUser _user;
+        private IRepository<ApplicationUser> _users;
 
-        public UsersController(IHttpContextAccessor httpContext, IUserService userService)
+        public UsersController(IHttpContextAccessor httpContext, IUserService userService, IRepository<ApplicationUser> users)
         {
             _userService = userService;
             _httpContext = httpContext;
             _user = (Models.ApplicationUser)_httpContext.HttpContext.Items["User"];
+            _users = users;
         }
-
-        //[HttpPost("authenticate")]
-        //public IActionResult Authenticate(LoginRequest model)
+        //[JWTAuthorize]
+        //[HttpGet("getall")]
+        //public IActionResult GetAll()
         //{
-        //    var response = _userService.Authenticate(model);
-        //    if (response == null)
-        //        return BadRequest(new { message = "Username or password is incorrect" });
-        //    return Ok(response);
+        //    var users = _userService.GetAll();
+        //    return Ok(users);
         //}
-
-        //[Authorize]
-        [JWTAuthorize]
-        [HttpGet("getall")]
-        public IActionResult GetAll()
+        [HttpPost]
+        public async Task<IActionResult> UserBalance(int id)
         {
-            var users = _userService.GetAll();
-            return Ok(users);
+            var entity = new ApplicationUser()
+            {
+                Id = id
+            };
+            return PartialView("~/Views/Account/PartialView/_AddBalance.cshtml", entity);
+
         }
+
+        [HttpPost]
+        public async Task<IActionResult> AddUserBalance(ApplicationUser entity)
+        {
+            var userId = User.GetLoggedInUserId<int>();
+            entity.UserId = userId.ToString();
+            var data = _users.AddAsync(entity).Result;
+            return Json(data);
+        }
+
     }
 }

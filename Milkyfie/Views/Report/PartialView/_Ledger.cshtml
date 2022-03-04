@@ -1,0 +1,33 @@
+﻿
+@using Milkyfie.AppCode.Reops.Entities;
+ @model List<Ledger>
+
+@if (Model != null && Model.Any())
+{
+    int i = 1;
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@i</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.User.Name)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.LastAmount)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.CurrentAmount)</td>
+             <td class="name">@Html.DisplayFor(modelItem => item.Amount)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.TransactionType)</td>
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="5">No Records Found</td>
+    </tr>
+}
+
+  
+    
+<script>
+   
+</script>

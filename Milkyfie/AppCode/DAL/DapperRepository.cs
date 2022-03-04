@@ -12,6 +12,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Dapper.SqlMapper;
+using Milkyfie.AppCode.Reops.Entities;
+using Milkyfie.Models;
 
 namespace Milkyfie.AppCode.DAL
 {
@@ -32,6 +34,8 @@ namespace Milkyfie.AppCode.DAL
         {
             GC.SuppressFinalize(this);
         }
+
+
 
         public async Task<int> ExecuteAsync(string sp, object param = null, CommandType commandType = CommandType.StoredProcedure)
         {
@@ -266,6 +270,36 @@ namespace Milkyfie.AppCode.DAL
             }
         }
 
+        public async Task<dynamic> GetMultipleAsync<T1, T2, TReturn>(string sp, object parms, Func<T1, T2, TReturn> p, string splitOn
+            , CommandType commandType = CommandType.StoredProcedure)
+        {
+            var res = new JDataTable<TReturn>
+            {
+                Data = new List<TReturn>(),
+                PageSetting = new PageSetting()
+            };
+            try
+            {
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    using (var reader = await db.QueryMultipleAsync(sp, parms))
+                    {
+                        var pgstng = reader.Read<PageSetting>();
+                        var stuff = reader.Read<T1, T2, TReturn>(p, splitOn: splitOn).ToList();
+                        res = new JDataTable<TReturn>
+                        {
+                            Data = stuff,
+                            PageSetting = pgstng.FirstOrDefault()
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+            return res;
+        }
         public async Task<dynamic> GetMultipleAsync<T1, T2, T3>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
         {
             try
@@ -403,15 +437,15 @@ namespace Milkyfie.AppCode.DAL
             }
         }
 
-        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, T4,T5,T6,T7, TReturn>(T1 entity, string sqlQuery,
-            DynamicParameters parms, Func<T1, T2, T3, T4, T5,T6, T7, TReturn> p, string splitOn)
+        public async Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, T4, T5, T6, T7, TReturn>(T1 entity, string sqlQuery,
+            DynamicParameters parms, Func<T1, T2, T3, T4, T5, T6, T7, TReturn> p, string splitOn)
         {
             try
             {
                 //var prepared = PrepareParameters(sqlQuery, entity.ToDictionary());
                 using (IDbConnection db = new SqlConnection(Connectionstring))
                 {
-                    var result = await db.QueryAsync<T1, T2, T3, T4, T5,T6, T7, TReturn>(sqlQuery, p, splitOn: splitOn, param: parms, commandType: CommandType.StoredProcedure);
+                    var result = await db.QueryAsync<T1, T2, T3, T4, T5, T6, T7, TReturn>(sqlQuery, p, splitOn: splitOn, param: parms, commandType: CommandType.StoredProcedure);
                     return result;
                 };
             }
@@ -422,7 +456,33 @@ namespace Milkyfie.AppCode.DAL
             }
         }
 
+
+
+
+
+
         #endregion
+
+        public async Task<IEnumerable<TReturn>> GetMultiSplit<T1, T2, TReturn>(string sqlQuery, Func<T1, T2, TReturn> p, string splitOn, DynamicParameters parms = null, CommandType commandType = CommandType.StoredProcedure)
+        {
+
+            try
+            {
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    var result = await db.QueryAsync<T1, T2, TReturn>(sqlQuery, p, splitOn: splitOn, param: parms, commandType: commandType);
+                    return result;
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw ex;
+            }
+        }
+
+
+
 
         public async Task<IEnumerable<TReturn>> GetAsync<T1, T2, TReturn>(string sqlQuery, Func<T1, T2, TReturn> p, string splitOn, DynamicParameters parms = null, CommandType commandType = CommandType.StoredProcedure)
         {
@@ -495,6 +555,11 @@ namespace Milkyfie.AppCode.DAL
         }
 
         public Task<IEnumerable<TReturn>> GetAllAsyncProc<T1, T2, T3, TReturn>(T1 entity, string sqlQuery, Func<T1, T2, TReturn> p, string splitOn)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<dynamic> GetMultipleAsync<T1, T2>(string sp, object parms, CommandType commandType = CommandType.StoredProcedure)
         {
             throw new NotImplementedException();
         }

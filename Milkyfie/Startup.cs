@@ -54,6 +54,7 @@ namespace Milkyfie
             /* End Jwd */
             services.AddControllersWithViews();
             services.AddMvc();
+         
             #region Identity
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>

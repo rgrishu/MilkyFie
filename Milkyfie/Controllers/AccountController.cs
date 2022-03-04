@@ -219,10 +219,16 @@ namespace Milkyfie.Controllers
             }
             return PartialView("~/Views/Account/PartialView/_UsersList.cshtml", users);
         }
+
+
         [HttpPost]
         public async Task<IActionResult> UsersDropdown()
         {
             var users = _users.GetAllAsync().Result;
+            if (users.Count() > 0)
+            {
+                users = users.Where(x => x.Role == "Consumer");
+            }
             return Json(users);
         }
         /* JWT */

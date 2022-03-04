@@ -10,5 +10,6 @@ namespace Milkyfie.AppCode.Interfaces
         Task<IEnumerable<OrderSummary>> GetAllAsync(OrderSummary entity = null);
         Task<IEnumerable<OrderDetail>> GetAllAsync(OrderDetail entity = null);
         Task<Response> ChangeStatus(StatusChangeReq screq);
+        Task<Response> UodateOrderDetailStatus(StatusChangeReq screq,int LoginID);
     }
 }

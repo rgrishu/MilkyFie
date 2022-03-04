@@ -29,12 +29,15 @@ else
 <script>
 
        function loadOrderDetails(id){
-           
+           var formData=new FormData();
+        formData.append("OrderSummary.OrderID",id);
             Q.preloader.load();
          $.ajax({
                type: 'post',
-                url: 'OrderDetailList',
-                data:{id:id},
+                url: 'OrderSummaryDetailList',
+                processData: false,
+               contentType: false,
+               data: formData,
                 success: function (data) {
                       Q.preloader.remove();
                        Q.alert({
@@ -42,7 +45,6 @@ else
                     body:data,
                     width : '900px',
                     });
-                    
                 },
                 error: function (data) {
                      Q.preloader.remove();

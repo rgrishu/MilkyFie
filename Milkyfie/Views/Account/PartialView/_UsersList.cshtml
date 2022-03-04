@@ -10,7 +10,6 @@
             <td>
                 @Html.DisplayFor(modelItem => item.UserName)
             </td>
-           
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
@@ -19,6 +18,9 @@
             </td>
               <td>
                 @Html.DisplayFor(modelItem => item.Email)
+            </td>
+              <td>
+               <a style="color:blue" class="userbalance" data-id="@item.Id"> @Html.DisplayFor(modelItem => item.Balance)</a>
             </td>
              <td>
                 @Html.DisplayFor(modelItem => item.Address)
@@ -37,3 +39,31 @@ else
     </tr>
 }
 
+<script>
+    $('.userbalance').click(function(){
+    var id=$(this).attr('data-id');
+     var formData = new FormData();
+          formData.append("Id",id);
+      $.ajax({
+              type: 'POST',
+              url: '/Users/UserBalance',
+              processData: false,
+              contentType: false,
+              data: formData,
+              success: result => {
+                      Q.alert({
+                    title: "Add Balance",
+                    body:result,
+                    width : '900px',
+                    });
+                  Q.preloader.remove();
+              },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                    Q.preloader.remove();
+                },
+          })
+  
+    })
+</script>

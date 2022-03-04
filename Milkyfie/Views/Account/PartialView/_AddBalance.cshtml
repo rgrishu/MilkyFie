@@ -1,0 +1,78 @@
+﻿@using Milkyfie.AppCode.Reops.Entities;
+@model ApplicationUser
+@{
+    if (Model != null)
+    {
+        
+
+    }
+
+}
+
+<!-- Row start -->
+<div class="row gutters">
+    @* <form id="frmproduct" >*@
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row gutters">
+                  <input type="hidden" value="@Model.Id" id="hdnUserID" />
+                    <div class="col-xl-10 col-lg col-md-10 col-sm-10 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Enter Balance</label>
+                            <input type="number" maxlength="6" id="txtbalance" class="form-control" placeholder="Balance" />
+                        </div>
+                    </div>
+                 <div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
+                            <div class="btn-group">
+                                <button class="btn btn-lg btn-primary" style="margin-top:20px" id="btnSubmit" type="submit">Add</button>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*</form>*@
+</div>
+<script>
+    $('#btnSubmit').click(function () {
+      var balance=$("#txtbalance").val();
+     
+      if(balance=="0" || balance=="")
+      {
+        Q.notify(-1,'Amount Required.!');
+        return;
+      }
+        
+        Q.preloader.load();
+          var formData = new FormData();
+          formData.append("Id",$("#hdnUserID").val());
+          formData.append("Balance",balance);
+          $.ajax({
+              type: 'POST',
+              url: '/Users/AddUserBalance',
+              processData: false,
+              contentType: false,
+              data: formData,
+              success: result => {
+                  console.log(result)
+                  if(result.statusCode==1)
+                  {
+                      getUsers();
+                      $('#txtbalance').val('');
+                 Q.notify(result.statusCode, result.responseText);
+                  }
+                  else
+                  {
+                   Q.notify(result.statusCode, result.responseText);
+                  }
+                  Q.preloader.remove();
+              },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                    Q.preloader.remove();
+                },
+          })
+      });
+</script>

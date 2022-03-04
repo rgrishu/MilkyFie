@@ -1,32 +1,88 @@
 ﻿@using Milkyfie.AppCode.Reops.Entities;
  @model List<OrderDetail>
-
-
                 @if (Model != null && Model.Any())
+{
+    int i = 1;
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@i</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.OrderSummary.User.Name)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+            <td class="name"><img height="60px" width="60px" src="~/images/Product/@item.Product.ProductImage" /></td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Quantity)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Cost)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Discount)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.OrderShift)</td>
+            @{
+                string colr = item.Status == Status.Delivered ? "success" : item.Status == Status.Canceled ? "danger" : "warning";
+            }
+            <td class="name"><h6><span class="badge badge-@colr"> @item.Status.ToString()</span> </h6> </td>
+            <td class="name">
+                @if (@item.Status == Status.Pending)
                 {
-                    int i = 1;
-
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@i</td>
-                            @*     <td class="name">@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>*@
-                            <td class="name">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
-                            <td class="name"><img height="60px" width="60px" src="~/images/Product/@item.Product.ProductImage" /></td>
-                            <td class="name">@Html.DisplayFor(modelItem => item.Quantity)</td>
-                            <td class="name">@Html.DisplayFor(modelItem => item.Cost)</td>
-                            <td class="name">@Html.DisplayFor(modelItem => item.Discount)</td>
-                            <td class="name">@Html.DisplayFor(modelItem => item.OrderShift)</td>
-                            <td class="name"><h6><span class="badge badge-warning"> @item.Status.ToString()</span> </h6> </td>
-                        </tr>
-                        i++;
-                    }
+                    <input class="form-control" name="remark" id="@("remark"+@i)" type="text" placeholder="Remark">
                 }
                 else
                 {
-                    <tr>
-                        <td colspan="7">No Records Found</td>
-                    </tr>
+                    <span>@item.Remark</span>
                 }
+            </td>
+            <td class="name">
+                <div class="btn-group">
+                    @if (@item.Status == Status.Pending)
+                    {
+                        <button class="btn btn-sm btn-primary Deliver" data-enc="@i" data-status="D" data-id="@item.OrderDetailID">Deliver</button>
+                        <button class="btn btn-sm btn-dark Deliver" data-enc="@i" data-status="C" data-id="@item.OrderDetailID">Cancel</button>
+                    }
+                </div>
+            </td>
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="7">No Records Found</td>
+    </tr>
+}
 
-         
+<script>
+    $('.Deliver').click(function(){
+    var orderdid = $(this).attr("data-id");
+    var auencid = $(this).attr("data-enc");
+    var status = $(this).attr("data-status");
+    var remark = $('#remark'+auencid).val();
+    var formData=new FormData();
+    formData.append("ID",orderdid);
+    formData.append("Remark",remark);
+    formData.append("type",status);
+     $.ajax({
+              type: 'POST',
+              url: 'UpdateOrderDetailStatus',
+              processData: false,
+              contentType: false,
+              data: formData,
+              success: result => {
+                  if(result.statusCode==1)
+                  {
+                      Q.notify(result.statusCode, result.responseText);
+                    loadOrderDetails();
+                  }
+                  else
+                  {
+                   Q.notify(result.statusCode, result.responseText);
+                  }
+                  Q.preloader.remove();
+              },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                    Q.preloader.remove();
+                },
+          })
+    })
+
+
+</script>

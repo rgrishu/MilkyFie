@@ -106,7 +106,6 @@
           var userslist=s.Dropdown.Users();
       userslist.then(result=>
         {
-            console.log(result)
             $('#ddlUser').empty().append('<option id="Option" name="UserID" value="0">:: User ::</option>').append(result.map(x=>`<option value="${x.id}">${x.name}</option>`));
         });
     }

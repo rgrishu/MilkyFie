@@ -110,18 +110,46 @@ namespace Milkyfie.Controllers
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> OrderDetailList(int id)
+        public async Task<IActionResult> OrderSummaryDetailList(OrderDetail entity)
         {
-            var entity = new OrderDetail()
-            {
-                OrderSummary = new OrderSummary()
-                {
-                    OrderID = id,
-                },
-            };
+            var res = await _orderschedule.GetAllAsync(entity);
+            return PartialView("PartialView/_OrdersSummaryDetails", res);
+        }
+        [HttpPost]
+        public async Task<IActionResult> OrderDetailList(OrderDetail entity)
+        {
             var res = await _orderschedule.GetAllAsync(entity);
             return PartialView("PartialView/_OrdersDetails", res);
         }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateOrderDetailStatus(StatusChangeReq entity, string type)
+        {
+            var response = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString(),
+            };
+            if (type == "D")
+            {
+                entity.Status = Status.Delivered;
+            }
+            else if (type == "C")
+            {
+                entity.Status = Status.Canceled;
+            }
+            else
+            {
+                response.ResponseText = "Invalid Status.!";
+                return Json(response);
+            }
+            var userId = User.GetLoggedInUserId<int>();
+            response = await _orderschedule.UodateOrderDetailStatus(entity, userId);
+            return Json(response);
+        }
+
         #endregion
 
     }

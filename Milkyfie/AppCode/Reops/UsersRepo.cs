@@ -21,10 +21,19 @@ namespace Milkyfie.AppCode.Reops
             _dapper = dapper;
         }
 
-        public Task<Response> AddAsync(ApplicationUser entity)
+
+
+        public async Task<Response> AddAsync(ApplicationUser entity)
         {
-            throw new NotImplementedException();
+            var dbparams = new DynamicParameters();
+            dbparams.Add("UserID", entity.Id);
+            dbparams.Add("LoginID", entity.UserId);
+            dbparams.Add("Amount", entity.Balance);
+            var res = await _dapper.InsertAsync<Response>("proc_AddBalance", dbparams, commandType: CommandType.StoredProcedure);
+            return res;
+            // throw new System.NotImplementedException();
         }
+
 
         public Task<Response> DeleteAsync(int id)
         {
@@ -35,12 +44,12 @@ namespace Milkyfie.AppCode.Reops
         public async Task<IEnumerable<ApplicationUser>> GetAllAsync(ApplicationUser entity = null)
         {
             List<ApplicationUser> res = new List<ApplicationUser>();
-             
+
             try
             {
                 var dbparams = new DynamicParameters();
 
-               var ires = await _dapper.GetAllAsync<ApplicationUser>("proc_users", dbparams, commandType: CommandType.StoredProcedure);
+                var ires = await _dapper.GetAllAsync<ApplicationUser>("proc_users", dbparams, commandType: CommandType.StoredProcedure);
                 res = ires.ToList();
             }
             catch (Exception ex)

@@ -39,6 +39,7 @@ namespace Milkyfie.AppCode.Extensions
             services.AddSingleton<IRepository<ApplicationUser>, UsersRepo>();
             services.AddSingleton<IOrder, OrderRepo>();
             services.AddSingleton<IRepository<Frequency>, FrequencyRepo>();
+            services.AddSingleton<IReport, ReportRepo>();
             services.AddSingleton<Database>();
             services.AddAutoMapper(typeof(Startup));
             services.AddHangfire(x => x.UseSqlServerStorage(dbConnectionString));

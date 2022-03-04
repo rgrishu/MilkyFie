@@ -7,19 +7,14 @@ namespace Milkyfie.AppCode.Reops.Entities
     public class OrderSchedule
     {
         public int ScheduleID { get; set; }
-
         public int LoginID { get; set; }
-
-
         public string OtherFrequency { get; set; }
         public decimal Quantity { get; set; }
-
         public string StartFromDate { get; set; }
         public string EndToDate { get; set; }
         public string Remark { get; set; }
         public string ScheduleShift { get; set; }
         public string Description { get; set; }
-     
         public string CreatedOn { get; set; }
         public string UpdatedOn { get; set; }
         public ApplicationUser User { get; set; }
@@ -37,7 +32,6 @@ namespace Milkyfie.AppCode.Reops.Entities
         public decimal TotalCost { get; set; }
         public decimal TotalDiscount { get; set; }
         public decimal TotalGst { get; set; }
-      
         public bool IsProcess { get; set; }
         public ApplicationUser User { get; set; }
         public Status Status { get; set; }
@@ -51,6 +45,7 @@ namespace Milkyfie.AppCode.Reops.Entities
         public decimal Discount { get; set; }
         public string CreatedOn { get; set; }
         public string OrderShift { get; set; }
+        public string Remark { get; set; }
         public OrderSummary OrderSummary { get; set; }
         public OrderSchedule Schedule { get; set; }
         public Product Product { get; set; }
