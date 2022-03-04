@@ -5,6 +5,7 @@ using Milkyfie.AppCode.Interfaces;
 using Milkyfie.AppCode.Reops.Entities;
 using Milkyfie.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Milkyfie.Controllers
 {
@@ -34,9 +35,9 @@ namespace Milkyfie.Controllers
         public IActionResult LedgerFilter(jsonAOData jsonAOData)
         {
             var res = (JDataTable<Ledger>)_report.GetMultiSplits().Result;
-            res.recordsTotal = 15;
-            res.draw = 10;
-           // var ledger = res.Data;
+            res.Data = res.Data.Where(x => x.LedgerID > 9).ToList();
+            res.recordsTotal = 17;
+            res.recordsFiltered = 17;
             return Json(res);
         }
     }
