@@ -47,9 +47,8 @@ var serviceProperty = {
 
 $(function () {
    // $("#loaderbody").addClass('hide');
-    Q.preloader.load();
     $(document).bind('ajaxStart', function () {
-        $("#loaderbody").removeClass('hide');
+        Q.preloader.load();
     }).bind('ajaxStop', function () {
         Q.preloader.remove();
     });
@@ -62,22 +61,23 @@ $(function () {
 
 
 function ajaxFormSubmit(form) {
-    $.validator.unobtrusive.parse(form);
-    if ($(form).valid()) {
+    event.preventDefault();
+    /*$.validator.unobtrusive.parse(form);*/
+    /*if ($(form).valid()) {*/
+    //let data = new FormData(form);
+    let data = $(form).serializeArray()
         var ajaxConfig = {
             type: 'POST',
             url: form.action,
-            data: new FormData(form),
+            data: data,
             success: function (response) {
-                if (response.success) {
+                Q.notify(response.statusCode, response.responseText);
+                if (response.statusCode == 1) {
+                    $(form).trigger("reset");
                     $("#firstTab").html(response.html);
-                    refreshAddNewTab($(form).attr('data-restUrl'), true);
-                    $.notify(response.message, "success");
-                    if (typeof activatejQueryTable !== 'undefined' && $.isFunction(activatejQueryTable))
-                        activatejQueryTable();
-                }
-                else {
-                    $.notify(response.message, "error");
+                   // refreshAddNewTab($(form).attr('data-restUrl'), true);
+                    if (typeof loadData !== 'undefined' && $.isFunction(loadData))
+                        loadData();
                 }
             }
         }
@@ -87,8 +87,8 @@ function ajaxFormSubmit(form) {
         }
         $.ajax(ajaxConfig);
 
-    }
-    return false;
+    //}
+    //return false;
 }
 
 var s = services;
