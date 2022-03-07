@@ -23,8 +23,13 @@ namespace Milkyfie.Models
         public int start { get; set; } = 0;
         public int length { get; set; } = 100;
         public jsonAODataSearch search { get; set; }
-        public object param { get; set; }
+        public dynamic param { get; set; }
     }
+
+    //public class jsonAOData<T> : jsonAOData
+    //{
+    //    public T param { get; set; }
+    //}
 
     public class jsonAODataSearch
     {
