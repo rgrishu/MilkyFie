@@ -11,5 +11,6 @@ namespace Milkyfie.AppCode.Interfaces
         Task<IEnumerable<OrderDetail>> GetAllAsync(OrderDetail entity = null);
         Task<Response> ChangeStatus(StatusChangeReq screq);
         Task<Response> UodateOrderDetailStatus(StatusChangeReq screq,int LoginID);
+        Task<Response> ActiveDeactiveOrderSchedule(int id, bool Status);
     }
 }

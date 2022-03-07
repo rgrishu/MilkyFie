@@ -60,13 +60,13 @@ namespace Milkyfie.Controllers
             return Json(resp);
         }
         [HttpPost]
-        public async Task<IActionResult> UpdateOrderSchedule(StatusChangeReq scr,string type)
+        public async Task<IActionResult> UpdateOrderSchedule(StatusChangeReq scr, string type)
         {
 
             var response = new Response()
             {
-                StatusCode=ResponseStatus.Failed,
-                ResponseText= ResponseStatus.Failed.ToString(),
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString(),
             };
 
             if (type == "A")
@@ -147,6 +147,18 @@ namespace Milkyfie.Controllers
             }
             var userId = User.GetLoggedInUserId<int>();
             response = await _orderschedule.UodateOrderDetailStatus(entity, userId);
+            return Json(response);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ActDeaOrderSch(int id, bool status)
+        {
+            var response = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString(),
+            };
+            response = await _orderschedule.ActiveDeactiveOrderSchedule(id, status);
             return Json(response);
         }
 

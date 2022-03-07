@@ -10,7 +10,17 @@
             <td class="name">@Html.DisplayFor(modelItem => item.OrderSummary.User.Name)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
             <td class="name"><img height="60px" width="60px" src="~/images/Product/@item.Product.ProductImage" /></td>
-            <td class="name">@Html.DisplayFor(modelItem => item.Quantity)</td>
+
+            <td class="name">
+                @if (@item.Status == Status.Pending)
+                {
+                    <input class="form-control" name="Quantity" id="@("quantity"+@i)"  min="1" max="50" value="@item.Quantity">
+                }
+                else
+                {
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                }
+            </td>
             <td class="name">@Html.DisplayFor(modelItem => item.Cost)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.Discount)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.OrderShift)</td>
@@ -25,7 +35,7 @@
                 }
                 else
                 {
-                    <span>@item.Remark</span>
+                    @Html.DisplayFor(modelItem => item.Remark)
                 }
             </td>
             <td class="name">
@@ -54,9 +64,11 @@ else
     var auencid = $(this).attr("data-enc");
     var status = $(this).attr("data-status");
     var remark = $('#remark'+auencid).val();
+    var qnty = $('#quantity'+auencid).val();
     var formData=new FormData();
     formData.append("ID",orderdid);
     formData.append("Remark",remark);
+    formData.append("Quantity",qnty);
     formData.append("type",status);
      $.ajax({
               type: 'POST',

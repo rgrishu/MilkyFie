@@ -1,4 +1,14 @@
-﻿
+﻿<style>
+    .ui-dialog.ui-corner-all.ui-widget.ui-widget-content.ui-front.s-MessageDialog.s-AlertDialog.ui-draggable.ui-resizable{
+        z-index: 9999!important;
+    }
+    .ui-widget-overlay{
+        opacity: unset;
+        background: rgba(0,0,0,0.7);
+        z-index: 999;
+    }
+    
+</style>
 
 <div class="main-container">
     <!-- Row start -->
@@ -13,22 +23,22 @@
                 <div class="card-body">
 
                     <div class="table-container">
-                         
+
                         <div class="table-responsive">
                             <table id="basicExample" class="table custom-table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                          <th>Customer Name</th>
+                                        <th>Customer Name</th>
                                         <th>Category Name</th>
                                         <th>Product Name</th>
-                                      
+
                                         <th>Frequency</th>
-                                       <th>Quantity</th>
+                                        <th>Quantity</th>
                                         <th>From Date</th>
-                                     @*   <th>To Date</th>*@
+                                        @*   <th>To Date</th>*@
                                         <th>Status</th>
-                                         <th>Action</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -73,6 +83,7 @@
                     title: "Schedule Order",
                     body:data,
                     width : '900px',
+                    modal:true
                     });
                      Q.preloader.remove();
                 },
@@ -116,16 +127,17 @@
                type: 'post',
                 url: 'GetScheduleOrders',
                 success: function (data) {
-                   
+                     Q.preloader.remove();
                       $('tbody').html(data);
                 },
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
                        Q.notify(-1, 'An error occurred.');
+                         Q.preloader.remove();
                 },
           });
-           Q.preloader.remove();
+
     }
 
 </script>

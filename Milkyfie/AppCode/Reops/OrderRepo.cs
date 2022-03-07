@@ -60,7 +60,7 @@ namespace Milkyfie.AppCode.Reops
                 var dbparams = new DynamicParameters();
                 dbparams.Add("ScheduleID", screq.ID);
                 dbparams.Add("Status", screq.Status);
-                dbparams.Add("Remark",screq.Remark);
+                dbparams.Add("Remark", screq.Remark);
                 response = await _dapper.InsertAsync<Response>("proc_UpdateScheduleOrderStatus", dbparams, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
@@ -69,7 +69,29 @@ namespace Milkyfie.AppCode.Reops
             }
             return response;
         }
-        public async Task<Response> UodateOrderDetailStatus(StatusChangeReq screq,int LoginID)
+        public async Task<Response> ActiveDeactiveOrderSchedule(int id, bool Status)
+        {
+            var response = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString(),
+            };
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("ScheduleID", id);
+                dbparams.Add("IsActive", Status);
+                response = await _dapper.InsertAsync<Response>("proc_ActiveDeactiveOrderSchedule", dbparams, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return response;
+        }
+
+
+        public async Task<Response> UodateOrderDetailStatus(StatusChangeReq screq, int LoginID)
         {
             var response = new Response()
             {
@@ -83,6 +105,7 @@ namespace Milkyfie.AppCode.Reops
                 dbparams.Add("Status", screq.Status);
                 dbparams.Add("Remark", screq.Remark);
                 dbparams.Add("LoginID", LoginID);
+                dbparams.Add("Quantity", screq.Quantity);
                 response = await _dapper.InsertAsync<Response>("proc_UpdateOrderDetailStatus", dbparams, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
@@ -135,13 +158,13 @@ namespace Milkyfie.AppCode.Reops
             {
                 var dbparams = new DynamicParameters();
                 string sqlQuery = @"proc_GetOrderSummary";
-              
+
                 var res = await _dapper.GetAllAsyncProc<OrderSummary, ApplicationUser, OrderSummary>(entity ?? new OrderSummary(), sqlQuery,
                       dbparams, (oderssummary, applicationuser) =>
                       {
                           oderssummary.User = applicationuser;
-                          
-                         return oderssummary;
+
+                          return oderssummary;
                       }, splitOn: "OrderID,UserID");
                 oderssummary = res;
             }
@@ -159,13 +182,13 @@ namespace Milkyfie.AppCode.Reops
             try
             {
                 var dbparams = new DynamicParameters();
-                dbparams.Add("OrderID", entity.OrderSummary!=null?entity.OrderSummary.OrderID:0);
-                dbparams.Add("UserID", entity.OrderSummary!=null && entity.OrderSummary.User!=null? entity.OrderSummary.User.Id:0);
-                dbparams.Add("Shift", entity.OrderShift!=null && entity.OrderShift != "0" ?  entity.OrderShift:String.Empty);
-                dbparams.Add("DateRange", entity.OrderSummary!=null && entity.OrderSummary.OrderDate!=null? entity.OrderSummary.OrderDate:String.Empty);
+                dbparams.Add("OrderID", entity.OrderSummary != null ? entity.OrderSummary.OrderID : 0);
+                dbparams.Add("UserID", entity.OrderSummary != null && entity.OrderSummary.User != null ? entity.OrderSummary.User.Id : 0);
+                dbparams.Add("Shift", entity.OrderShift != null && entity.OrderShift != "0" ? entity.OrderShift : String.Empty);
+                dbparams.Add("DateRange", entity.OrderSummary != null && entity.OrderSummary.OrderDate != null ? entity.OrderSummary.OrderDate : String.Empty);
                 string sqlQuery = @"proc_GetOrderDetails";
 
-                var res = await _dapper.GetAllAsyncProc<OrderDetail, Product,OrderSummary,ApplicationUser, OrderDetail>(entity ?? new OrderDetail(), sqlQuery,
+                var res = await _dapper.GetAllAsyncProc<OrderDetail, Product, OrderSummary, ApplicationUser, OrderDetail>(entity ?? new OrderDetail(), sqlQuery,
                       dbparams, (orderdetail, product, ordersummary, applicationuser) =>
                       {
                           orderdetail.Product = product;
@@ -184,7 +207,7 @@ namespace Milkyfie.AppCode.Reops
 
 
 
-     
+
 
 
         public Task<Response<OrderSchedule>> GetByIdAsync(int id)

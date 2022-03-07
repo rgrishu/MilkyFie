@@ -40,7 +40,15 @@
                 }
                 else if (item.Status == Status.Approved)
                 {
-                    <input type="checkbox" id="chkapprove" >
+                
+               //   string check=@item.IsActive==true?"Checked":"";
+                 
+                    <!-- Default switch -->
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" data-id="@item.ScheduleID" class="custom-control-input chkapprove" @Html.Raw(@item.IsActive==true?"Checked":"")   id="@("chkapprove"+@i)">
+                        <label class="custom-control-label" for="@("chkapprove"+@i)"></label>
+                    </div>
+
                 }
 
             </td>
@@ -56,6 +64,37 @@ else
 }
 
 <script>
+        $('.chkapprove').change(function() {
+               var formData = new FormData();
+            formData.append("ID", $(this).attr('data-id'));
+            formData.append("status",this.checked);
+             $.ajax({
+              type: 'POST',
+              url: 'ActDeaOrderSch',
+              processData: false,
+              contentType: false,
+              data: formData,
+              success: result => {
+                  if(result.statusCode==1)
+                  {
+                      Q.notify(result.statusCode, result.responseText);
+                      loadScheduleOrders();
+                  }
+                  else
+                  {
+                   Q.notify(result.statusCode, result.responseText);
+                  }
+                  Q.preloader.remove();
+              },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                    Q.preloader.remove();
+                },
+          })
+    });
+
+
     function ASchedule(id,type){
           //  Q.preloader.load();
           var formData = new FormData();
