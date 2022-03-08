@@ -166,20 +166,22 @@ namespace Milkyfie.Controllers
                 StatusCode = ResponseStatus.Failed,
                 ResponseText = "Invalid Login Attempt"
             };
-            var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, false, true);
-            if (result.Succeeded)
-            {
-                var user = _users.GetDetails(model.MobileNo).Result;
-                var token = generateJwtToken(user);
-                var authResponse = new AuthenticateResponse(user, token);
-                response = new Response<AuthenticateResponse>
+          
+                var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, false, true);
+                if (result.Succeeded)
                 {
-                    StatusCode = ResponseStatus.Success,
-                    ResponseText = ResponseStatus.Success.ToString(),
-                    Result = authResponse
-                };
-                goto Finish;
-            }
+                    var user = _users.GetDetails(model.MobileNo).Result;
+                    var token = generateJwtToken(user);
+                    var authResponse = new AuthenticateResponse(user, token);
+                    response = new Response<AuthenticateResponse>
+                    {
+                        StatusCode = ResponseStatus.Success,
+                        ResponseText = ResponseStatus.Success.ToString(),
+                        Result = authResponse
+                    };
+                    goto Finish;
+                }
+           
         Finish:
             return Json(response);
         }

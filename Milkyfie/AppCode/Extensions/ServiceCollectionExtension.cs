@@ -37,6 +37,7 @@ namespace Milkyfie.AppCode.Extensions
             services.AddSingleton<IRepository<Banners>, BannersRepo>();
             services.AddSingleton<IRepository<News>, NewsRepo>();
             services.AddSingleton<IRepository<ApplicationUser>, UsersRepo>();
+            services.AddSingleton<IUser, UsersRepo>();
             services.AddSingleton<IOrder, OrderRepo>();
             services.AddSingleton<IRepository<Frequency>, FrequencyRepo>();
             services.AddSingleton<IReport, ReportRepo>();

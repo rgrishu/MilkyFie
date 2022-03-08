@@ -60,36 +60,7 @@ $(function () {
 
 
 
-function ajaxFormSubmit(form) {
-    event.preventDefault();
-    /*$.validator.unobtrusive.parse(form);*/
-    /*if ($(form).valid()) {*/
-    //let data = new FormData(form);
-    let data = $(form).serializeArray()
-        var ajaxConfig = {
-            type: 'POST',
-            url: form.action,
-            data: data,
-            success: function (response) {
-                Q.notify(response.statusCode, response.responseText);
-                if (response.statusCode == 1) {
-                    $(form).trigger("reset");
-                    $("#firstTab").html(response.html);
-                   // refreshAddNewTab($(form).attr('data-restUrl'), true);
-                    if (typeof loadData !== 'undefined' && $.isFunction(loadData))
-                        loadData();
-                }
-            }
-        }
-        if ($(form).attr('enctype') == "multipart/form-data") {
-            ajaxConfig["contentType"] = false;
-            ajaxConfig["processData"] = false;
-        }
-        $.ajax(ajaxConfig);
 
-    //}
-    //return false;
-}
 
 var s = services;
 var Dropdown = services.Dropdown;

@@ -264,9 +264,9 @@ namespace Milkyfie.AppCode.Data
 
         }
 
-        public Task SetLockoutEnabledAsync(ApplicationUser user, bool enabled, CancellationToken cancellationToken)
+        public async Task SetLockoutEnabledAsync(ApplicationUser user, bool enabled, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _dapperRepository.ExecuteAsync("update [dbo].[Users] set LockoutEnabled = 1  where Id = @Id", new { user.Id }, commandType: CommandType.Text);
         }
 
         public async Task SetLockoutEndDateAsync(ApplicationUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)

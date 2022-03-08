@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace Milkyfie.Controllers
 {
@@ -27,8 +28,10 @@ namespace Milkyfie.Controllers
         private readonly IServiceProvider IServiceProvider;
         private readonly ApplicationUser _user;
         private readonly IRepository<EmailConfig> _emailConfig;
+        private IUser _users;
         private IMapper _mapper;
-        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContext, IUserService userService, IServiceProvider ServiceProvider, IRepository<EmailConfig> emailConfig, IMapper mapper)
+        public HomeController(ILogger<HomeController> logger, IHttpContextAccessor httpContext, IUserService userService, IServiceProvider ServiceProvider, 
+            IRepository<EmailConfig> emailConfig, IMapper mapper, IUser users)
         {
             _userService = userService;
             _httpContext = httpContext;
@@ -36,17 +39,19 @@ namespace Milkyfie.Controllers
             _emailConfig = emailConfig;
             IServiceProvider = ServiceProvider;
             _mapper = mapper;
-            if (_httpContext!=null && _httpContext.HttpContext != null)
+            if (_httpContext != null && _httpContext.HttpContext != null)
             {
                 _user = (ApplicationUser)_httpContext?.HttpContext.Items["User"];
             }
+            _users = users;
         }
 
         public IActionResult Index()
         {
-            var userId = User.GetLoggedInUserId<string>(); // Specify the type of your UserId;
+            var userId = User.GetLoggedInUserId<int>(); // Specify the type of your UserId;
             var userName = User.GetLoggedInUserName();
             var userEmail = User.GetLoggedInUserEmail();
+           
             return View();
         }
 
@@ -100,7 +105,7 @@ namespace Milkyfie.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex,ex.Message);
+                _logger.LogError(ex, ex.Message);
             }
         }
 
@@ -112,12 +117,50 @@ namespace Milkyfie.Controllers
             return Ok($"Job Id {jobId} Completed. Welcome Mail Sent!");
         }
 
+
+        [HttpPost]
+        [Route("AdminBalance")]
+        public IActionResult AdminBalance()
+        {
+            return PartialView("~/Views/Home/PartialView/_AdminBalAdd.cshtml");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddAdminBalance(ApplicationUser entity)
+        {
+            var userId = User.GetLoggedInUserId<int>();
+            entity.UserId = userId.ToString();
+            entity.Id = userId;
+            var data = _users.AddAsync(entity).Result;
+            return Json(data);
+        }
+
+
+        [HttpPost]
+        [Route("Dashboard")]
+        public async Task<IActionResult> LoadDashboard()
+        {
+            var userId = User.GetLoggedInUserId<int>(); // Specify the type of your UserId;
+            var entity = new Dashboard()
+            {
+                User = new ApplicationUser()
+                {
+                    Id = userId
+                },
+            };
+            var resp = _users.GetUserDashBoard(entity).Result;
+            return PartialView("~/Views/Home/PartialView/_Dashboard.cshtml", resp);
+        }
+
+
         public void SendWelcomeMail(string userName)
         {
             var config = _emailConfig.GetAllAsync().Result;
-                config = _emailConfig.GetAllAsync(new EmailConfig { Id = 2 }).Result;
-            var setting= _mapper.Map<EmailSettings>(config.FirstOrDefault());
+            config = _emailConfig.GetAllAsync(new EmailConfig { Id = 2 }).Result;
+            var setting = _mapper.Map<EmailSettings>(config.FirstOrDefault());
             var _ = AppUtility.O.SendMail(setting);
         }
+
+
+        
     }
 }

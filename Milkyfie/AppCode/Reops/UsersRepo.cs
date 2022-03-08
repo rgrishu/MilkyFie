@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Milkyfie.AppCode.Reops
 {
-    public class UsersRepo : IRepository<ApplicationUser>
+    public class UsersRepo : IUser
     {
         private IDapperRepository _dapper;
         public UsersRepo(IDapperRepository dapper)
@@ -56,6 +56,31 @@ namespace Milkyfie.AppCode.Reops
             { }
             return res;
         }
+        public async Task<Dashboard> GetUserDashBoard(Dashboard entity = null)
+        {
+            Dashboard dashboard = new Dashboard();
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("UserID", entity != null && entity.User!=null?entity.User.Id:0) ;
+
+                string sqlQuery = @"proc_SelectUserDashBoard";
+                var res = await _dapper.GetAllAsyncProc<Dashboard, ApplicationUser, Dashboard>(entity ?? new Dashboard(), sqlQuery,
+                    dbparams, (dashboard, applicationuser) =>
+                    {
+                        dashboard.User = applicationuser;
+
+                        return dashboard;
+                    }, splitOn: "UserID");
+                dashboard = res.FirstOrDefault();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return dashboard;
+
+        }
 
 
         public Task<Response<ApplicationUser>> GetByIdAsync(int id)
@@ -63,9 +88,25 @@ namespace Milkyfie.AppCode.Reops
             throw new NotImplementedException();
         }
 
+
+
+
+
         public async Task<ApplicationUser> GetDetails(object id)
         {
-            throw new NotImplementedException();
+            ApplicationUser res = new ApplicationUser();
+
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("UserName", id);
+                dbparams.Add("Role", 0);
+                var ires = await _dapper.GetAllAsync<ApplicationUser>("proc_users", dbparams, commandType: CommandType.StoredProcedure);
+                res = ires.FirstOrDefault();
+            }
+            catch (Exception ex)
+            { }
+            return res;
         }
 
         public async Task<IReadOnlyList<ApplicationUser>> GetDropdownAsync(ApplicationUser entity = null)

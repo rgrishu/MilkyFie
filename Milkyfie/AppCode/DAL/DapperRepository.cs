@@ -607,8 +607,23 @@ namespace Milkyfie.AppCode.DAL
         private object prepareParam(jsonAOData param)
         {
             DynamicParameters p = new DynamicParameters();
-            p.Add(nameof(param.draw), param.draw);
-            p.Add(nameof(param.start), param.start);
+            var _additional = new Dictionary<string, dynamic>();
+            try
+            {
+                _additional = param.param.ToDictionary();
+                foreach (var item in _additional)
+                {
+                    p.Add(item.Key, item.Value);
+                }
+                p.Add(nameof(param.start), param.start);
+                p.Add(nameof(param.length), param.length);
+                if (param.search != null && !string.IsNullOrEmpty(param.search.value))
+                    p.Add("searchText", param.search.value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
             return p;
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Milkyfie.AppCode.Helper;
+using System.Collections.Generic;
 
 namespace Milkyfie.Models
 {
@@ -23,7 +24,15 @@ namespace Milkyfie.Models
         public int start { get; set; } = 0;
         public int length { get; set; } = 100;
         public jsonAODataSearch search { get; set; }
-        public dynamic param { get; set; }
+        public List<Order> order { get; set; }
+        public object param { get; set; }
+     
+    }
+
+    public class Order
+    {
+        public int column { get; set; } 
+        public string dir { get; set; } 
     }
 
     //public class jsonAOData<T> : jsonAOData

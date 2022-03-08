@@ -31,6 +31,8 @@ namespace Milkyfie.AppCode.Reops
                         ledger.User = applicationuser;
                         return ledger;
                     }, splitOn: "LedgerID,UserID");
+                d.recordsFiltered = d.PageSetting.TotoalRows;//d.Data.Count();
+                d.recordsTotal = d.PageSetting.TotoalRows;
             }
             catch (Exception ex)
             {

@@ -10,8 +10,9 @@
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
                     <div class="card-header bg-primary text-white h6">
-                        @Model.Role
-                        <input type="hidden" value="@Model.Role" id="hdnroleid" />
+                        <span id="spnrole">@Model.Role</span>
+                      @*  <input type="hidden" value="@Model.Role" id="hdnroleid" />*@
+
                         <div class="float-right">  <button id="btnNew" class="btnaddUser btn btn-info">New</button></div>
                     </div>
                     <div class="card-body">
@@ -76,7 +77,7 @@
               $.ajax({
                 type: 'post',
                 url: '/Master/UserForm',
-                 data:{role:$('#hdnroleid').val()},
+                 data:{role:$('#spnrole').text()},
                 success: function (data) {
                     console.log(data)
                 Q.alert({
@@ -100,7 +101,7 @@
          $.ajax({
                type: 'post',
                 url: '/Account/UsersDetails',
-               data:{role:$('#hdnroleid').val()},
+               data:{role:$('#spnrole').text()},
                 success: function (data) {
                       $('tbody').html(data);
                 },

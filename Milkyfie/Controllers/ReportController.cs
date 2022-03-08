@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Milkyfie.AppCode.DAL;
+using Milkyfie.AppCode.Helper;
 using Milkyfie.AppCode.Interfaces;
 using Milkyfie.AppCode.Reops.Entities;
 using Milkyfie.Models;
@@ -32,13 +33,11 @@ namespace Milkyfie.Controllers
         }
 
         [HttpPost]
-        public IActionResult LedgerFilter(jsonAOData jsonAOData)
+        public IActionResult LedgerFilter(jsonAOData jsonAOData, LedgerFilters filters)
         {
-            jsonAOData.param = new Ledger { LedgerID = 1 };
+            //jsonAOData.param = new { LedgerID = 0, searchText = jsonAOData.search?.value};
+            jsonAOData.param = filters;
             var res = (JDataTable<Ledger>)_report.Ledger(jsonAOData).Result;
-            res.Data = res.Data.Where(x => x.LedgerID > 9).ToList();
-            res.recordsTotal = 17;
-            res.recordsFiltered = 17;
             return Json(res);
         }
     }
