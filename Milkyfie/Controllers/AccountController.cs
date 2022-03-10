@@ -30,7 +30,7 @@ namespace Milkyfie.Controllers
         private readonly ApplicationUserManager _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private IRepository<ApplicationUser> _users;
+        private IUser _users;
         private readonly ILogger<AccountController> _logger;
         private readonly IRepository<EmailConfig> _emailConfig;
         private IMapper _mapper;
@@ -38,7 +38,7 @@ namespace Milkyfie.Controllers
         //IConfiguration config
         public AccountController(IOptions<AppSettings> appSettings,
             ApplicationUserManager userManager, RoleManager<ApplicationRole> roleManager,
-            SignInManager<ApplicationUser> signInManager, IRepository<ApplicationUser> users,
+            SignInManager<ApplicationUser> signInManager, IUser users,
             ILogger<AccountController> logger, IRepository<EmailConfig> emailConfig, IMapper mapper)
         {
             //_config = config;
@@ -170,7 +170,8 @@ namespace Milkyfie.Controllers
                 var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, false, true);
                 if (result.Succeeded)
                 {
-                    var user = _users.GetDetails(model.MobileNo).Result;
+                
+                    var user = _users.GetUserInfo(new ApplicationUser { UserName= model.MobileNo } ).Result;
                     var token = generateJwtToken(user);
                     var authResponse = new AuthenticateResponse(user, token);
                     response = new Response<AuthenticateResponse>

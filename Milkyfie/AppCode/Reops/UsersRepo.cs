@@ -89,18 +89,16 @@ namespace Milkyfie.AppCode.Reops
         }
 
 
-
-
-
-        public async Task<ApplicationUser> GetDetails(object id)
+        public async Task<ApplicationUser> GetUserInfo(ApplicationUser entity=null)
         {
             ApplicationUser res = new ApplicationUser();
 
             try
             {
                 var dbparams = new DynamicParameters();
-                dbparams.Add("UserName", id);
-                dbparams.Add("Role", 0);
+                dbparams.Add("UserName", entity != null ? entity.UserName:String.Empty);
+                dbparams.Add("Role", entity != null ? entity.Role:String.Empty);
+                dbparams.Add("UserID", entity!=null?entity.Id:0);
                 var ires = await _dapper.GetAllAsync<ApplicationUser>("proc_users", dbparams, commandType: CommandType.StoredProcedure);
                 res = ires.FirstOrDefault();
             }
@@ -110,6 +108,11 @@ namespace Milkyfie.AppCode.Reops
         }
 
         public async Task<IReadOnlyList<ApplicationUser>> GetDropdownAsync(ApplicationUser entity = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<ApplicationUser> GetDetails(object id)
         {
             throw new NotImplementedException();
         }

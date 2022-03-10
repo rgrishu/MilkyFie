@@ -19,11 +19,12 @@ namespace Milkyfie.Controllers
         private IHttpContextAccessor _httpContext;
         private LoginResponse loginResponse;
         private readonly ApplicationUser _user;
+        protected IUser _users;
         protected IRepository<Product> _product;
         protected IRepository<Category> _category;
         protected IRepository<News> _news;
         protected IRepository<Banners> _banners;
-        public APIController(IHttpContextAccessor httpContext, IUserService userService, IRepository<Product> product, IRepository<Category> category, IRepository<News> news, IRepository<Banners> banners)
+        public APIController(IHttpContextAccessor httpContext, IUserService userService, IRepository<Product> product, IRepository<Category> category, IRepository<News> news, IRepository<Banners> banners, IUser users)
         {
             _userService = userService;
             _httpContext = httpContext;
@@ -31,6 +32,7 @@ namespace Milkyfie.Controllers
             _category = category;
             _news = news;
             _banners = banners;
+            _users = users;
             if (_httpContext != null && _httpContext.HttpContext != null)
             {
                 loginResponse = (LoginResponse)_httpContext?.HttpContext.Items["User"];
@@ -38,14 +40,14 @@ namespace Milkyfie.Controllers
             }
         }
 
-      
+
         [HttpGet(nameof(loginInfo))]
         public IActionResult loginInfo()
         {
             return Ok(loginResponse);
         }
 
-       
+
         [HttpPost(nameof(ProductDetails))]
         public IActionResult ProductDetails(int ProductID = 0, int CategoryID = 0, int ParentCatID = 0)
         {
@@ -87,7 +89,7 @@ namespace Milkyfie.Controllers
                 StatusCode = ResponseStatus.Failed,
                 ResponseText = ResponseStatus.Failed.ToString()
             };
-           
+
             var resp = _category.GetAllAsync().Result;
             if (resp != null && resp.Count() > 0)
             {
@@ -139,6 +141,35 @@ namespace Milkyfie.Controllers
                     ResponseText = ResponseStatus.Success.ToString(),
                     Result = resp.ToList()
                 };
+            }
+            return Json(res);
+        }
+
+        [HttpPost(nameof(UerInfo))]
+        public IActionResult UerInfo(int id)
+        {
+            var res = new Response<ApplicationUser>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var entity = new ApplicationUser()
+            {
+                Id = id,
+            };
+            var resp = _users.GetUserInfo(entity).Result;
+            if (resp != null)
+            {
+                res = new Response<ApplicationUser>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp
+                };
+            }
+            else
+            {
+                res.ResponseText = "User Details Not Found";
             }
             return Json(res);
         }
