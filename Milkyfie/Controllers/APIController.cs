@@ -21,12 +21,16 @@ namespace Milkyfie.Controllers
         private readonly ApplicationUser _user;
         protected IRepository<Product> _product;
         protected IRepository<Category> _category;
-        public APIController(IHttpContextAccessor httpContext, IUserService userService, IRepository<Product> product, IRepository<Category> category)
+        protected IRepository<News> _news;
+        protected IRepository<Banners> _banners;
+        public APIController(IHttpContextAccessor httpContext, IUserService userService, IRepository<Product> product, IRepository<Category> category, IRepository<News> news, IRepository<Banners> banners)
         {
             _userService = userService;
             _httpContext = httpContext;
             _product = product;
             _category = category;
+            _news = news;
+            _banners = banners;
             if (_httpContext != null && _httpContext.HttpContext != null)
             {
                 loginResponse = (LoginResponse)_httpContext?.HttpContext.Items["User"];
@@ -96,6 +100,48 @@ namespace Milkyfie.Controllers
             }
             return Json(res);
         }
-         
+        [HttpPost(nameof(news))]
+        public IActionResult news()
+        {
+            var res = new Response<List<News>>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+
+            var resp = _news.GetAllAsync().Result;
+            if (resp != null && resp.Count() > 0)
+            {
+                res = new Response<List<News>>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp.ToList()
+                };
+            }
+            return Json(res);
+        }
+        [HttpPost(nameof(banner))]
+        public IActionResult banner()
+        {
+            var res = new Response<List<Banners>>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+
+            var resp = _banners.GetAllAsync().Result;
+            if (resp != null && resp.Count() > 0)
+            {
+                res = new Response<List<Banners>>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp.ToList()
+                };
+            }
+            return Json(res);
+        }
+
     }
 }
