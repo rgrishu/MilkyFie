@@ -1822,3 +1822,30 @@ Error Number:53,State:0,Class:20
 2022-03-08 18:55:25.0337 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
    at NLog.Config.Factory`2.CreateInstance(String itemName)
    at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-03-09 15:15:15.8994 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-03-09 16:22:41.3810 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-03-10 10:53:53.3720 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-03-10 11:03:56.2482 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-03-10 11:06:10.9530 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-03-10 11:11:33.8620 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-03-10 11:15:34.2297 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-03-10 11:17:10.8594 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)
+2022-03-10 12:22:43.6682 Error Error parsing layout trace will be ignored. Exception: System.ArgumentException: LayoutRenderer cannot be found: 'trace'
+   at NLog.Config.Factory`2.CreateInstance(String itemName)
+   at NLog.Layouts.LayoutParser.GetLayoutRenderer(ConfigurationItemFactory configurationItemFactory, String name, Nullable`1 throwConfigExceptions)

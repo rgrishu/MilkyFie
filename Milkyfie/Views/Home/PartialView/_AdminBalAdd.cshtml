@@ -4,23 +4,38 @@
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <div class="card">
             <div class="card-body">
-                <form action="/Home/AddAdminBalance" method="post">
-                    <div class="row gutters">
-                        <div class="col-xl-10 col-lg col-md-10 col-sm-10 col-12">
-                            <div class="form-group">
-                                <label for="inputName">Enter Balance</label>
-                                <input type="number" maxlength="6" id="txtbalance" class="form-control" name="Balance" placeholder="Balance" />
-                            </div>
-                        </div>
-                        <div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
-                            <div class="btn-group">
-                                <button class="btn btn-lg btn-primary" style="margin-top:20px" id="btnSubmit" type="submit">Add</button>
-                            </div>
+                @* <form action="/Home/AddAdminBalance" method="post">*@
+                <div class="row gutters">
+                    <div class="col-xl-10 col-lg col-md-10 col-sm-10 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Enter Balance</label>
+                            <input type="number" maxlength="6" id="txtbalance" class="form-control" name="Balance" placeholder="Balance" />
                         </div>
                     </div>
-                </form>
+                    <div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
+                        <div class="btn-group">
+                            <button class="btn btn-lg btn-primary" style="margin-top:20px" id="btnSubmit" type="submit">Add</button>
+                        </div>
+                    </div>
+                </div>
+                @*  </form>*@
             </div>
         </div>
     </div>
     @*</form>*@
 </div>
+<script>
+    $('#btnSubmit').click(function(){
+        if($('#txtbalance').val()=="" || $('#txtbalance').val()==null)
+        {
+        Q.notify(-1, 'Enter Valid Amount.');
+        return;
+        }
+         CallPaymentGateway(1005, 250, 5000, 1);
+   
+    })
+     var CallPaymentGateway = function (upgid, oid, amount, wallet) {
+        window.open("/redirect-pg?id=" + oid + "&a=" + amount + "&w=" + wallet + "&pg=" + upgid, "_blank", "toolbar=0,width=900,height=650,left=0,top=0");
+    }
+</script>
+

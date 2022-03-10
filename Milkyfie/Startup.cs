@@ -35,6 +35,7 @@ namespace Milkyfie
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
             })
                .AddJwtBearer(options =>
                {
