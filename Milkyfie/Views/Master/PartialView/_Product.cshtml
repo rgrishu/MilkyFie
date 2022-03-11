@@ -26,13 +26,13 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                    @*  <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
-                            <label for="inputName">Quantity</label>
-                            <input type="text" required="" value="@Model.Quantity" class="form-control"
-                                   id="txtQuantity" autocomplete="off" name="Quantity" placeholder="Enter Quantity">
+                        <label for="inputName">Quantity</label>
+                        <input type="text" required="" value="@Model.Quantity" class="form-control"
+                        id="txtQuantity" autocomplete="off" name="Quantity" placeholder="Enter Quantity">
                         </div>
-                    </div>
+                        </div>*@
                     <div class="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Product Name</label>
@@ -74,12 +74,25 @@
                     </div>
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
-                            <label for="inputName">Is Discount</label>
-                            <br />
-                            <input type="checkbox" name="IsDiscount" value="@Model.IsDiscount" id="chekdiscount" value="true" />
+                            <label for="inputName">Weight</label>
+                            <input type="text" required="" class="form-control"
+                                   id="txtWeight" autocomplete="off" value="@Model.Weight" name="Weight" placeholder="Enter Weight">
                         </div>
                     </div>
-
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Packaging Detail</label>
+                            <input type="text" required="" class="form-control"
+                                   id="txtpackdetails" autocomplete="off" value="@Model.PackagingDetail" name="PackagingDetail" placeholder="Enter Packaging Detail">
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Key Features</label>
+                            <input type="text" required="" class="form-control"
+                                   id="txtFeatures" autocomplete="off" value="@Model.KeyFeatures" name="KeyFeatures" placeholder="Enter Key Features">
+                        </div>
+                    </div>
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Product Icon</label>
@@ -89,42 +102,60 @@
                     </div>
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
+                            <label for="inputName">Is Discount</label>
+                            <br />
+                            <input type="checkbox" name="IsDiscount" value="@Model.IsDiscount" id="chekdiscount" value="true" />
+                        </div>
+                    </div>
+
+
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
                             <label for="inputName">Product Image</label>
                             <input type="file" name="file" id="productimage" />
                         </div>
                     </div>
+
+                    <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
+                        <div class="form-group">
+                            <label for="inputName">Nutrition</label>
+                            <textarea  class="summernote" id="txtnutrition"></textarea>
+                        </div>
+                    </div>
+
+
+
                     <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
                         <div class="form-group">
                             <label for="inputName">Discription</label>
-                            <textarea type="text" required="" class="form-control"
-                                      id="txtDiscription" autocomplete="off" name="Description" placeholder="Enter Discription">@Model.Description</textarea>
-                        </div>
-                    </div>
-                    <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
-                        <div class="form-group">
-                            <label for="inputName">Remark</label>
-                            <textarea type="text" required="" class="form-control"
-                                      id="txtRemark" autocomplete="off" value="@Model.Remark" name="Remark" placeholder="EnterRemark"></textarea>
+                           <textarea  class="summernote" id="txtDescription"> </textarea>
+                                        
                         </div>
                     </div>
 
 
                 </div>
                 <button class="btn btn-primary" id="btnSubmit" type="submit">Submit</button>
-              
+
             </div>
         </div>
     </div>
     @*</form>*@
 </div>
 <script>
+    $(document).ready(function() {
+                $('.summernote').summernote({
+                    height: 170,
+                    tabsize: 2
+                });
+            });
     $('#btnSubmit').click(function () {
         Q.preloader.load();
           var fileupload = $("#productimage").get(0);
           var isdiscount = $('#chekdiscount').is(':checked') == true ? true : false;
           var files = fileupload.files;
           var formData = new FormData();
-          
+
           formData.append("file", files[0]);
          // formData.append("Category",cat);
           formData.append("Category.CategoryID", $("#ddlCategory").val());
@@ -132,15 +163,19 @@
           formData.append("Unit.UnitID", $("#ddlUnit").val());
          // formData.append("Unit.UnitID", $("#ddlUnit").val());
           formData.append("ProductName", $("#txtProductName").val());
-          formData.append("Quantity", $("#txtQuantity").val());
+          formData.append("Weight", $("#txtWeight").val());
+          formData.append("PackagingDetail", $("#txtpackdetails").val());
+          formData.append("KeyFeatures", $("#txtFeatures").val());
+          //formData.append("Quantity", $("#txtQuantity").val());
           formData.append("MRP", $("#txtMRP").val());
           formData.append("SellingPrice", $("#txtSellingPrice").val());
           formData.append("DiscountType",$("#txtDisType").val());
           formData.append("Discount", $("#txtdiscount").val());
           formData.append("IsDiscount",isdiscount);
           formData.append("ProductIcon",$("#txtProducticon").val());
-          formData.append("Description", $("#txtDiscription").val());
-          formData.append("Remark",$("#txtRemark").val());
+          formData.append("Description", $("#txtDescription").val());
+          formData.append("Nutrition", $("#txtnutrition").val());
+          //formData.append("Remark",$("#txtRemark").val());
           $.ajax({
               type: 'POST',
               url: 'SaveNewProduct',
@@ -153,6 +188,7 @@
                   {
                       loadProduct();
                   $('input').val('');
+                   $('textarea').val('');
                   $('.field-validation-valid').remove();
                  Q.notify(result.statusCode, result.responseText);
                   }

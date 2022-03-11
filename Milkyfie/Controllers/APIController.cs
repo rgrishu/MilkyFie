@@ -20,11 +20,11 @@ namespace Milkyfie.Controllers
         private LoginResponse loginResponse;
         private readonly ApplicationUser _user;
         protected IUser _users;
-        protected IRepository<Product> _product;
+        protected IProduct _product;
         protected IRepository<Category> _category;
         protected IRepository<News> _news;
         protected IRepository<Banners> _banners;
-        public APIController(IHttpContextAccessor httpContext, IUserService userService, IRepository<Product> product, IRepository<Category> category, IRepository<News> news, IRepository<Banners> banners, IUser users)
+        public APIController(IHttpContextAccessor httpContext, IUserService userService, IProduct product, IRepository<Category> category, IRepository<News> news, IRepository<Banners> banners, IUser users)
         {
             _userService = userService;
             _httpContext = httpContext;
@@ -46,6 +46,40 @@ namespace Milkyfie.Controllers
         {
             return Ok(loginResponse);
         }
+
+        [HttpPost(nameof(Products))]
+        public IActionResult Products(int ProductID = 0, int CategoryID = 0, int ParentCatID = 0)
+        {
+            var res = new Response<List<Product>>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var req = new Product()
+            {
+                ProductID = ProductID,
+                Category = new Category()
+                {
+                    CategoryID = CategoryID,
+                    Parent = new Parent()
+                    {
+                        ParentID = ParentCatID
+                    }
+                },
+            };
+            var resp = _product.GetProduct(req).Result;
+            if (resp != null && resp.Count() > 0)
+            {
+                res = new Response<List<Product>>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp.ToList()
+                };
+            }
+            return Json(res);
+        }
+
 
 
         [HttpPost(nameof(ProductDetails))]

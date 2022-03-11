@@ -26,7 +26,7 @@ namespace Milkyfie.Controllers
         protected IRepository<News> _news;
         protected IRepository<Frequency> _frequency;
         public MasterController(IDapperRepository dapper, IRepository<Category> category,
-            IRepository<Unit> unit, IRepository<Product> product, IRepository<Banners> banner, IRepository<News> news, IRepository<Frequency> frequency, IMapper mapper) : base(dapper, category, unit, product, mapper)
+            IRepository<Unit> unit, IProduct product, IRepository<Banners> banner, IRepository<News> news, IRepository<Frequency> frequency, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
             _banner = banner;
             _news = news;

@@ -14,7 +14,7 @@ namespace Milkyfie.Controllers
     {
         protected IReport _report;
         public ReportController(IDapperRepository dapper, IRepository<Category> category,
-            IRepository<Unit> unit, IRepository<Product> product, IReport report, IMapper mapper) : base(dapper, category, unit, product, mapper)
+            IRepository<Unit> unit, IProduct product, IReport report, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
             _report = report;
         }

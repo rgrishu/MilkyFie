@@ -13,11 +13,11 @@ namespace Milkyfie.Controllers
         protected IDapperRepository _dapper;
         protected IRepository<Category> _category;
         protected IRepository<Unit> _unit;
-        protected IRepository<Product> _product;
+        protected IProduct _product;
       
         protected IMapper _mapper;
         public BaseController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit,
-            IRepository<Product> product, IMapper mapper)
+            IProduct product, IMapper mapper)
         {
             _dapper = dapper;
             _category = category;

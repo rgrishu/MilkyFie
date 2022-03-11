@@ -22,7 +22,7 @@ namespace Milkyfie.Controllers
 
 
         public UsersController(IDapperRepository dapper, IRepository<Category> category,
-           IRepository<Unit> unit, IRepository<Product> product, IOrder orderschedule, IMapper mapper, IHttpContextAccessor httpContext, IUser users) : base(dapper, category, unit, product, mapper)
+           IRepository<Unit> unit, IProduct product, IOrder orderschedule, IMapper mapper, IHttpContextAccessor httpContext, IUser users) : base(dapper, category, unit, product, mapper)
         {
             _httpContext = httpContext;
             _user = (Models.ApplicationUser)_httpContext.HttpContext.Items["User"];

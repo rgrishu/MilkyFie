@@ -26,7 +26,7 @@ namespace Milkyfie.Controllers
     {
         protected IOrder _orderschedule;
         public OrderController(IDapperRepository dapper, IRepository<Category> category,
-            IRepository<Unit> unit, IRepository<Product> product, IOrder orderschedule, IMapper mapper) : base(dapper, category, unit, product, mapper)
+            IRepository<Unit> unit, IProduct product, IOrder orderschedule, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
             _orderschedule = orderschedule;
         }

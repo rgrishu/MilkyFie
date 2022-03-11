@@ -14,7 +14,7 @@ namespace Milkyfie.AppCode.Reops
 {
 
 
-    public class ProductRepo : IRepository<Product>
+    public class ProductRepo : IProduct
     {
         private IDapperRepository _dapper;
         public ProductRepo(IDapperRepository dapper)
@@ -38,6 +38,10 @@ namespace Milkyfie.AppCode.Reops
             dbparams.Add("ProductIcon", entity.ProductIcon);
             dbparams.Add("Description", entity.Description);
             dbparams.Add("Remark", entity.Remark);
+            dbparams.Add("Weight", entity.Weight);
+            dbparams.Add("PackagingDetail", entity.PackagingDetail);
+            dbparams.Add("KeyFeatures", entity.KeyFeatures);
+            dbparams.Add("Nutrition", entity.Nutrition);
             var res = await _dapper.InsertAsync<Response>("proc_addproduct", dbparams, commandType: CommandType.StoredProcedure);
             return res;
 
@@ -61,13 +65,7 @@ namespace Milkyfie.AppCode.Reops
             return res;
         }
 
-        //public async Task<IEnumerable<Product>> GetAllAsync(Product entity = null)
-        //{
-        //    var dbparams = new DynamicParameters();
-        //    dbparams.Add("ProductID", entity.ProductID);
-        //    var res = await _dapper.GetAllAsync<Product>("proc_SelectProduct", dbparams, commandType: CommandType.StoredProcedure);
-        //    return res;
-        //}
+        
 
 
         public async Task<IEnumerable<Product>> GetAllAsync(Product entity = null)
@@ -97,6 +95,31 @@ namespace Milkyfie.AppCode.Reops
             return product;
         }
 
+        public async Task<IEnumerable<Product>> GetProduct(Product entity = null)
+        {
+            IEnumerable<Product> product = new List<Product>();
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("ProductID", entity != null ? entity.ProductID : 0);
+                dbparams.Add("ParentCategoryID", entity != null && entity.Category != null && entity.Category.Parent != null ? entity.Category.Parent.ParentID : 0);
+                dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
+                string sqlQuery = @"proc_GetProduct";
+                Product cc = new Product();
+                var res = await _dapper.GetAllAsyncProc<Product, Category, Parent, Product>(entity ?? new Product(), sqlQuery, dbparams, (product, category, parent) =>
+                {
+                    product.Category = category;
+                    product.Category.Parent = parent;
+                    return product;
+                }, splitOn: "ProductID,CategoryID,ParentID");
+                product = res;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return product;
+        }
 
 
 

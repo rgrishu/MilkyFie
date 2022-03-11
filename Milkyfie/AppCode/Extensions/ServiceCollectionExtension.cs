@@ -33,7 +33,7 @@ namespace Milkyfie.AppCode.Extensions
             services.AddSingleton<IRepository<EmailConfig>, EmailConfigRepo>();
             services.AddSingleton<IRepository<Category>, CategoryRepo>();
             services.AddSingleton<IRepository<Unit>, UnitRepo>();
-            services.AddSingleton<IRepository<Product>, ProductRepo>();
+            services.AddSingleton<IProduct, ProductRepo>();
             services.AddSingleton<IRepository<Banners>, BannersRepo>();
             services.AddSingleton<IRepository<News>, NewsRepo>();
             services.AddSingleton<IRepository<ApplicationUser>, UsersRepo>();
