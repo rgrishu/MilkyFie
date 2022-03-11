@@ -126,7 +126,7 @@ namespace Milkyfie.Controllers
         [HttpPost(nameof(banner))]
         public IActionResult banner()
         {
-            var res = new Response<List<Banners>>()
+            var res = new Response<bannerpopup>()
             {
                 StatusCode = ResponseStatus.Failed,
                 ResponseText = ResponseStatus.Failed.ToString()
@@ -135,44 +135,48 @@ namespace Milkyfie.Controllers
             var resp = _banners.GetAllAsync().Result;
             if (resp != null && resp.Count() > 0)
             {
-                res = new Response<List<Banners>>()
+                res = new Response<bannerpopup>()
                 {
                     StatusCode = ResponseStatus.Success,
                     ResponseText = ResponseStatus.Success.ToString(),
-                    Result = resp.ToList()
+                    Result = new bannerpopup
+                    {
+                        banners = resp.Where(x => !x.IsPopup).ToList(),
+                        popup = resp.Where(x => x.IsPopup).FirstOrDefault()
+                    }
                 };
             }
             return Json(res);
         }
 
-        //[HttpPost(nameof(UerInfo))]
-        //public IActionResult UerInfo(int id)
-        //{
-        //    var res = new Response<ApplicationUser>()
-        //    {
-        //        StatusCode = ResponseStatus.Failed,
-        //        ResponseText = ResponseStatus.Failed.ToString()
-        //    };
-        //    var entity = new ApplicationUser()
-        //    {
-        //        Id = id,
-        //    };
-        //    var resp = _users.GetUserInfo(entity).Result;
-        //    if (resp != null)
-        //    {
-        //        res = new Response<ApplicationUser>()
-        //        {
-        //            StatusCode = ResponseStatus.Success,
-        //            ResponseText = ResponseStatus.Success.ToString(),
-        //            Result = resp
-        //        };
-        //    }
-        //    else
-        //    {
-        //        res.ResponseText = "User Details Not Found";
-        //    }
-        //    return Json(res);
-        //}
+        [HttpPost(nameof(UerInfo))]
+        public IActionResult UerInfo(int id)
+        {
+            var res = new Response<ApplicationUser>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var entity = new ApplicationUser()
+            {
+                Id = id,
+            };
+            var resp = _users.GetUserInfo(entity).Result;
+            if (resp != null)
+            {
+                res = new Response<ApplicationUser>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp
+                };
+            }
+            else
+            {
+                res.ResponseText = "User Details Not Found";
+            }
+            return Json(res);
+        }
         [HttpPost(nameof(UserBalance))]
         public IActionResult UserBalance(int id)
         {
