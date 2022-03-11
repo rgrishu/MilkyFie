@@ -8,6 +8,7 @@ namespace Milkyfie.Models
         public int TotoalRows { get; set; }
         public int CurrentPage { get; set; }
         public int Draw { get; set; }
+        public int RecordsFiltered { get; set; }
     }
 
     public class JDataTable<T>

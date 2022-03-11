@@ -145,22 +145,47 @@ namespace Milkyfie.Controllers
             return Json(res);
         }
 
-        [HttpPost(nameof(UerInfo))]
-        public IActionResult UerInfo(int id)
+        //[HttpPost(nameof(UerInfo))]
+        //public IActionResult UerInfo(int id)
+        //{
+        //    var res = new Response<ApplicationUser>()
+        //    {
+        //        StatusCode = ResponseStatus.Failed,
+        //        ResponseText = ResponseStatus.Failed.ToString()
+        //    };
+        //    var entity = new ApplicationUser()
+        //    {
+        //        Id = id,
+        //    };
+        //    var resp = _users.GetUserInfo(entity).Result;
+        //    if (resp != null)
+        //    {
+        //        res = new Response<ApplicationUser>()
+        //        {
+        //            StatusCode = ResponseStatus.Success,
+        //            ResponseText = ResponseStatus.Success.ToString(),
+        //            Result = resp
+        //        };
+        //    }
+        //    else
+        //    {
+        //        res.ResponseText = "User Details Not Found";
+        //    }
+        //    return Json(res);
+        //}
+        [HttpPost(nameof(UserBalance))]
+        public IActionResult UserBalance(int id)
         {
-            var res = new Response<ApplicationUser>()
+            var res = new Response<decimal>()
             {
                 StatusCode = ResponseStatus.Failed,
                 ResponseText = ResponseStatus.Failed.ToString()
             };
-            var entity = new ApplicationUser()
-            {
-                Id = id,
-            };
-            var resp = _users.GetUserInfo(entity).Result;
+           
+            var resp = _users.UserBalanceForAPi(id).Result;
             if (resp != null)
             {
-                res = new Response<ApplicationUser>()
+                res = new Response<decimal>()
                 {
                     StatusCode = ResponseStatus.Success,
                     ResponseText = ResponseStatus.Success.ToString(),
@@ -169,10 +194,9 @@ namespace Milkyfie.Controllers
             }
             else
             {
-                res.ResponseText = "User Details Not Found";
+                res.ResponseText = "User Balance Not Found";
             }
             return Json(res);
         }
-
     }
 }

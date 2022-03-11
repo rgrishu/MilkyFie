@@ -26,6 +26,7 @@ namespace Milkyfie.AppCode.Reops
             dbparams.Add("BackLink", entity.BackLink);
             dbparams.Add("Banner", entity.Banner);
             dbparams.Add("IsActive", entity.IsActive);
+            dbparams.Add("IsPopup", entity.IsPopup);
             dbparams.Add("QueryType", entity.BannerID == 0 ? "I" : "U");
             var res = await _dapper.InsertAsync<Response>("proc_banner", dbparams, commandType: CommandType.StoredProcedure);
             return res;

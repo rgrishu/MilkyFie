@@ -62,7 +62,7 @@ namespace Milkyfie.AppCode.Reops
             try
             {
                 var dbparams = new DynamicParameters();
-                dbparams.Add("UserID", entity != null && entity.User!=null?entity.User.Id:0) ;
+                dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
 
                 string sqlQuery = @"proc_SelectUserDashBoard";
                 var res = await _dapper.GetAllAsyncProc<Dashboard, ApplicationUser, Dashboard>(entity ?? new Dashboard(), sqlQuery,
@@ -89,22 +89,37 @@ namespace Milkyfie.AppCode.Reops
         }
 
 
-        public async Task<ApplicationUser> GetUserInfo(ApplicationUser entity=null)
+        public async Task<ApplicationUser> GetUserInfo(ApplicationUser entity = null)
         {
             ApplicationUser res = new ApplicationUser();
 
             try
             {
                 var dbparams = new DynamicParameters();
-                dbparams.Add("UserName", entity != null ? entity.UserName:String.Empty);
-                dbparams.Add("Role", entity != null ? entity.Role:String.Empty);
-                dbparams.Add("UserID", entity!=null?entity.Id:0);
+                dbparams.Add("UserName", entity != null ? entity.UserName : String.Empty);
+                dbparams.Add("Role", entity != null ? entity.Role : String.Empty);
+                dbparams.Add("UserID", entity != null ? entity.Id : 0);
                 var ires = await _dapper.GetAllAsync<ApplicationUser>("proc_users", dbparams, commandType: CommandType.StoredProcedure);
                 res = ires.FirstOrDefault();
             }
             catch (Exception ex)
             { }
             return res;
+        }
+        public async Task<decimal> UserBalanceForAPi(int UserID)
+        {
+            decimal balance = 0;
+            try
+            {
+                //var dbparams = new DynamicParameters();
+                //dbparams.Add("UserID", UserID);
+                string query = "Select Balance from UserBalance where UserID=@UserID";
+                balance = await _dapper.GetAsync<decimal>(query, new { UserID }, commandType: CommandType.Text);
+
+            }
+            catch (Exception ex)
+            { }
+            return balance;
         }
 
         public async Task<IReadOnlyList<ApplicationUser>> GetDropdownAsync(ApplicationUser entity = null)

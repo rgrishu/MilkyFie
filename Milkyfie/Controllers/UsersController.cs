@@ -6,31 +6,28 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Milkyfie.AppCode.Extensions;
+using Milkyfie.AppCode.DAL;
+using Milkyfie.AppCode.Reops.Entities;
+using AutoMapper;
 
 namespace Milkyfie.Controllers
 {
-   
-    public class UsersController : Controller
+
+    public class UsersController : BaseController
     {
-        private IUserService _userService;
+
         private IHttpContextAccessor _httpContext;
         private ApplicationUser _user;
-        private IRepository<ApplicationUser> _users;
+        private IUser _users;
 
-        public UsersController(IHttpContextAccessor httpContext, IUserService userService, IRepository<ApplicationUser> users)
+
+        public UsersController(IDapperRepository dapper, IRepository<Category> category,
+           IRepository<Unit> unit, IRepository<Product> product, IOrder orderschedule, IMapper mapper, IHttpContextAccessor httpContext, IUser users) : base(dapper, category, unit, product, mapper)
         {
-            _userService = userService;
             _httpContext = httpContext;
             _user = (Models.ApplicationUser)_httpContext.HttpContext.Items["User"];
             _users = users;
         }
-        //[JWTAuthorize]
-        //[HttpGet("getall")]
-        //public IActionResult GetAll()
-        //{
-        //    var users = _userService.GetAll();
-        //    return Ok(users);
-        //}
         [HttpPost]
         public async Task<IActionResult> UserBalance(int id)
         {
@@ -39,9 +36,7 @@ namespace Milkyfie.Controllers
                 Id = id
             };
             return PartialView("~/Views/Account/PartialView/_AddBalance.cshtml", entity);
-
         }
-
         [HttpPost]
         public async Task<IActionResult> AddUserBalance(ApplicationUser entity)
         {
@@ -50,6 +45,7 @@ namespace Milkyfie.Controllers
             var data = _users.AddAsync(entity).Result;
             return Json(data);
         }
+
 
     }
 }

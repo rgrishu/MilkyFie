@@ -213,7 +213,7 @@ namespace Milkyfie.Controllers
             //var resp = await _category.GetAllAsync(null);
             return View();
         }
-        public async Task<IActionResult> UploadBanner(IFormFile file, string backlink)
+        public async Task<IActionResult> UploadBanner(IFormFile file, string backlink,bool IsPopup)
         {
 
             var response = new Response()
@@ -244,7 +244,8 @@ namespace Milkyfie.Controllers
                     {
                         Banner = sb.ToString(),
                         BackLink = backlink,
-                        IsActive = true
+                        IsActive = true,
+                        IsPopup= IsPopup
                     };
                     var resp = await _banner.AddAsync(banner);
                     return Json(resp);

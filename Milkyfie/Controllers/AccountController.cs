@@ -68,7 +68,7 @@ namespace Milkyfie.Controllers
             {
                 return Json(response);
             }
-            if (string.IsNullOrEmpty(model.RoleName))
+            if (string.IsNullOrEmpty(model.RoleName) || model.RoleName=="null")
             {
                 model.RoleName = "Consumer";
             }

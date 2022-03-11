@@ -7,5 +7,6 @@
         public string Banner { get; set; }
         public float BannerNo { get; set; }
         public  bool IsActive { get; set; }
+        public  bool IsPopup { get; set; }
     }
 }

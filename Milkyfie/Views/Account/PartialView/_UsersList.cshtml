@@ -28,6 +28,7 @@
               <td>
                 @Html.DisplayFor(modelItem => item.Pincode)
             </td>
+            <td>  <a class="btn-ed-del btndel" data-id="@item.Id"><img src="~/img/delete.png" class="img-action" /></a></td>
         </tr>
         i++;
     }
@@ -40,6 +41,7 @@ else
 }
 
 <script>
+    
     $('.userbalance').click(function(){
     var id=$(this).attr('data-id');
      var formData = new FormData();

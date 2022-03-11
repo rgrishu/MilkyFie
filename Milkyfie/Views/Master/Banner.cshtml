@@ -2,14 +2,8 @@
     @model List<Category>*@
 
 <style>
-    .lobipanel .card-header .dropdown .dropdown-menu .dropdown-item i {
 
-      color: #ffff;
-         }
-    .lobipanel .card-header .dropdown .dropdown-menu .dropdown-item:hover, .lobipanel .card-header .dropdown .dropdown-menu .dropdown-item:focus:hover {
-        background-color: transparent;
-    }
-   
+
 </style>
 
 <div class="main-container">
@@ -23,21 +17,34 @@
                     </div>
                     <div class="card-body">
                         <div class="row gutters">
-                            <div class="col-xl-6 col-lg col-md-6 col-sm-6 col-12">
+                            <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
 
                                 <div class="form-group">
                                     <label>Back Link</label>
                                     <input type="text" id="txtbacklink" class="form-control" />
                                 </div>
                             </div>
-                            <div class="col-xl-6 col-lg col-md-6 col-sm-6 col-12">
+                            <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                                 <div class="form-group">
                                     <label>Upload Image</label>
                                     <input type='file' id="bannerupload" class="form-control UploadImage" />
                                     @*  <label for="bannerupload" class="btn btn-secondary btn-sm">Upload User Banner</label>*@
                                 </div>
                             </div>
-                            <button class="btn btn-primary" id="btnSubmit" type="submit">Submit</button>
+                            <div class="col-xl-2 col-lg col-md-2 col-sm-2 col-12">
+                                <div class="form-group">
+                                    <label>Is Popup</label>
+                                    <br />
+                                    <input type='checkbox' style="margin-top:10px" id="chkpopup" />
+                                    @*  <label for="bannerupload" class="btn btn-secondary btn-sm">Upload User Banner</label>*@
+                                </div>
+                            </div>
+
+                            <div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" style="margin-top:20px" id="btnSubmit" type="submit">Submit</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -57,6 +64,7 @@
                         <th>Banner</th>
 
                         <th>Back Link</th>
+                        <th>Is Popup</th>
 
                         <th>Is Active</th>
 
@@ -73,78 +81,79 @@
 
 
 @section scripts{
-    <script>
-        $(document).ready(function () {
-            loadBanner();
-            $('#btnSubmit').click(function () {
-                if ($('#bannerupload').get(0).files.length === 0) {
-                    Q.notify(-1, "Select a file To Upload");
-                    return;
+<script>
+    $(document).ready(function () {
+        loadBanner();
+        $('#btnSubmit').click(function () {
+            if ($('#bannerupload').get(0).files.length === 0) {
+                Q.notify(-1, "Select a file To Upload");
+                return;
+            }
+            uploadImage();
+        })
+    });
+
+    var uploadImage = () => {
+        Q.preloader.load();
+        var formData = new FormData();
+        formData.append('file', $("#bannerupload")[0].files[0]);
+        formData.append('backlink', $("#txtbacklink").val());
+        formData.append('IsPopup',  $('#chkpopup').is(':checked') == true ? true : false);
+        $.ajax({
+            type: 'POST',
+            url: 'UploadBanner',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (result) {
+                if (result.statusCode === 1) {
+                    $('input').val('');
+                    Q.notify(result.statusCode, result.responseText);
+                    loadBanner();
+                } else {
+                    Q.notify(result.statusCode, result.responseText);
                 }
-                uploadImage();
-            })
+            },
+            statusCode: {
+                500: function () {
+                    Q.notify(-1, 'Server error');
+
+
+                },
+                0: function () {
+                    Q.notify(-1, 'Internet Connection was broke');
+
+                }
+            },
+            error: function (result) {
+
+                Q.notify(-1, 'An error occured!');
+            },
+            complete: function () {
+                Q.preloader.remove();
+                $('.UploadImage').val('');
+            }
         });
+    };
+    function loadBanner() {
+        Q.preloader.load();
+        $.ajax({
+            type: 'post',
+            url: 'GetBanner',
+            data: '',
+            success: function (data) {
+                $('tbody').html(data);
+                Q.preloader.remove();
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                Q.notify(-1, 'An error occurred.');
+                Q.preloader.remove();
+            },
+        });
+    }
 
-        var uploadImage = () => {
-            Q.preloader.load();
-            var formData = new FormData();
-            formData.append('file', $("#bannerupload")[0].files[0]);
-            formData.append('backlink', $("#txtbacklink").val());
-            $.ajax({
-                type: 'POST',
-                url: 'UploadBanner',
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: function (result) {
-                    if (result.statusCode === 1) {
-                        $('input').val('');
-                        Q.notify(result.statusCode, result.responseText);
-                        loadBanner();
-                    } else {
-                        Q.notify(result.statusCode, result.responseText);
-                    }
-                },
-                statusCode: {
-                    500: function () {
-                        Q.notify(-1, 'Server error');
-
-
-                    },
-                    0: function () {
-                        Q.notify(-1, 'Internet Connection was broke');
-
-                    }
-                },
-                error: function (result) {
-
-                    Q.notify(-1, 'An error occured!');
-                },
-                complete: function () {
-                    Q.preloader.remove();
-                    $('.UploadImage').val('');
-                }
-            });
-        };
-        function loadBanner() {
-            Q.preloader.load();
-            $.ajax({
-                type: 'post',
-                url: 'GetBanner',
-                data: '',
-                success: function (data) {
-                    $('tbody').html(data);
-                    Q.preloader.remove();
-                },
-                error: function (data) {
-                    console.log('An error occurred.');
-                    console.log(data);
-                    Q.notify(-1, 'An error occurred.');
-                    Q.preloader.remove();
-                },
-            });
-        }
-
-    </script>
+</script>
 
 }

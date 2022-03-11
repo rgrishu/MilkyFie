@@ -10,10 +10,14 @@
         <tr data-id="@item.BannerID">
             <td>@i</td>
             @*<td style="display:none">@Html.DisplayFor(modelItem => item.ParentID)</td>*@
-            <td class="name@(item.BannerID)"><img height="45px"  src="/images/thumbnail/@item.Banner" /></td>
-             <td >@item.BackLink</td>
-           
-              @{
+            <td class="name@(item.BannerID)"><img height="45px" src="/images/thumbnail/@item.Banner" /></td>
+            <td>@item.BackLink</td>
+            @{
+                string pop = @item.IsPopup == true ? "checked" : "";
+            }
+            <td class="parent@(item.IsPopup)"><input type="checkbox" @pop disabled> </td>
+
+            @{
                 string act = @item.IsActive == true ? "checked" : "";
             }
             <td class="parent@(item.IsActive)"><input type="checkbox" @act disabled> </td>

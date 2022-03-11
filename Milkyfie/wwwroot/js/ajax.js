@@ -1,13 +1,13 @@
 ﻿$(function () {
-    $("#loaderbody").addClass('hide');
-    $(document).bind('ajaxStart', function () {
-        $("#loaderbody").removeClass('hide');
-    }).bind('ajaxStop', function () {
-        $("#loaderbody").addClass('hide');
+    //$("#loaderbody").addClass('hide');
+    //$(document).bind('ajaxStart', function () {
+    //    $("#loaderbody").removeClass('hide');
+    //}).bind('ajaxStop', function () {
+    //    $("#loaderbody").addClass('hide');
+    //});
+    $('body').on('submit', 'form', function () {
+        ajaxFormSubmit(this)
     });
-	$('body').on('submit','form',function(){
-		ajaxFormSubmit(this)
-	})
 });
 
 
