@@ -12,7 +12,6 @@ namespace Milkyfie.Controllers
     [JWTAuthorize]
     [ApiController]
     [Route("api/")]
-
     public class APIController : Controller
     {
         private IUserService _userService;
@@ -219,7 +218,7 @@ namespace Milkyfie.Controllers
                 StatusCode = ResponseStatus.Failed,
                 ResponseText = ResponseStatus.Failed.ToString()
             };
-           
+
             var resp = _users.UserBalanceForAPi(id).Result;
             if (resp != null)
             {
@@ -235,6 +234,18 @@ namespace Milkyfie.Controllers
                 res.ResponseText = "User Balance Not Found";
             }
             return Json(res);
+        }
+
+        [HttpPost(nameof(UpdateProfile))]
+        public IActionResult UpdateProfile(ApplicationUser au)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var resp = _users.UpdateUserInfo(au).Result;
+            return Json(resp);
         }
     }
 }

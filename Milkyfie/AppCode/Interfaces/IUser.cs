@@ -10,5 +10,6 @@ namespace Milkyfie.AppCode.Interfaces
         Task<Dashboard> GetUserDashBoard(Dashboard entity = null);
         Task<ApplicationUser> GetUserInfo(ApplicationUser entity = null);
         Task<decimal> UserBalanceForAPi(int UserID);
+        Task<Response> UpdateUserInfo(ApplicationUser entity);
     }
 }

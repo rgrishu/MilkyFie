@@ -106,6 +106,34 @@ namespace Milkyfie.AppCode.Reops
             { }
             return res;
         }
+        public async Task<Response> UpdateUserInfo(ApplicationUser entity)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            if (entity == null)
+            {
+                res.ResponseText = "Invalid Request Data!";
+                return res;
+            }
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("UserID", entity.Id);
+                dbparams.Add("Name", entity.Name);
+                dbparams.Add("Email", entity.Email);
+                dbparams.Add("PhoneNumber", entity.PhoneNumber);
+                dbparams.Add("Address", entity.Address);
+                dbparams.Add("Pincode", entity.Pincode);
+                var ires = await _dapper.GetAllAsync<Response>("prco_UserUpdate", dbparams, commandType: CommandType.StoredProcedure);
+                res = ires.FirstOrDefault();
+            }
+            catch (Exception ex)
+            { }
+            return res;
+        }
         public async Task<decimal> UserBalanceForAPi(int UserID)
         {
             decimal balance = 0;
@@ -121,6 +149,8 @@ namespace Milkyfie.AppCode.Reops
             { }
             return balance;
         }
+
+
 
         public async Task<IReadOnlyList<ApplicationUser>> GetDropdownAsync(ApplicationUser entity = null)
         {
