@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Milkyfie.AppCode.Reops
@@ -30,7 +31,7 @@ namespace Milkyfie.AppCode.Reops
             {
                 var dbparams = new DynamicParameters();
                 dbparams.Add("ScheduleID", entity.ScheduleID);
-                dbparams.Add("UserID", entity.Product != null ? entity.User.Id : 0);
+                dbparams.Add("UserID", entity.User != null ? entity.User.Id : 0);
                 dbparams.Add("LoginID", entity.LoginID);
                 dbparams.Add("ProductID", entity.Product != null ? entity.Product.ProductID : 0);
                 dbparams.Add("CategoryID", entity.Category != null ? entity.Category.CategoryID : 0);
@@ -127,8 +128,10 @@ namespace Milkyfie.AppCode.Reops
             {
                 var dbparams = new DynamicParameters();
                 dbparams.Add("ProductID", entity != null && entity.Product != null ? entity.Product.ProductID : 0);
+                dbparams.Add("ScheduleID",0);
+                dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
                 //dbparams.Add("ParentCategoryID", entity != null && entity.Category != null && entity.Category.Parent != null ? entity.Category.Parent.ParentID : 0);
-                //dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
+              dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
                 string sqlQuery = @"proc_GetOrderSchedule";
                 var res = await _dapper.GetAllAsyncProc<OrderSchedule, ApplicationUser, Product, Frequency, Unit,
                     Category, Parent, OrderSchedule>(entity ?? new OrderSchedule(), sqlQuery,
@@ -151,19 +154,52 @@ namespace Milkyfie.AppCode.Reops
             return oderschedule;
 
         }
+
+
+        public async Task<IEnumerable<ApiOrderSchedule>> GetAllAsyncAPi(OrderSchedule entity = null)
+        {
+            var dbparams = new DynamicParameters();
+            dbparams.Add("ProductID", entity != null && entity.Product != null ? entity.Product.ProductID : 0);
+            dbparams.Add("ScheduleID", 0);
+            dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
+            dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
+            var res = await _dapper.GetAllAsync<ApiOrderSchedule>("proc_GetOrderSchedule", dbparams, commandType: CommandType.StoredProcedure);
+            return res;
+        }
+
+        public async Task<IEnumerable<ApiOrderSummary>> GetAllAsyncOrderSummaryAPi(OrderSummary entity = null)
+        {
+            var dbparams = new DynamicParameters();
+            dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
+            var res = await _dapper.GetAllAsync<ApiOrderSummary>("proc_GetOrderSummary", dbparams, commandType: CommandType.StoredProcedure);
+            return res;
+        }
+
+        public async Task<IEnumerable<APIOrderDetail>> GetAllAsyncOrderDetailAPi(OrderDetail entity = null)
+        {
+            var dbparams = new DynamicParameters();
+            dbparams.Add("OrderID", entity.OrderSummary != null ? entity.OrderSummary.OrderID : 0);
+            dbparams.Add("UserID", entity.OrderSummary != null && entity.OrderSummary.User != null ? entity.OrderSummary.User.Id : 0);
+            dbparams.Add("Shift", entity.OrderShift != null && entity.OrderShift != "0" ? entity.OrderShift : String.Empty);
+            dbparams.Add("DateRange", entity.OrderSummary != null && entity.OrderSummary.OrderDate != null ? entity.OrderSummary.OrderDate : String.Empty);
+            var res = await _dapper.GetAllAsync<APIOrderDetail>("proc_GetOrderDetails", dbparams, commandType: CommandType.StoredProcedure);
+            return res;
+        }
+
+
+
         public async Task<IEnumerable<OrderSummary>> GetAllAsync(OrderSummary entity = null)
         {
             IEnumerable<OrderSummary> oderssummary = new List<OrderSummary>();
             try
             {
                 var dbparams = new DynamicParameters();
+                dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
                 string sqlQuery = @"proc_GetOrderSummary";
-
                 var res = await _dapper.GetAllAsyncProc<OrderSummary, ApplicationUser, OrderSummary>(entity ?? new OrderSummary(), sqlQuery,
                       dbparams, (oderssummary, applicationuser) =>
                       {
                           oderssummary.User = applicationuser;
-
                           return oderssummary;
                       }, splitOn: "OrderID,UserID");
                 oderssummary = res;
