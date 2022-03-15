@@ -3,15 +3,15 @@
     public class ApiOrderSchedule
     {
         public int ScheduleID { get; set; }
-        public string UserID { get; set; }
+        public int UserID { get; set; }
         public string Name { get; set; }
-        public string CategoryID { get; set; }
+        public int CategoryID { get; set; }
         public string CategoryName { get; set; }
 
-        public string FrequencyID { get; set; }
+        public int FrequencyID { get; set; }
         public string FrequencyName { get; set; }
 
-        public string ProductID { get; set; }
+        public int ProductID { get; set; }
         public string ProductName { get; set; }
         public int Quantity { get; set; }
         public string StartFromDate { get; set; }

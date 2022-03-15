@@ -281,7 +281,7 @@ namespace Milkyfie.Controllers
         #endregion
         #region ORder
         [HttpPost(nameof(ScheduleOrder))]
-        public IActionResult ScheduleOrder(OrderSchedule os)
+        public IActionResult ScheduleOrder(ApiOrderSchedule os)
         {
             var res = new Response()
             {
@@ -292,21 +292,20 @@ namespace Milkyfie.Controllers
             {
                 User = new ApplicationUser()
                 {
-                    Id = os.User.Id
+                    Id = os.UserID
                 },
-                LoginID = os.User.Id,
+                LoginID = os.UserID,
                 Product = new Product()
                 {
-                    ProductID = os.Product.ProductID
+                    ProductID = os.ProductID
                 },
                 Category = new Category()
                 {
-                    CategoryID = os.Category.CategoryID
-
+                    CategoryID = os.CategoryID
                 },
                 Frequency = new Frequency()
                 {
-                    FrequencyID = os.Frequency.FrequencyID,
+                    FrequencyID = os.FrequencyID,
                 },
                 Quantity = os.Quantity,
                 StartFromDate = os.StartFromDate,
@@ -319,15 +318,29 @@ namespace Milkyfie.Controllers
 
 
         [HttpPost(nameof(ScheduleOrderDetails))]
-        public IActionResult ScheduleOrderDetails(OrderSchedule entity)
+        public IActionResult ScheduleOrderDetails(ApiOrderSchedule os)
         {
             var res = new Response<List<ApiOrderSchedule>>()
             {
                 StatusCode = ResponseStatus.Failed,
                 ResponseText = ResponseStatus.Failed.ToString()
             };
-
-            var resp = _order.GetAllAsyncAPi(entity).Result;
+            var orderschedule = new OrderSchedule()
+            {
+                User = new ApplicationUser()
+                {
+                    Id = os.UserID
+                },
+                Product = new Product()
+                {
+                    ProductID = os.ProductID
+                },
+                Category = new Category()
+                {
+                    CategoryID = os.CategoryID
+                }
+            };
+            var resp = _order.GetAllAsyncAPi(orderschedule).Result;
             if (resp != null && resp.Count() > 0)
             {
                 res = new Response<List<ApiOrderSchedule>>()
