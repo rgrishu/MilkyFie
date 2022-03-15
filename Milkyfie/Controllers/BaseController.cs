@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Milkyfie.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     public class BaseController : Controller
     {

@@ -24,6 +24,7 @@ using Paymentgateway.Paytm;
 
 namespace Milkyfie.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class GatewayController : Controller
     {
         #region Variables

@@ -17,6 +17,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 namespace Milkyfie.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Authorize]
     //[JWTAuthorize]
     public class HomeController : Controller

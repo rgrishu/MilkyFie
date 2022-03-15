@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Milkyfie.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class RoleController : Controller
     {
         private readonly RoleManager<ApplicationRole> _roleManager;

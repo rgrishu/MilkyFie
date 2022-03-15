@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Milkyfie.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi =true)]
     public class AccountController : Controller
     {
         #region Variables

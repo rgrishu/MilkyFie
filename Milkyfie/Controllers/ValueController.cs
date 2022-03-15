@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Milkyfie.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
