@@ -394,7 +394,7 @@ namespace Milkyfie.Controllers
                 OrderSummary = new OrderSummary()
                 {
                     OrderID = OrderID,
-                },  
+                },
             };
             var resp = _order.GetAllAsyncOrderDetailAPi(entity).Result;
             if (resp != null && resp.Count() > 0)
@@ -408,7 +408,17 @@ namespace Milkyfie.Controllers
             }
             return Json(res);
         }
-
+        [HttpPost(nameof(UpdateOrderStatus))]
+        public IActionResult UpdateOrderStatus(StatusChangeReq entity, int UserID)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            res = _order.UodateOrderDetailStatus(entity, UserID).Result;
+            return Json(res);
+        }
         #endregion
 
     }

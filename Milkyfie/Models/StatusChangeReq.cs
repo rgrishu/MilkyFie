@@ -8,7 +8,6 @@ namespace Milkyfie.Models
         public int ID { get; set; }
         public int Quantity { get; set; }
         public string Remark { get; set; }
-        [Required]
         public Status Status { get; set; }
 
     }
