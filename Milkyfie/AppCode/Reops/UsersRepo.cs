@@ -23,6 +23,8 @@ namespace Milkyfie.AppCode.Reops
 
 
 
+
+
         public async Task<Response> AddAsync(ApplicationUser entity)
         {
             var dbparams = new DynamicParameters();
@@ -150,7 +152,92 @@ namespace Milkyfie.AppCode.Reops
             return balance;
         }
 
+        public async Task<Response> FosMapping(FOSMap entity)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            if (entity == null)
+            {
+                res.ResponseText = "Invalid Request Data!";
+                return res;
+            }
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("FOSMapID", entity.FOSMapID);
+                dbparams.Add("FOSID",  entity.Users.Id);
+                dbparams.Add("PincodeID", entity.pincode.PincodeID);
+                dbparams.Add("QueryType", "I");
+                var ires = await _dapper.GetAllAsync<Response>("proc_FosMaping", dbparams, commandType: CommandType.StoredProcedure);
+                res = ires.FirstOrDefault();
+            }
+            catch (Exception ex)
+            { }
+            return res;
+        }
+        public async Task<Response> DeleteFosMapping(FOSMap entity)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            if (entity == null)
+            {
+                res.ResponseText = "Invalid Request Data!";
+                return res;
+            }
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("FOSMapID", entity.FOSMapID);
+                dbparams.Add("FOSID", 0);
+                dbparams.Add("PincodeID", 0);
+                dbparams.Add("QueryType", "D");
+                var ires = await _dapper.GetAllAsync<Response>("proc_FosMaping", dbparams, commandType: CommandType.StoredProcedure);
+                res = ires.FirstOrDefault();
+            }
+            catch (Exception ex)
+            { }
+            return res;
+        }
 
+        public async Task<IEnumerable<FOSMap>> GetMapedFos(FOSMap entity=null)
+        {
+            IEnumerable<FOSMap> fosmap = new List<FOSMap>();
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("FOSMapID", 0);
+                dbparams.Add("FOSID", 0);
+                dbparams.Add("PincodeID", 0);
+                dbparams.Add("QueryType", "S");
+                string sqlQuery = @"proc_FosMaping";
+                var res = await _dapper.GetAllAsyncProc<FOSMap, ApplicationUser,Pincode, FOSMap>(entity ?? new FOSMap(), sqlQuery,
+                      dbparams, (fosmap, applicationuser, pincode) =>
+                      {
+                          fosmap.Users = applicationuser;
+                          fosmap.pincode = pincode;
+                          return fosmap;
+                      }, splitOn: "FOSMapID,UserID,PincodeID");
+                fosmap = res;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return fosmap;
+
+        }
+
+
+
+
+
+      
 
         public async Task<IReadOnlyList<ApplicationUser>> GetDropdownAsync(ApplicationUser entity = null)
         {

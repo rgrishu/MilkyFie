@@ -36,7 +36,10 @@ var serviceProperty = {
             $.post('/Master/GetFrequency', param).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
         }),
         Users: param => new Promise((resolve, reject) => {
-            $.post('/Account/UsersDropdown', param).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
+            $.post('/Account/UsersDropdown', { role: param }).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
+        }),
+        Pincode: param => new Promise((resolve, reject) => {
+            $.post('/Master/GetPincodeDrop', param).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
         }),
     };
 
@@ -47,11 +50,11 @@ var serviceProperty = {
 
 $(function () {
    // $("#loaderbody").addClass('hide');
-    $(document).bind('ajaxStart', function () {
-        Q.preloader.load();
-    }).bind('ajaxStop', function () {
-        Q.preloader.remove();
-    });
+    //$(document).bind('ajaxStart', function () {
+    //    Q.preloader.load();
+    //}).bind('ajaxStop', function () {
+    //    Q.preloader.remove();
+    //});
     $('body').on('submit', 'form', function () {
         ajaxFormSubmit(this)
     })

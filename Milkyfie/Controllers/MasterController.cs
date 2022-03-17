@@ -25,12 +25,14 @@ namespace Milkyfie.Controllers
         protected IRepository<Banners> _banner;
         protected IRepository<News> _news;
         protected IRepository<Frequency> _frequency;
+        protected IRepository<Pincode> _pincode;
         public MasterController(IDapperRepository dapper, IRepository<Category> category,
-            IRepository<Unit> unit, IProduct product, IRepository<Banners> banner, IRepository<News> news, IRepository<Frequency> frequency, IMapper mapper) : base(dapper, category, unit, product, mapper)
+            IRepository<Unit> unit, IProduct product, IRepository<Banners> banner, IRepository<News> news, IRepository<Frequency> frequency, IRepository<Pincode> pincode, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
             _banner = banner;
             _news = news;
             _frequency = frequency;
+            _pincode = pincode;
         }
         #region Category
         public async Task<IActionResult> Category()
@@ -126,7 +128,7 @@ namespace Milkyfie.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveNewProduct(ProductViewModel model)
         {
-           
+
             var retRes = new Response()
             {
                 StatusCode = ResponseStatus.Failed,
@@ -166,9 +168,19 @@ namespace Milkyfie.Controllers
             return PartialView("PartialView/_ProductList", resp);
         }
         [HttpPost]
-        public async Task<IActionResult> GetProductDrop(int categoryid=0)
+        public async Task<IActionResult> GetProductDrop(int categoryid = 0)
         {
-            var resp = await _product.GetAllAsync(new Product { Category = new Category { CategoryID= categoryid } });
+            var resp = await _product.GetAllAsync(new Product { Category = new Category { CategoryID = categoryid } });
+            return Json(resp);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetPincodeDrop(PincodeFilter term)
+        {
+            var pincode = new Pincode()
+            { 
+            PinCode= term.term
+            };
+            var resp = await _pincode.GetAllAsync(pincode);
             return Json(resp);
         }
 
@@ -176,7 +188,7 @@ namespace Milkyfie.Controllers
         [HttpPost]
         public async Task<IActionResult> DelProduct(int id)
         {
-          
+
             var resp = await _product.DeleteAsync(id);
             return Json(resp);
         }
@@ -199,7 +211,7 @@ namespace Milkyfie.Controllers
         [HttpPost]
         public async Task<IActionResult> UserForm(string role)
         {
-            return PartialView("~/Views/Account/PartialView/_Register.cshtml", new RegisterViewModel { IsAdmin = true,RoleType= role });
+            return PartialView("~/Views/Account/PartialView/_Register.cshtml", new RegisterViewModel { IsAdmin = true, RoleType = role });
         }
 
 
@@ -213,7 +225,7 @@ namespace Milkyfie.Controllers
             //var resp = await _category.GetAllAsync(null);
             return View();
         }
-        public async Task<IActionResult> UploadBanner(IFormFile file, string backlink,bool IsPopup)
+        public async Task<IActionResult> UploadBanner(IFormFile file, string backlink, bool IsPopup)
         {
 
             var response = new Response()
@@ -245,7 +257,7 @@ namespace Milkyfie.Controllers
                         Banner = sb.ToString(),
                         BackLink = backlink,
                         IsActive = true,
-                        IsPopup= IsPopup
+                        IsPopup = IsPopup
                     };
                     var resp = await _banner.AddAsync(banner);
                     return Json(resp);
@@ -357,8 +369,8 @@ namespace Milkyfie.Controllers
 
 
         #region Frequency
-       
-        
+
+
         [HttpPost]
         public async Task<IActionResult> GetFrequency()
         {
@@ -366,7 +378,7 @@ namespace Milkyfie.Controllers
             return Json(resp);
         }
 
-       
+
         #endregion
     }
 }

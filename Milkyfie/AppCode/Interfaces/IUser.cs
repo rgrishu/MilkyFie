@@ -11,5 +11,9 @@ namespace Milkyfie.AppCode.Interfaces
         Task<ApplicationUser> GetUserInfo(ApplicationUser entity = null);
         Task<decimal> UserBalanceForAPi(int UserID);
         Task<Response> UpdateUserInfo(ApplicationUser entity);
+
+        Task<Response> FosMapping(FOSMap entity);
+        Task<Response> DeleteFosMapping(FOSMap entity);
+        Task<IEnumerable<FOSMap>> GetMapedFos(FOSMap entity = null);
     }
 }

@@ -226,12 +226,13 @@ namespace Milkyfie.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> UsersDropdown()
+        public async Task<IActionResult> UsersDropdown(string role)
         {
+            
             var users = _users.GetAllAsync().Result;
             if (users.Count() > 0)
             {
-                users = users.Where(x => x.Role == "Consumer");
+                users = users.Where(x => x.Role == (role ?? "Consumer"));
             }
             return Json(users);
         }

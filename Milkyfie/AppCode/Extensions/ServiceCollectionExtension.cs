@@ -40,6 +40,7 @@ namespace Milkyfie.AppCode.Extensions
             services.AddSingleton<IUser, UsersRepo>();
             services.AddSingleton<IOrder, OrderRepo>();
             services.AddSingleton<IRepository<Frequency>, FrequencyRepo>();
+            services.AddSingleton<IRepository<Pincode>, PinCodeRepo>();
             services.AddSingleton<IReport, ReportRepo>();
             services.AddSingleton<Database>();
             services.AddAutoMapper(typeof(Startup));

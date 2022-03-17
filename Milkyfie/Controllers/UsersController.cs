@@ -45,7 +45,58 @@ namespace Milkyfie.Controllers
             var data = _users.AddAsync(entity).Result;
             return Json(data);
         }
-
-
+        [HttpGet]
+        public async Task<IActionResult> FosMap()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> FosMapping(int Id, int PincodeID)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            if (Id == 0)
+            {
+                res.ResponseText = "Select FOS!";
+                return Json(res);
+            }
+            if (PincodeID == 0)
+            {
+                res.ResponseText = "Select PinCode!";
+                return Json(res);
+            }
+            var entity = new FOSMap()
+            {
+                Users = new ApplicationUser()
+                {
+                    Id = Id,
+                },
+                pincode = new Pincode()
+                {
+                    PincodeID = PincodeID
+                },
+            };
+            res = _users.FosMapping(entity).Result;
+            return Json(res);
+        }
+        [HttpPost]
+        public async Task<IActionResult> DeleteFosMapping(int id)
+        {
+            var entity = new FOSMap()
+            {
+                FOSMapID = id
+            };
+            var data = _users.DeleteFosMapping(entity).Result;
+            return Json(data);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetMapedFos()
+        {
+            var data = _users.GetMapedFos().Result;
+            return PartialView("PartialView/_FosMapList", data);
+        }
     }
 }

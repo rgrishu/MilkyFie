@@ -375,6 +375,7 @@ var ajaxvalidationerror = xhr => {
     Q.reset = () => {
         $('input').val('');
         $('textarea').val('');
+        $('select').val('0').trigger('change');
         $('select').each(function (i) {
             $(this).selectedIndex = -1;
         });
@@ -795,9 +796,12 @@ function ajaxFormSubmit(form) {
         url: form.action,
         data: data,
         success: function (response) {
-            Q.notify(response.statusCode, response.responseText);
+            Q.notify(response
+
+                .statusCode, response.responseText);
             if (response.statusCode == 1) {
                 $(form).trigger("reset");
+                Q.reset();
                 $("#firstTab").html(response.html);
                 // refreshAddNewTab($(form).attr('data-restUrl'), true);
                 if (typeof loadData !== 'undefined' && $.isFunction(loadData))

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Milkyfie.Controllers
 {
@@ -292,22 +293,22 @@ namespace Milkyfie.Controllers
             {
                 User = new ApplicationUser()
                 {
-                    Id = os.UserID
+                    Id = int.Parse(os.UserID ?? "0")
                 },
-                LoginID = os.UserID,
+                LoginID = int.Parse(os.UserID),
                 Product = new Product()
                 {
-                    ProductID = os.ProductID
+                    ProductID = int.Parse(os.ProductID ?? "0")
                 },
                 Category = new Category()
                 {
-                    CategoryID = os.CategoryID
+                    CategoryID = int.Parse(os.CategoryID ?? "0")
                 },
                 Frequency = new Frequency()
                 {
-                    FrequencyID = os.FrequencyID,
+                    FrequencyID = int.Parse(os.FrequencyID ?? "0"),
                 },
-                Quantity = os.Quantity,
+                Quantity = int.Parse(os.Quantity ?? "0"),
                 StartFromDate = os.StartFromDate,
                 ScheduleShift = os.ScheduleShift,
                 Description = os.Description
@@ -318,7 +319,7 @@ namespace Milkyfie.Controllers
 
 
         [HttpPost(nameof(ScheduleOrderDetails))]
-        public IActionResult ScheduleOrderDetails(ApiOrderSchedule os)
+        public IActionResult ScheduleOrderDetails(ApiOrderReq os)
         {
             var res = new Response<List<ApiOrderSchedule>>()
             {
@@ -329,97 +330,99 @@ namespace Milkyfie.Controllers
             {
                 User = new ApplicationUser()
                 {
-                    Id = os.UserID
+                    Id = int.Parse(os.UserID ?? "0")
                 },
                 Product = new Product()
                 {
-                    ProductID = os.ProductID
+                    ProductID = int.Parse(os.ProductID ?? "0")
                 },
                 Category = new Category()
                 {
-                    CategoryID = os.CategoryID
+                    CategoryID = int.Parse(os.CategoryID ?? "0")
                 }
             };
             var resp = _order.GetAllAsyncAPi(orderschedule).Result;
             if (resp != null && resp.Count() > 0)
             {
+                
                 res = new Response<List<ApiOrderSchedule>>()
                 {
                     StatusCode = ResponseStatus.Success,
                     ResponseText = ResponseStatus.Success.ToString(),
-                    Result = resp.ToList()
+                   
+                Result = resp.ToList()
                 };
-            }
-            return Json(res);
         }
-
-
-        [HttpPost(nameof(OrderSummary))]
-        public IActionResult OrderSummary(int UserID)
-        {
-            var res = new Response<List<ApiOrderSummary>>()
-            {
-                StatusCode = ResponseStatus.Failed,
-                ResponseText = ResponseStatus.Failed.ToString()
-            };
-            var entity = new OrderSummary()
-            {
-                User = new ApplicationUser()
-                {
-                    Id = UserID,
-                }
-            };
-            var resp = _order.GetAllAsyncOrderSummaryAPi(entity).Result;
-            if (resp != null && resp.Count() > 0)
-            {
-                res = new Response<List<ApiOrderSummary>>()
-                {
-                    StatusCode = ResponseStatus.Success,
-                    ResponseText = ResponseStatus.Success.ToString(),
-                    Result = resp.ToList()
-                };
-            }
             return Json(res);
-        }
-        [HttpPost(nameof(OrderDetails))]
-        public IActionResult OrderDetails(int OrderID)
-        {
-            var res = new Response<List<APIOrderDetail>>()
-            {
-                StatusCode = ResponseStatus.Failed,
-                ResponseText = ResponseStatus.Failed.ToString()
-            };
-            var entity = new OrderDetail()
-            {
-                OrderSummary = new OrderSummary()
-                {
-                    OrderID = OrderID,
-                },
-            };
-            var resp = _order.GetAllAsyncOrderDetailAPi(entity).Result;
-            if (resp != null && resp.Count() > 0)
-            {
-                res = new Response<List<APIOrderDetail>>()
-                {
-                    StatusCode = ResponseStatus.Success,
-                    ResponseText = ResponseStatus.Success.ToString(),
-                    Result = resp.ToList()
-                };
-            }
-            return Json(res);
-        }
-        [HttpPost(nameof(UpdateOrderStatus))]
-        public IActionResult UpdateOrderStatus(StatusChangeReq entity, int UserID)
-        {
-            var res = new Response()
-            {
-                StatusCode = ResponseStatus.Failed,
-                ResponseText = ResponseStatus.Failed.ToString()
-            };
-            res = _order.UodateOrderDetailStatus(entity, UserID).Result;
-            return Json(res);
-        }
-        #endregion
-
     }
+
+
+    [HttpPost(nameof(OrderSummary))]
+    public IActionResult OrderSummary(int UserID)
+    {
+        var res = new Response<List<ApiOrderSummary>>()
+        {
+            StatusCode = ResponseStatus.Failed,
+            ResponseText = ResponseStatus.Failed.ToString()
+        };
+        var entity = new OrderSummary()
+        {
+            User = new ApplicationUser()
+            {
+                Id = UserID,
+            }
+        };
+        var resp = _order.GetAllAsyncOrderSummaryAPi(entity).Result;
+        if (resp != null && resp.Count() > 0)
+        {
+            res = new Response<List<ApiOrderSummary>>()
+            {
+                StatusCode = ResponseStatus.Success,
+                ResponseText = ResponseStatus.Success.ToString(),
+                Result = resp.ToList()
+            };
+        }
+        return Json(res);
+    }
+    [HttpPost(nameof(OrderDetails))]
+    public IActionResult OrderDetails(int OrderID)
+    {
+        var res = new Response<List<APIOrderDetail>>()
+        {
+            StatusCode = ResponseStatus.Failed,
+            ResponseText = ResponseStatus.Failed.ToString()
+        };
+        var entity = new OrderDetail()
+        {
+            OrderSummary = new OrderSummary()
+            {
+                OrderID = OrderID,
+            },
+        };
+        var resp = _order.GetAllAsyncOrderDetailAPi(entity).Result;
+        if (resp != null && resp.Count() > 0)
+        {
+            res = new Response<List<APIOrderDetail>>()
+            {
+                StatusCode = ResponseStatus.Success,
+                ResponseText = ResponseStatus.Success.ToString(),
+                Result = resp.ToList()
+            };
+        }
+        return Json(res);
+    }
+    [HttpPost(nameof(UpdateOrderStatus))]
+    public IActionResult UpdateOrderStatus(StatusChangeReq entity, int UserID)
+    {
+        var res = new Response()
+        {
+            StatusCode = ResponseStatus.Failed,
+            ResponseText = ResponseStatus.Failed.ToString()
+        };
+        res = _order.UodateOrderDetailStatus(entity, UserID).Result;
+        return Json(res);
+    }
+    #endregion
+
+}
 }

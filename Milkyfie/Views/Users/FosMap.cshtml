@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "Fos Map";
+    Layout = "_LayOut";
+}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<div class="main-container">
+    <div class="row gutters">
+        <div id="frmcat" class="w-100">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                 <form action="/Users/FosMapping" method="post">
+                <div class="card lobipanel-minimize">
+                    <div class="card-header bg-primary text-white h6">
+                        Fos Map
+                    </div>
+                    <div class="card-body">
+                        <div class="row gutters">
+                            <div class="col-xl-5 col-lg col-md-5 col-sm-4 col-12">
+                                <input type="hidden" name="CategoryID" value="0" id="hdncatid" />
+                                <div class="form-group">
+                                    @*                                    <label asp-for="@mdl.ParentID" class="control-label"></label>
+                                        <select asp-for="@mdl.ParentID" name="ParentID" class="form-control" asp-items="ViewBag.Category"></select>
+                                        <span asp-validation-for="@mdl.ParentID" class="text-danger"></span>*@
+                                    <label for="inputName">Select FOS</label>
+                                    <select class="form-control js-example-basic-single" name="Id" id="ddlfos">
+                                      @*  <option id="Option" name="ParentID" value="0">:: Select Fos ::</option>*@
+                                        @*  @if (@Model != null && @Model.Any())
+                                            {
+                                            @foreach (var item in Model)
+                                            {
+                                            <option value="@item.CategoryID">@item.CategoryName</option>
+                                            }
+                                            }*@
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-5 col-lg col-md-5 col-sm-5 col-12">
+                      
+                                <div class="form-group">
+
+                                    <label for="inputName">Select Pincode</label>
+                                    <select class="form-control js-example-basic-single" name="PincodeID" id="ddlpincode">
+                                      @*  <option id="Option" name="ParentID" value="0">:: Select PinCode ::</option>*@
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
+                                <div class="btn-group">
+                                    <button class="btn btn-primary" style="margin-top:20px" id="btnSubmit" type="submit">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<button class="btn btn-secondary" type="button" >Cancel</button>*@
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Row start -->
+    <div class="row gutters">
+        <div id="frmcat" class="w-100">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white h6">
+                        <span id="spnrole">Maped List</span>
+
+
+
+                    </div>
+                    <div class="card-body">
+
+
+                        <div class="table-container">
+                            <div class="table-responsive">
+                                <table id="basicExample" class="table custom-table">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                #
+                                            </th>
+                                            <th>
+                                                Fos Name
+                                            </th>
+
+                                            <th>
+                                                PinCode
+                                            </th>
+                                            <th>
+                                                Entry Date
+                                            </th>
+                                            <th>
+                                                Action
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+
+        $(document).ready(function(){
+      
+        //  BindDdlPincode();
+         $('#ddlfos').select2({placeholder: "::fos::",});
+       //  $('#ddlpincode').select2();
+
+         $("#ddlpincode").select2({
+             placeholder: "::Pincode::",
+         //minimumInputLength: 2,
+        tags: [],
+        ajax: {
+            url: "/Master/GetPincodeDrop",
+            dataType: 'json',
+            type: "POST",
+            quietMillis: 50,
+            data: function (term) {
+                return {
+                    term: term
+                };
+            },
+            processResults: function (result) {
+            return {
+                results: $.map(result, function (item) {
+                    return {
+                        id: item.pincodeID,
+                        text: item.pinCode
+                    };
+                }),
+            };
+        }
+        }
+    });
+      BindDropDownUsers("Fos");
+        loadData();
+        })
+        function loadData(){
+             Q.preloader.load();
+             $.ajax({
+                   type: 'post',
+                    url: '/Users/GetMapedFos',
+                   data:{role:$('#spnrole').text()},
+                    success: function (data) {
+                          $('tbody').html(data);
+                    },
+                    error: function (data) {
+                        console.log('An error occurred.');
+                        console.log(data);
+                           Q.notify(-1, 'An error occurred.');
+                    },
+              });
+              Q.preloader.remove();
+        }
+         function BindDropDownUsers(fos){
+              var userslist=s.Dropdown.Users(fos);
+          userslist.then(result=>
+            {
+                $('#ddlfos').empty().append('<option id="Option" name="UserID" value="0">:: FOS ::</option>').append(result.map(x=>`<option value="${x.id}">${x.name}</option>`));
+            });
+        }
+
+        //function BindDdlPincode(){
+        //      var userslist=s.Dropdown.Pincode();
+        //  userslist.then(result=>
+        //    {
+        //        $('#ddlpincode').empty().append('<option id="Option" name="pincode" value="0">:: Select Pincode ::</option>').append(result.map(x=>`<option value="${x.pincodeID}">${x.pinCode}</option>`));
+        //    });
+        //}
+
+</script>
+}
