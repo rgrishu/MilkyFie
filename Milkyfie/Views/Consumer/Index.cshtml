@@ -2,15 +2,45 @@
     ViewData["Title"] = "Index";
 	    Layout = "_ConsumerLayout";
 }
+@using Milkyfie.AppCode.Reops.Entities;
+@model ApplicationUser
+@{
+    ViewData["Title"] = "Index";
+}
 <div class="main-container">
-					<!-- Row start -->
-					<div class="row gutters">
-				<h1>Welcome</h1>
-					</div>
-					<!-- Row end -->
+    <div id="dashboard"></div>
+    <!-- Row start -->
+    
+    <!-- Row end -->
+    <!-- Row start -->
+    <!-- Row end -->
 
-					<!-- Row start -->
-				
-					<!-- Row end -->
-
-				</div>
+</div>
+@section scripts{
+<script>
+    $(document).ready(function(){
+    loadData();
+    });
+     function loadData(){
+         Q.preloader.load();
+         $.ajax({
+               type: 'post',
+               url: 'Dashboard',
+               processData: false,
+               contentType: false,
+             
+                success: function (data) {
+                      $('#dashboard').html(data);
+                       Q.preloader.remove();
+                },
+                error: function (data) {
+                     Q.preloader.remove();
+                    console.log('An error occurred.');
+                    console.log(data);
+                       Q.notify(-1, 'An error occurred.');
+                },
+          });
+    }
+    
+</script>
+}

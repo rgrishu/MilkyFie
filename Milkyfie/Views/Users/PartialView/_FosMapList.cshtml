@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Milkyfie.AppCode.Reops.Entities.FOSMap>
+@if (Model != null && Model.Any())
+{
+    int i = 1;
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@i</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Users.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.pincode.PinCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedOn)
+            </td>
+
+            <td>
+                <a class="btn-ed-del btndel" data-id="@item.FOSMapID">
+                    <img src="~/img/delete.png" class="img-action" />
+                </a>
+            </td>
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="3">No Records Found</td>
+    </tr>
+}
+
+<script>
+    $('.btn-ed-del').click(function(){
+              Q.preloader.load();
+            var id = $(this).attr("data-id");
+
+           $.ajax({
+              type: 'post',
+               url: 'DeleteFosMapping',
+               data: {id:id},
+               success: function (data) {
+                   if(data.statusCode==1)
+                 {
+                     loadData();
+                           Q.notify(data.statusCode, data.responseText);
+                 }
+                 else
+                 {
+                         Q.notify(data.statusCode, data.responseText);
+                 }
+
+                     Q.preloader.remove();
+               },
+               error: function (data) {
+                   console.log('An error occurred.');
+                   console.log(data);
+                      Q.notify(-1, 'An error occurred.');
+                        Q.preloader.remove();
+               },
+           });
+
+       })
+
+</script>

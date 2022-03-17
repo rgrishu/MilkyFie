@@ -10,7 +10,7 @@
     }
     else
     {
-      <script src="~/theme/js/jquery.min.js"></script>
+        <script src="~/theme/js/jquery.min.js"></script>
     }
 }
 
@@ -19,10 +19,11 @@
         <div class="form-group">
             <label asp-for="RoleName" class="control-label"></label>
             <select asp-for="RoleName" id="ddlRole" class="form-control">
-                @if(Model.RoleType=="Consumer")
+                @if (Model.RoleType == "Consumer")
                 {
-                   <option value="Consumer" selected="selected">Consumer</option> 
-                }else  if(Model.RoleType=="Fos")
+                    <option value="Consumer" selected="selected">Consumer</option>
+                }
+                else if (Model.RoleType == "Fos")
                 {
                     <option value="Fos">FOS</option>
                 }
@@ -117,9 +118,13 @@
               {
                     Q.preloader.remove()
                      Q.notify(result.statusCode, result.responseText);
+                     if( $("#hdnIsAdmin").val()=="true")
+                     {
+                      getUserss();
+                     }
                   $('input').val('');
                   $('.field-validation-valid').remove();
-                    getUserss();
+
               }
               else
               {
@@ -133,7 +138,7 @@
                     Q.notify(-1, 'An error occurred.');
              }
          })
-        
+
      });
 
       function getUserss(){

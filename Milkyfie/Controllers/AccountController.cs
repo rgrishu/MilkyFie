@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Milkyfie.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi =true)]
     public class AccountController : Controller
     {
         #region Variables
@@ -30,7 +31,7 @@ namespace Milkyfie.Controllers
         private readonly ApplicationUserManager _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private IRepository<ApplicationUser> _users;
+        private IUser _users;
         private readonly ILogger<AccountController> _logger;
         private readonly IRepository<EmailConfig> _emailConfig;
         private IMapper _mapper;
@@ -38,7 +39,7 @@ namespace Milkyfie.Controllers
         //IConfiguration config
         public AccountController(IOptions<AppSettings> appSettings,
             ApplicationUserManager userManager, RoleManager<ApplicationRole> roleManager,
-            SignInManager<ApplicationUser> signInManager, IRepository<ApplicationUser> users,
+            SignInManager<ApplicationUser> signInManager, IUser users,
             ILogger<AccountController> logger, IRepository<EmailConfig> emailConfig, IMapper mapper)
         {
             //_config = config;
@@ -68,7 +69,7 @@ namespace Milkyfie.Controllers
             {
                 return Json(response);
             }
-            if (string.IsNullOrEmpty(model.RoleName))
+            if (string.IsNullOrEmpty(model.RoleName) || model.RoleName=="null")
             {
                 model.RoleName = "Consumer";
             }
@@ -166,20 +167,23 @@ namespace Milkyfie.Controllers
                 StatusCode = ResponseStatus.Failed,
                 ResponseText = "Invalid Login Attempt"
             };
-            var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, false, true);
-            if (result.Succeeded)
-            {
-                var user = _users.GetDetails(model.MobileNo).Result;
-                var token = generateJwtToken(user);
-                var authResponse = new AuthenticateResponse(user, token);
-                response = new Response<AuthenticateResponse>
+          
+                var result = await _signInManager.PasswordSignInAsync(model.MobileNo, model.Password, false, true);
+                if (result.Succeeded)
                 {
-                    StatusCode = ResponseStatus.Success,
-                    ResponseText = ResponseStatus.Success.ToString(),
-                    Result = authResponse
-                };
-                goto Finish;
-            }
+                
+                    var user = _users.GetUserInfo(new ApplicationUser { UserName= model.MobileNo } ).Result;
+                    var token = generateJwtToken(user);
+                    var authResponse = new AuthenticateResponse(user, token);
+                    response = new Response<AuthenticateResponse>
+                    {
+                        StatusCode = ResponseStatus.Success,
+                        ResponseText = ResponseStatus.Success.ToString(),
+                        Result = authResponse
+                    };
+                    goto Finish;
+                }
+           
         Finish:
             return Json(response);
         }
@@ -222,12 +226,13 @@ namespace Milkyfie.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> UsersDropdown()
+        public async Task<IActionResult> UsersDropdown(string role)
         {
+            
             var users = _users.GetAllAsync().Result;
             if (users.Count() > 0)
             {
-                users = users.Where(x => x.Role == "Consumer");
+                users = users.Where(x => x.Role == (role ?? "Consumer"));
             }
             return Json(users);
         }
@@ -272,7 +277,7 @@ namespace Milkyfie.Controllers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddMinutes(10),
+                Expires = DateTime.UtcNow.AddDays(30),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);

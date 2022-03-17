@@ -1,5 +1,6 @@
 ﻿using Milkyfie.Models;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace Milkyfie.AppCode.Reops.Entities
 {
@@ -21,21 +22,14 @@ namespace Milkyfie.AppCode.Reops.Entities
         public string ProductIcon { get; set; }
         public string Description { get; set; }
         public string Remark { get; set; }
+        public string Weight { get; set; }
+        public string PackagingDetail { get; set; }
+        public string KeyFeatures { get; set; }
+        public string Nutrition { get; set; }
+       
         public Category Category { get; set; }
         public Unit Unit { get; set; }
-
+        
     }
-    //public class ProductCategory
-    //{
-    //    public int CategoryID { get; set; }
-    //    public int CategoryName { get; set; }
-    //    public Parent Parent { get; set; }
-    //    public ProductDetails ProductDetails { get; set; }
-    //}
-    //public class ProductDetails
-    //{
-    //    public string ProductName { get; set; }
-
-    //}
-
+  
 }

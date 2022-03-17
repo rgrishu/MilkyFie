@@ -29,6 +29,7 @@ namespace Milkyfie.AppCode.DAL
 
         //MultiWith Split
         Task<dynamic> GetMultipleAsync<T1, T2,TReturn>(string sp, object parms, Func<T1, T2, TReturn> p, string splitOn, CommandType commandType = CommandType.StoredProcedure);
+        Task<dynamic> GetMultipleAsync<T1, T2,TReturn>(string sp, DynamicParameters parms, Func<T1, T2, TReturn> p, string splitOn, CommandType commandType = CommandType.StoredProcedure);
 
 
 

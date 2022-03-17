@@ -17,6 +17,7 @@ namespace Milkyfie.AppCode.Reops.Entities
         public decimal CurrentAmount { get; set; }
         public string TransactionType { get; set; }
         public string CreatedOn { get; set; }
+        public string Naration { get; set; }
         public ApplicationUser User { get; set; }
         public OrderSummary Order { get; set; }
     }

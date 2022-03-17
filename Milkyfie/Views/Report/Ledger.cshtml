@@ -5,7 +5,7 @@
     <div class="row gutters">
 
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <div class="card">
+            <div class="card lobipanel-minimize">
                 <div class="card-header bg-primary text-white h6">
                     Ledger Details
                 </div>
@@ -54,17 +54,20 @@
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 
             <div class="table-container">
-                <div class="t-header">Basic Example</div>
+
                 <div class="table-responsive">
-                    <table class="table custom-table">
+                    <table id="copy-print-csv" class="table custom-table">
                         <thead>
                             <tr>
-                              
+                                @* <th>#</th>*@
                                 <th>Customre Name</th>
-                                <th>Last Amount </th>
-                                <th>Current Amount </th>
-                                <th>Amount</th>
+                                <th>Opening Amount </th>
+                                   <th>Amount</th>
+                                <th>Closing Amount </th>
+                             
                                 <th>Transaction Type</th>
+                                <th>Transaction Date</th>
+                                <th>Naration</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -74,6 +77,8 @@
             </div>
         </div>
     </div>
+
+
 </div>
 
 
@@ -85,11 +90,11 @@
     });
     $(document).ready(function(){
         BindDropDownUsers();
-      loadGrid();
+        loadData();
     });
 
     $('#btnSubmit').click(function(){
-        loadedgerDetails();
+        loadData();
     });
        function BindDropDownUsers(){
           var userslist=s.Dropdown.Users();
@@ -121,37 +126,27 @@
                 },
           });
     }
-
-        var loadGrid = function () {
-            debugger;
-            let columns = [
-                { data: "user.name" },
-               { data: "lastAmount" },
-                { data: "currentAmount" },
-                { data: "amount" },
-                { data: "transactionType"}
-
-            ];
-            $('table').dataTable({
-                processing: true,
-                serverSide: true,
-                paging: true,
-                destroy: true,
-                ajax: {
-                    url: "/Report/LedgerFilter",
-                    type: "POST",
-                    data: function (jsonAOData) {
-                        return { jsonAOData }
-                    },
-                    //dataSrc: "data",
-                },
-                aoColumns: columns,
-                //scrollY: $('[name="Applicationlist"]').offset().top + 118,
-                scrollCollapse: true,
-               // dom: 'R<"top"Bf>rt<"bottom"ilp><"clear">',
-            });
-        };
-        loadGrid();
+    var loadData = function(){
+        $.renderDataTable({
+            columns :  [
+              //{"render":function(d,t,row){}},
+                { data: "user.name"},
+                { data: "lastAmount",orderable:false },
+                   { data: "amount",orderable:false },
+                { data: "currentAmount",orderable:false },
+             
+                { data: "transactionType",orderable:false},
+                { data: "createdOn",orderable:false},
+                { data: "naration",orderable:false}
+            ],
+            apiUrl : '/Report/LedgerFilter',
+            filters:{
+                UserID:$('#ddluser').val(),
+                CreatedOn:$('#txtStartDate').val()
+            }
+        })
+    };
+    
 </script>
 
     }

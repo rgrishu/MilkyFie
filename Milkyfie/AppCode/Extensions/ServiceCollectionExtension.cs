@@ -33,12 +33,14 @@ namespace Milkyfie.AppCode.Extensions
             services.AddSingleton<IRepository<EmailConfig>, EmailConfigRepo>();
             services.AddSingleton<IRepository<Category>, CategoryRepo>();
             services.AddSingleton<IRepository<Unit>, UnitRepo>();
-            services.AddSingleton<IRepository<Product>, ProductRepo>();
+            services.AddSingleton<IProduct, ProductRepo>();
             services.AddSingleton<IRepository<Banners>, BannersRepo>();
             services.AddSingleton<IRepository<News>, NewsRepo>();
             services.AddSingleton<IRepository<ApplicationUser>, UsersRepo>();
+            services.AddSingleton<IUser, UsersRepo>();
             services.AddSingleton<IOrder, OrderRepo>();
             services.AddSingleton<IRepository<Frequency>, FrequencyRepo>();
+            services.AddSingleton<IRepository<Pincode>, PinCodeRepo>();
             services.AddSingleton<IReport, ReportRepo>();
             services.AddSingleton<Database>();
             services.AddAutoMapper(typeof(Startup));

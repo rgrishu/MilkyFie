@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Milkyfie.AppCode.DAL;
+using Milkyfie.AppCode.Helper;
 using Milkyfie.AppCode.Interfaces;
 using Milkyfie.AppCode.Reops.Entities;
 using Milkyfie.Models;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Milkyfie.Controllers
 {
@@ -12,7 +14,7 @@ namespace Milkyfie.Controllers
     {
         protected IReport _report;
         public ReportController(IDapperRepository dapper, IRepository<Category> category,
-            IRepository<Unit> unit, IRepository<Product> product, IReport report, IMapper mapper) : base(dapper, category, unit, product, mapper)
+            IRepository<Unit> unit, IProduct product, IReport report, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
             _report = report;
         }
@@ -25,18 +27,17 @@ namespace Milkyfie.Controllers
         {
             // var res = _report.GetAllLedger(entity).Result;
             List<Ledger> ledger = new List<Ledger>();
-            var res = (JDataTable<Ledger>)_report.GetMultiSplits().Result;
+            var res = (JDataTable<Ledger>)_report.Ledger().Result;
             ledger = res.Data;
             return PartialView("PartialView/_Ledger", ledger);
         }
 
         [HttpPost]
-        public IActionResult LedgerFilter(jsonAOData jsonAOData)
+        public IActionResult LedgerFilter(jsonAOData jsonAOData, LedgerFilters filters)
         {
-            var res = (JDataTable<Ledger>)_report.GetMultiSplits().Result;
-            res.recordsTotal = 15;
-            res.draw = 10;
-           // var ledger = res.Data;
+            //jsonAOData.param = new { LedgerID = 0, searchText = jsonAOData.search?.value};
+            jsonAOData.param = filters;
+            var res = (JDataTable<Ledger>)_report.Ledger(jsonAOData).Result;
             return Json(res);
         }
     }

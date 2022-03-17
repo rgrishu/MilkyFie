@@ -1,7 +1,6 @@
 ﻿body.has-loading {
     height: 100vh !important;
     width: 100%;
-    
 }
 
 .loading {
@@ -16,6 +15,7 @@
     justify-content: center;
     align-items: center;
 }
+
 form {
     width: 100%
 }
@@ -28,21 +28,38 @@ form {
 a {
     cursor: pointer;
 }
+
 .ui-dialog.ui-corner-all.ui-widget.ui-widget-content.ui-front.s-MessageDialog.s-AlertDialog.ui-draggable.ui-resizable {
     z-index: 999 !important;
 }
+
 .ui-dialog-titlebar-close {
-  
     border-radius: 12px !important;
     border-color: #b73d3d !important;
 }
-.ui-dialog-titlebar-close:after {
-    content: "X";
-   
-}
+
+    .ui-dialog-titlebar-close:after {
+        content: "X";
+    }
+
 .ui-widget-header {
-  
     background: #ee0000 !important;
     color: white !important;
-  
+}
+
+.ui-dialog.ui-corner-all.ui-widget.ui-widget-content.ui-front.s-MessageDialog.s-AlertDialog.ui-draggable.ui-resizable {
+    z-index: 9999 !important;
+}
+
+.ui-widget-overlay {
+    opacity: unset;
+    background: rgba(0,0,0,0.7);
+    z-index: 999;
+}
+.lobipanel .card-header .dropdown .dropdown-menu .dropdown-item i {
+    color: #ffff;
+}
+
+.lobipanel .card-header .dropdown .dropdown-menu .dropdown-item:hover, .lobipanel .card-header .dropdown .dropdown-menu .dropdown-item:focus:hover {
+    background-color: transparent;
 }

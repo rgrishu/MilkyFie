@@ -7,8 +7,7 @@ namespace Milkyfie.AppCode.Reops.Entities
         public int CategoryID { get; set; }
         //public int ParentID { get; set; }
        
-        [Required(ErrorMessage = "Enter Category Name")]
-        [StringLength(200)]
+       
         public string CategoryName { get; set; }
         //public string ParentName { get; set; }
         public string Icon { get; set; }

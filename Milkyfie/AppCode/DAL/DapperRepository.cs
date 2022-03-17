@@ -273,6 +273,7 @@ namespace Milkyfie.AppCode.DAL
         public async Task<dynamic> GetMultipleAsync<T1, T2, TReturn>(string sp, object parms, Func<T1, T2, TReturn> p, string splitOn
             , CommandType commandType = CommandType.StoredProcedure)
         {
+            parms = prepareParam((jsonAOData)parms);
             var res = new JDataTable<TReturn>
             {
                 Data = new List<TReturn>(),
@@ -282,7 +283,7 @@ namespace Milkyfie.AppCode.DAL
             {
                 using (IDbConnection db = new SqlConnection(Connectionstring))
                 {
-                    using (var reader = await db.QueryMultipleAsync(sp, parms))
+                    using (var reader = await db.QueryMultipleAsync(sp, param: parms, commandType: commandType))
                     {
                         var pgstng = reader.Read<PageSetting>();
                         var stuff = reader.Read<T1, T2, TReturn>(p, splitOn: splitOn).ToList();
@@ -300,6 +301,38 @@ namespace Milkyfie.AppCode.DAL
             }
             return res;
         }
+
+        public async Task<dynamic> GetMultipleAsync<T1, T2, TReturn>(string sp, DynamicParameters parms, Func<T1, T2, TReturn> p, string splitOn
+            , CommandType commandType = CommandType.StoredProcedure)
+        {
+            var res = new JDataTable<TReturn>
+            {
+                Data = new List<TReturn>(),
+                PageSetting = new PageSetting()
+            };
+            try
+            {
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    using (var reader = await db.QueryMultipleAsync(sp, parms, commandType: commandType))
+                    {
+                        var pgstng = reader.Read<PageSetting>();
+                        var stuff = reader.Read<T1, T2, TReturn>(p, splitOn: splitOn).ToList();
+                        res = new JDataTable<TReturn>
+                        {
+                            Data = stuff,
+                            PageSetting = pgstng.FirstOrDefault()
+                        };
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
+            return res;
+        }
+
         public async Task<dynamic> GetMultipleAsync<T1, T2, T3>(string sp, DynamicParameters parms, CommandType commandType = CommandType.StoredProcedure)
         {
             try
@@ -562,6 +595,36 @@ namespace Milkyfie.AppCode.DAL
         public Task<dynamic> GetMultipleAsync<T1, T2>(string sp, object parms, CommandType commandType = CommandType.StoredProcedure)
         {
             throw new NotImplementedException();
+        }
+
+        private DynamicParameters prepareDynamicParam(jsonAOData param)
+        {
+            DynamicParameters p = new DynamicParameters();
+            p.Add(nameof(param.draw), param.draw);
+            return p;
+        }
+
+        private object prepareParam(jsonAOData param)
+        {
+            DynamicParameters p = new DynamicParameters();
+            var _additional = new Dictionary<string, dynamic>();
+            try
+            {
+                _additional = param.param.ToDictionary();
+                foreach (var item in _additional)
+                {
+                    p.Add(item.Key, item.Value);
+                }
+                p.Add(nameof(param.start), param.start);
+                p.Add(nameof(param.length), param.length);
+                if (param.search != null && !string.IsNullOrEmpty(param.search.value))
+                    p.Add("searchText", param.search.value);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message, ex);
+            }
+            return p;
         }
     }
 }

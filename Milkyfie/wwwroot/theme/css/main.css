@@ -663,6 +663,10 @@ h3.styled {
     .header-actions > li:first-child {
         display: none;
     }
+    .ui-dialog {
+       width: 300px!important;
+         left: 33px!important;
+    }
 }
 
 ul.header-notifications li a {
@@ -8948,3 +8952,36 @@ code {
 
 @media only screen and (max-width:575px) {
 }
+
+
+.ui-widget.ui-widget-content {
+    border: inherit !important;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+    border-bottom-right-radius: inherit !important;
+}
+
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+    border-bottom-left-radius: inherit !important;
+}
+
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+    border-top-right-radius: inherit !important;
+}
+
+.ui-widget-content {
+    border: inherit !important;
+}
+
+.ui-widget-header {
+    border: inherit !important;
+}
+
+.ui-dialog {
+    padding: 0em !important;
+}
+
+    .ui-dialog .ui-dialog-titlebar {
+        padding: 0.9em 1em !important;
+    }

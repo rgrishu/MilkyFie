@@ -11,7 +11,7 @@
                      <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label for="inputName">Select User</label>
-                            <select class="form-control Category" name="CategoryID" id="ddlUser">
+                            <select class="form-control Category drpdwn" name="CategoryID" id="ddlUser">
                                 <option id="Option" name="CatgoryID" value="0">:: Users ::</option>
                             </select>
                         </div>
@@ -19,7 +19,7 @@
                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label for="inputName">Select Category</label>
-                            <select class="form-control Category" name="CategoryID" id="ddlCategory">
+                            <select class="form-control Category drpdwn" name="CategoryID" id="ddlCategory">
                                 <option id="Option" name="CatgoryID" value="0">:: Category ::</option>
                             </select>
                         </div>
@@ -27,7 +27,7 @@
                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label for="inputName">Select Product</label>
-                            <select class="form-control" name="CategoryID" id="ddlProduct">
+                            <select class="form-control drpdwn" name="CategoryID" id="ddlProduct">
                                 <option id="Option" name="ProductID" value="0">:: Products ::</option>
                             </select>
                         </div>
@@ -35,22 +35,22 @@
                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label for="inputName">Frequncy</label>
-                            <select class="form-control" name="CategoryID" id="ddlFrequncy">
+                            <select class="form-control drpdwn" name="CategoryID" id="ddlFrequncy">
                                 <option id="Option" name="CatgoryID" value="0">:: Select ::</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
-                            <label for="inputName">Other Frequncy</label>
+                            <label for="inputName reset">Other Frequncy</label>
                             <input type="text" placeholder="Other Frequency" id="txtotherFrequncy" disabled class="form-control" />
                         </div>
                     </div>
 
                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
-                            <label for="inputName">Quantity</label>
-                            <input type="text" placeholder="Quantity" id="txtQuantity" class="form-control" />
+                            <label for="inputName ">Quantity</label>
+                            <input type="text" placeholder="Quantity" id="txtQuantity" class="form-control reset" />
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@
                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-3">
                         <div class="form-group">
                             <label for="inputName">Shift</label>
-                             <select class="form-control" name="CategoryID" id="ddlshift">
+                             <select class="form-control drpdwn" name="CategoryID" id="ddlshift">
                                 <option id="Option" name="CatgoryID" value="Morning">Morning</option>
                                 <option id="Option" name="CatgoryID" value="Evening">Evening</option>
                             </select>
@@ -81,7 +81,7 @@
                     <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
                         <div class="form-group">
                             <label for="inputName">Description</label>
-                            <textarea type="text" placeholder="Description" id="txtDescription" class="form-control"></textarea>
+                            <textarea type="text" placeholder="Description" id="txtDescription" class="form-control reset"></textarea>
                         </div>
                     </div>
                    @* <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
@@ -142,7 +142,9 @@
                   if(result.statusCode==1)
                   {
                       loadScheduleOrders();
-                  $('input').val('');
+                  $('.reset').val('');
+                
+                  $('.drpdwn').val('0');
                   $('.field-validation-valid').remove();
                  Q.notify(result.statusCode, result.responseText);
                   }

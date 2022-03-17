@@ -56,6 +56,7 @@ namespace Milkyfie.AppCode.Extensions
 
             return principal.FindFirstValue(ClaimTypes.Email);
         }
+       
 
         public static string GetLoggedInUserRoles(this ClaimsPrincipal principal)
         {

@@ -31,5 +31,6 @@ namespace Milkyfie.Models
         Pending = 2,
         info = 3,
         warning = 4,
+        Unauthorized=-2
     }
 }

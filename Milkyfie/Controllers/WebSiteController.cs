@@ -2,6 +2,7 @@
 
 namespace Milkyfie.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class WebSiteController : Controller
     {
 

@@ -19,32 +19,21 @@ namespace Milkyfie.AppCode.Reops
         {
             _dapper = dapper;
         }
-        public Task<Response> AddAsync(Report entity)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Task<Response> DeleteAsync(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<Report>> GetAllAsync(Report entity = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<JDataTable<Ledger>> GetMultiSplits(Report entity = null)
+        public async Task<JDataTable<Ledger>> Ledger(jsonAOData filter = null)
         {
             JDataTable<Ledger> d = new JDataTable<Ledger>();
             try
             {
-                d = await _dapper.GetMultipleAsync<Ledger, ApplicationUser, Ledger>("proc_selectLedger", new { UserID = 0 },
+                d = await _dapper.GetMultipleAsync<Ledger, ApplicationUser, Ledger>("proc_selectLedger", filter,
                     (ledger, applicationuser) =>
                     {
                         ledger.User = applicationuser;
                         return ledger;
                     }, splitOn: "LedgerID,UserID");
+                  d.recordsFiltered = d.PageSetting.TotoalRows;//d.Data.Count();
+               // d.recordsFiltered = d.Data.Count();
+                d.recordsTotal = d.PageSetting.TotoalRows;
             }
             catch (Exception ex)
             {
@@ -78,20 +67,11 @@ namespace Milkyfie.AppCode.Reops
 
         }
 
-        public Task<Response<Report>> GetByIdAsync(int id)
+        private DynamicParameters prepareParam(jsonAOData param)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task<Report> GetDetails(object id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IReadOnlyList<Report>> GetDropdownAsync(Report entity)
-        {
-            throw new NotImplementedException();
+            DynamicParameters p = new DynamicParameters();
+            p.Add(nameof(param.draw), param.draw);
+            return p;
         }
     }
-
 }

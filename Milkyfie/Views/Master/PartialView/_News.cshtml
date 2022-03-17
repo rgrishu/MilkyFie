@@ -9,7 +9,7 @@
     {
         <tr data-id="@item.NewsID">
             <td>@i</td>
-            <td>@Html.DisplayFor(modelItem => item.NewsTitle)</td>
+            <td style="display:none">@Html.DisplayFor(modelItem => item.NewsTitle)</td>
             <td>@Html.DisplayFor(modelItem => item.NewsDescription)</td>
             @{
                 string act = @item.IsActive == true ? "checked" : "";
@@ -45,7 +45,7 @@ else
                 if(data.statusCode==1)
               {
 
-                loadNews();
+                 loadData();
                         Q.notify(data.statusCode, data.responseText);
               }
               else

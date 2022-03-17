@@ -6,30 +6,40 @@
     <div class="row gutters">
         <div id="frmcat" class="w-100">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="card">
-                    <div class="card-header bg-primary text-white h6">
-                      News
-                    </div>
-                    <div class="card-body">
-                        <div class="row gutters">
-                         
-                            <div class="col-xl-6 col-lglg-4 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label for="inputName">News Title</label>
-                                    <input type="text" required="" class="form-control" id="txttitle"  placeholder="Enter Title">
-                                </div>
-                            </div>
-                            <div class="col-xl-6 col-lglg-6 col-md-6 col-sm-6 col-12">
-                                <div class="form-group">
-                                    <label for="inputName">News Description </label>
-                                    <input type="text" class="form-control" name="Icon" id="txtdescription" placeholder="Enter Description">
-                                </div>
-                            </div>
+                <form action="/Master/AddNews" method="post">
+                    <div class="card lobipanel-minimize">
+
+                        <div class="card-header bg-primary text-white h6">
+                            News
                         </div>
-                        <button class="btn btn-primary" id="btnSubmit" type="submit" >Submit</button>
-                        @*<button class="btn btn-secondary" type="button" >Cancel</button>*@
+
+                        <div class="card-body">
+                            <div class="row gutters">
+
+                                <div style="display:none" class="col-xl-6 col-lglg-4 col-md-6 col-sm-6 col-12">
+                                    <div class="form-group">
+                                        <label for="inputName">News Title</label>
+                                        <input type="text" class="form-control" id="txttitle" placeholder="Enter Title">
+                                    </div>
+                                </div>
+                                <div class="col-xl-10 col-lglg-10 col-md-10 col-sm-10 col-12">
+                                    <div class="form-group">
+                                        <label for="inputName">News Description </label>
+                                        <input type="text" class="form-control" name="NewsDescription" id="txtdescription" placeholder="Enter Description">
+                                    </div>
+                                </div>
+                                <div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
+                                    <div class="btn-group">
+                                        <button class="btn btn-primary" style="margin-top:20px" id="btnSubmit" type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<button class="btn btn-secondary" type="button" >Cancel</button>*@
+                        </div>
                     </div>
-                </div>
+                </form>
+
             </div>
         </div>
     </div>
@@ -37,13 +47,13 @@
 
     <!-- Row start -->
     <div class="table-container">
-         
-        <d          iv class="table-responsive">
+
+        <d iv class="table-responsive">
             <table id="basicExample" class="table custom-table">
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Title</th>
+                        <th style="display:none">Title</th>
                         <th>Discription</th>
                         <th>IsActive</th>
                         <th>Action</th>
@@ -52,83 +62,84 @@
                 <tbody>
                 </tbody>
             </table>
-        </div>
-    
+    </div>
+
 
 </div>
 
 @section scripts{
 <script>
     $(document).ready(function(){
-        loadNews();
+       loadData();
     });
-
-    $('#btnSubmit').click(function(){
-     
-        if($('#txttitle').val()=='')
-            {
-              Q.notify(-1, 'Title Required.');
-              return false;
-            }
-            if($('#txtdescription').val()=='')
-            {
-              Q.notify(-1, 'Title Description.');
-              return false;
-            }
-              Q.preloader.load();
-        formData=new  FormData();
-       
-        formData.append("NewsTitle", $("#txttitle").val());
-        formData.append("NewsDescription", $("#txtdescription").val());
-      
-         $.ajax({
-             type: 'POST',
-             url: 'AddNews',
-             processData: false,
-             contentType: false,
-             data: formData,
-             success: result => {
-              if(result.statusCode==1)
-              {
-                  $('input').val('');
-                  $('.field-validation-valid').remove();
-                    loadNews();
-                        Q.notify(result.statusCode, result.responseText);
-                       
-              }
-              else
-              {
-                      Q.notify(result.statusCode, result.responseText);
-              }
-                Q.preloader.remove();
-             },
-             error:xhr=>{
-                   Q.preloader.remove();
-                 Q.renderError(xhr);
-                    Q.notify(-1, 'An error occurred.');
-             }
-         })
-    });
-
-     function loadNews(){
-           Q.preloader.load();
+    var loadData=function(){
+        //   Q.preloader.load();
          $.ajax({
                type: 'post',
                 url: 'GetNews',
                 data: '',
                 success: function (data) {
                       $('tbody').html(data);
-                        Q.preloader.remove();
+                    //    Q.preloader.remove();
                 },
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
                        Q.notify(-1, 'An error occurred.');
-                         Q.preloader.remove();
+                      //   Q.preloader.remove();
                 },
             });
-    }
-   
+    };
+
+    //$('#btnSubmit').click(function(){
+
+    //    if($('#txttitle').val()=='')
+    //        {
+    //          Q.notify(-1, 'Title Required.');
+    //          return false;
+    //        }
+    //        if($('#txtdescription').val()=='')
+    //        {
+    //          Q.notify(-1, 'Title Description.');
+    //          return false;
+    //        }
+    //          Q.preloader.load();
+    //    formData=new  FormData();
+
+    //    formData.append("NewsTitle", $("#txttitle").val());
+    //    formData.append("NewsDescription", $("#txtdescription").val());
+
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: 'AddNews',
+    //         processData: false,
+    //         contentType: false,
+    //         data: formData,
+    //         success: result => {
+    //          if(result.statusCode==1)
+    //          {
+    //              $('input').val('');
+    //              $('.field-validation-valid').remove();
+    //                loadNews();
+    //                    Q.notify(result.statusCode, result.responseText);
+
+    //          }
+    //          else
+    //          {
+    //                  Q.notify(result.statusCode, result.responseText);
+    //          }
+    //            Q.preloader.remove();
+    //         },
+    //         error:xhr=>{
+    //               Q.preloader.remove();
+    //             Q.renderError(xhr);
+    //                Q.notify(-1, 'An error occurred.');
+    //         }
+    //     })
+    //});
+
+
+
 
 </script>
 

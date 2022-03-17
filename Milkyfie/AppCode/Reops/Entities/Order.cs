@@ -9,7 +9,7 @@ namespace Milkyfie.AppCode.Reops.Entities
         public int ScheduleID { get; set; }
         public int LoginID { get; set; }
         public string OtherFrequency { get; set; }
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
         public string StartFromDate { get; set; }
         public string EndToDate { get; set; }
         public string Remark { get; set; }
@@ -17,6 +17,7 @@ namespace Milkyfie.AppCode.Reops.Entities
         public string Description { get; set; }
         public string CreatedOn { get; set; }
         public string UpdatedOn { get; set; }
+        public bool IsActive { get; set; }
         public ApplicationUser User { get; set; }
         public Frequency Frequency { get; set; }
         public Product Product { get; set; }
@@ -39,7 +40,7 @@ namespace Milkyfie.AppCode.Reops.Entities
     public class OrderDetail
     {
         public int OrderDetailID { get; set;}
-        public decimal Quantity { get; set; }
+        public int Quantity { get; set; }
         public decimal Cost { get; set; }
         public decimal GST { get; set; }
         public decimal Discount { get; set; }

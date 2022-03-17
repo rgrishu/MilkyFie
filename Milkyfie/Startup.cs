@@ -35,6 +35,7 @@ namespace Milkyfie
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+
             })
                .AddJwtBearer(options =>
                {
@@ -54,7 +55,7 @@ namespace Milkyfie
             /* End Jwd */
             services.AddControllersWithViews();
             services.AddMvc();
-         
+            services.AddSwaggerGen();
             #region Identity
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -119,6 +120,11 @@ namespace Milkyfie
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=WebSite}/{action=Index}/{id?}");
+            });
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "V1");
             });
         }
     }

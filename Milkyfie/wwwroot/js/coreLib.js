@@ -375,6 +375,7 @@ var ajaxvalidationerror = xhr => {
     Q.reset = () => {
         $('input').val('');
         $('textarea').val('');
+        $('select').val('0').trigger('change');
         $('select').each(function (i) {
             $(this).selectedIndex = -1;
         });
@@ -783,3 +784,79 @@ function printDiv(divName) {
         });
     };
 })($);
+
+function ajaxFormSubmit(form) {
+    event.preventDefault();
+    /*$.validator.unobtrusive.parse(form);*/
+    /*if ($(form).valid()) {*/
+    //let data = new FormData(form);
+    let data = $(form).serializeArray()
+    var ajaxConfig = {
+        type: 'POST',
+        url: form.action,
+        data: data,
+        success: function (response) {
+            Q.notify(response
+
+                .statusCode, response.responseText);
+            if (response.statusCode == 1) {
+                $(form).trigger("reset");
+                Q.reset();
+                $("#firstTab").html(response.html);
+                // refreshAddNewTab($(form).attr('data-restUrl'), true);
+                if (typeof loadData !== 'undefined' && $.isFunction(loadData))
+                    loadData();
+            }
+        }
+    }
+    if ($(form).attr('enctype') == "multipart/form-data") {
+        ajaxConfig["contentType"] = false;
+        ajaxConfig["processData"] = false;
+    }
+    $.ajax(ajaxConfig);
+
+    //}
+    //return false;
+}
+
+(function ($) {
+    $.renderDataTable = function (options) {
+        options = $.extend({}, {
+            columns: [],
+            apiUrl: '/',
+            selector: 'table',
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ],
+            filters: {},
+        }, options);
+       // console.log(options.apiUrl);
+        $(options.selector).dataTable({
+            processing: true,
+            serverSide: true,
+            paging: true,
+            destroy: true,
+            dom: 'Bfrtip',
+            buttons: options.buttons,
+            ajax: {
+                url: options.apiUrl,
+                type: "POST",
+                data: function (jsonAOData) {
+                    //jsonAOData.param = JSON.stringify(options.filters);
+                    //jsonAOData = $.extend(jsonAOData, options.filters);
+                    //console.log(jsonAOData);
+                    var filters = options.filters;
+                    return { jsonAOData, filters }
+                },
+                //dataSrc: "data",
+            },
+            aoColumns: options.columns,
+            //scrollY: $('[name="Applicationlist"]').offset().top + 118,
+            scrollCollapse: true,
+            // dom: 'R<"top"Bf>rt<"bottom"ilp><"clear">',
+        });
+    }
+}($));

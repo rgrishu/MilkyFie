@@ -21,7 +21,7 @@ namespace Milkyfie.Controllers
     
     public class ConsumerController : BaseController
     {
-        public ConsumerController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit, IRepository<Product> product, IMapper mapper) : base(dapper, category, unit, product, mapper)
+        public ConsumerController(IDapperRepository dapper, IRepository<Category> category, IRepository<Unit> unit, IProduct product, IMapper mapper) : base(dapper, category, unit, product, mapper)
         {
 
         }
