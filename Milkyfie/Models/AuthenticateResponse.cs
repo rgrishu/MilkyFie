@@ -10,11 +10,13 @@
         public string Name { get; set; }
         public string Address { get; set; }
         public string Pincode { get; set; }
+        public string Role { get; set; }
 
 
         public AuthenticateResponse(ApplicationUser user, string token)
         {
             Id = user.Id;
+            Role = user.Role;
             Username = user.UserName;
             Token = token;
             PhoneNumber = user.PhoneNumber;
