@@ -899,7 +899,6 @@ $.fn.dataTable.pipeline = function (opts) {
             JSON.stringify(request.columns) !== JSON.stringify(cacheLastRequest.columns) ||
             JSON.stringify(request.search) !== JSON.stringify(cacheLastRequest.search)
         ) {
-
             // properties changed (ordering, columns, searching)
             ajax = true;
         }
@@ -911,15 +910,12 @@ $.fn.dataTable.pipeline = function (opts) {
             // Need data from the server
             if (requestStart < cacheLower) {
                 requestStart = requestStart - (requestLength * (conf.pages - 1));
-
                 if (requestStart < 0) {
                     requestStart = 0;
                 }
             }
-
             cacheLower = requestStart;
             cacheUpper = requestStart + (requestLength * conf.pages);
-
             request.start = requestStart;
             request.length = requestLength * conf.pages;
 
@@ -983,7 +979,7 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
 //
 // DataTables initialisation
 //
-var table;
+
 (function ($) {
     $.renderDataTable2 = function (options) {
         options = $.extend({}, {
@@ -999,15 +995,18 @@ var table;
             filters: {},
         }, options);
         // console.log(options.apiUrl);
-         table = $(options.selector).DataTable({
+        var table = $(options.selector).DataTable({
             processing: true,
             serverSide: true,
             paging: true,
             destroy: true,
-            dom: 'Bfrtip',
+            //dom: 'Bfrtip',
+            dom: "<'row'<'col-sm-12'Bfrt>>" +
+                "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
+                "<'row'<'col-sm-12'i>>",
             searching: true,
             buttons: options.buttons,
-
+            stateSave: false,
             ajax: $.fn.dataTable.pipeline({
                 url: options.apiUrl,
                 pages: 5,// number of pages to cache,
@@ -1016,23 +1015,27 @@ var table;
             aoColumns: options.columns,
             //scrollY: $('[name="Applicationlist"]').offset().top + 118,
             scrollCollapse: true,
+            initComplete: function () {
+                delaySearch(this.api())
+            },
             drawCallback: function (settings) {
-                modifySearch();
+                //this.api().fnAdjustColumnSizing();
             }
         });
 
-        function modifySearch() {
+        function delaySearch(api) {
+            var timer = null;
+            // Grab the datatables input box and alter how it is bound to events
             $(".dataTables_filter input")
-                .unbind()
-                .bind('keyup change', function (e) {
-                    if (e.keyCode == 13 || this.value == "") {
-                        alert('hh')
-                        console.log(table);
-                        table.search(this.value).draw();
-                    }
+                .unbind() // Unbind previous default bindings
+                .bind("input", function (e) { // Bind our desired behavior
+                    searchTerm = this.value;//item.val();
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        api.search(searchTerm).draw();
+                    }, 600);
+                    return;
                 });
         }
-
-        
     }
 }($));
