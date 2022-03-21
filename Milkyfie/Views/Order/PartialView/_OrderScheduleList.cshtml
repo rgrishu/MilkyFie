@@ -7,7 +7,6 @@
 
     @foreach (var item in Model)
     {
-
         <tr data-id="@item.Category.CategoryID">
             <td>@i</td>
             <td class="name">@Html.DisplayFor(modelItem => item.User.Name)</td>
@@ -32,7 +31,6 @@
                 </h6>
             </td>
             <td>
-
                 @if (item.Status == Status.Pending)
                 {
                     <a class="btn-ed-ed" onclick="ASchedule(@item.ScheduleID,'A')"><img src="~/img/accept.png" class="img-action" /></a>
@@ -48,9 +46,7 @@
                         <input type="checkbox" data-id="@item.ScheduleID" class="custom-control-input chkapprove" @Html.Raw(@item.IsActive==true?"Checked":"")   id="@("chkapprove"+@i)">
                         <label class="custom-control-label" for="@("chkapprove"+@i)"></label>
                     </div>
-
                 }
-
             </td>
         </tr>
         i++;

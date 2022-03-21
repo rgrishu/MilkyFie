@@ -402,7 +402,8 @@ namespace Milkyfie.Controllers
         var resp = _order.GetAllAsyncOrderDetailAPi(entity).Result;
         if (resp != null && resp.Count() > 0)
         {
-            res = new Response<List<APIOrderDetail>>()
+         //resp.ToList().ForEach(c => c.StatusValue = Enum.GetName(typeof(Status),int.Parse(c.Status)));
+         res = new Response<List<APIOrderDetail>>()
             {
                 StatusCode = ResponseStatus.Success,
                 ResponseText = ResponseStatus.Success.ToString(),
