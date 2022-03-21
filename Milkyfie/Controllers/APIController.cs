@@ -250,7 +250,7 @@ namespace Milkyfie.Controllers
         [HttpPost(nameof(ProductDetails))]
         public IActionResult ProductDetails(int ProductID = 0, int CategoryID = 0, int ParentCatID = 0)
         {
-            var res = new Response<List<Product>>()
+            var res = new Response<Product>()
             {
                 StatusCode = ResponseStatus.Failed,
                 ResponseText = ResponseStatus.Failed.ToString()
@@ -267,14 +267,14 @@ namespace Milkyfie.Controllers
                     }
                 },
             };
-            var resp = _product.GetAllAsync(req).Result;
-            if (resp != null && resp.Count() > 0)
+            var resp = _product.GetAllProductDetailApi(req).Result;
+            if (resp != null)
             {
-                res = new Response<List<Product>>()
+                res = new Response<Product>()
                 {
                     StatusCode = ResponseStatus.Success,
                     ResponseText = ResponseStatus.Success.ToString(),
-                    Result = resp.ToList()
+                    Result = resp
                 };
             }
             return Json(res);

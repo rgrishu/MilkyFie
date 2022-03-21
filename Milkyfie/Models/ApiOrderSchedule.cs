@@ -45,6 +45,7 @@
         public string Thursday { get; set; }
         public string Friday { get; set; }
         public string Saturday { get; set; }
+        public string Weight { get; set; }
 
     }
 

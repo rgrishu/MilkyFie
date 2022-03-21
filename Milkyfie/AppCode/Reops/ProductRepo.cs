@@ -8,6 +8,7 @@ using Milkyfie.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Milkyfie.AppCode.Reops
@@ -87,6 +88,33 @@ namespace Milkyfie.AppCode.Reops
                      return product;
                  }, splitOn: "ProductID,UnitID,CategoryID,ParentID");
                 product = res;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return product;
+        }
+
+        public async Task<Product> GetAllProductDetailApi(Product entity = null)
+        {
+            Product product = new Product();
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("ProductID", entity != null ? entity.ProductID : 0);
+                dbparams.Add("ParentCategoryID", entity != null && entity.Category != null && entity.Category.Parent != null ? entity.Category.Parent.ParentID : 0);
+                dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
+                string sqlQuery = @"proc_SelectProduct";
+                Product cc = new Product();
+                var res = await _dapper.GetAllAsyncProc<Product, Unit, Category, Parent, Product>(entity ?? new Product(), sqlQuery, dbparams, (product, unit, category, parent) =>
+                {
+                    product.Unit = unit;
+                    product.Category = category;
+                    product.Category.Parent = parent;
+                    return product;
+                }, splitOn: "ProductID,UnitID,CategoryID,ParentID");
+                product = res.ToList().FirstOrDefault();
             }
             catch (Exception ex)
             {
