@@ -41,6 +41,13 @@ namespace Milkyfie.AppCode.Reops
                 dbparams.Add("StartFromDate", entity.StartFromDate);
                 dbparams.Add("ScheduleShift", entity.ScheduleShift);
                 dbparams.Add("Description", entity.Description);
+                dbparams.Add("Sunday", entity.Sunday);
+                dbparams.Add("Monday", entity.Monday);
+                dbparams.Add("Tuesday", entity.Tuesday);
+                dbparams.Add("Wednesday", entity.Wednesday);
+                dbparams.Add("Thursday", entity.Thursday);
+                dbparams.Add("Friday", entity.Friday);
+                dbparams.Add("Saterday", entity.Saterday);
                 response = await _dapper.InsertAsync<Response>("proc_AddOrderSchedule", dbparams, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)
@@ -152,10 +159,7 @@ namespace Milkyfie.AppCode.Reops
 
             }
             return oderschedule;
-
         }
-
-
         public async Task<IEnumerable<ApiOrderSchedule>> GetAllAsyncAPi(OrderSchedule entity = null)
         {
             var dbparams = new DynamicParameters();

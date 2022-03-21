@@ -18,6 +18,16 @@ namespace Milkyfie.AppCode.Reops.Entities
         public string CreatedOn { get; set; }
         public string UpdatedOn { get; set; }
         public bool IsActive { get; set; }
+
+        public int Sunday { get; set; }
+        public int Monday { get; set; }
+        public int Tuesday { get; set; }
+        public int Wednesday { get; set; }
+        public int Thursday { get; set; }
+        public int Friday { get; set; }
+        public int Saterday { get; set; }
+
+
         public ApplicationUser User { get; set; }
         public Frequency Frequency { get; set; }
         public Product Product { get; set; }

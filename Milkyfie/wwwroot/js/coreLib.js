@@ -962,7 +962,7 @@ $.fn.dataTable.pipeline = function (opts) {
             json.data?.splice(0, requestStart - cacheLower);
             json.data?.splice(requestLength, json.data.length);
 
-            //drawCallback(json);
+            drawCallback(json);
         }
     }
 };
@@ -1006,7 +1006,7 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
                 "<'row'<'col-sm-12'i>>",
             searching: true,
             buttons: options.buttons,
-            stateSave: false,
+            stateSave: true,
             ajax: $.fn.dataTable.pipeline({
                 url: options.apiUrl,
                 pages: 5,// number of pages to cache,
@@ -1014,7 +1014,7 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
             }),
             aoColumns: options.columns,
             //scrollY: $('[name="Applicationlist"]').offset().top + 118,
-            scrollCollapse: true,
+            //scrollCollapse: true,
             initComplete: function () {
                 delaySearch(this.api())
             },

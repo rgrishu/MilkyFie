@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row gutters">
-                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label for="inputName">Select User</label>
                             <select class="form-control Category drpdwn" name="CategoryID" id="ddlUser">
@@ -40,6 +40,54 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="row gutters" id="selecteddays" style="display:none">
+                        <div class="col-xl-2 col-lg col-md-2 col-sm-21 col-12 ">
+                            <div class="form-group">
+                                <label for="inputName">Sun</label>
+                                <input type="number" id="txtsun" value="0" class="form-control num" />
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg col-md-2 col-sm-2 col-12 ">
+                            <div class="form-group">
+                                <label for="inputName">Mon</label>
+                                <input type="number" id="txtmon" value="0" class="form-control num" />
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg col-md-2 col-sm-2 col-12 ">
+                            <div class="form-group">
+                                <label for="inputName">Tue</label>
+                                <input type="number" id="txttue" value="0" class="form-contro numl" />
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg col-md-2 col-sm-2 col-12 ">
+                            <div class="form-group">
+                                <label for="inputName">Wed</label>
+                                <input type="number" id="txtwed" value="0" class="form-control num" />
+                            </div>
+                        </div>  <div class="col-xl-2 col-lg col-md-2 col-sm-2 col-12 ">
+                            <div class="form-group">
+                                <label for="inputName">Thus</label>
+                                <input type="number" id="txtthus" value="0" class="form-control num" />
+                            </div>
+                        </div>
+                        <div class="col-xl-1 col-lg col-md-1 col-sm-1 col-12 ">
+                            <div class="form-group">
+                                <label for="inputName">Fri</label>
+                                <input type="number" id="txtfri" value="0" class="form-control num" />
+                            </div>
+                        </div>
+                        <div class="col-xl-1 col-lg col-md-1 col-sm-1 col-12 ">
+                            <div class="form-group">
+                                <label for="inputName">Sat</label>
+                                <input type="number" id="txtsat" value="0" class="form-control num" />
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label for="inputName reset">Other Frequncy</label>
@@ -50,7 +98,7 @@
                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
                             <label for="inputName ">Quantity</label>
-                            <input type="text" placeholder="Quantity" id="txtQuantity" class="form-control reset" />
+                            <input type="text" placeholder="Quantity" value="0" id="txtQuantity" class="form-control num" />
                         </div>
                     </div>
 
@@ -63,16 +111,16 @@
                     </div>
 
 
-                 @*   <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    @*   <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
                         <div class="form-group">
-                            <label for="inputName">End Date</label>
-                            <input type="text" placeholder="End Date" readonly="readonly" value="@DateTime.Now.ToString(" dd MMM yyyy")" id="txtEndDate" class="form-control" />
+                        <label for="inputName">End Date</label>
+                        <input type="text" placeholder="End Date" readonly="readonly" value="@DateTime.Now.ToString(" dd MMM yyyy")" id="txtEndDate" class="form-control" />
                         </div>
-                    </div>*@
+                        </div>*@
                     <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-3">
                         <div class="form-group">
                             <label for="inputName">Shift</label>
-                             <select class="form-control drpdwn" name="CategoryID" id="ddlshift">
+                            <select class="form-control" name="CategoryID" id="ddlshift">
                                 <option id="Option" name="CatgoryID" value="Morning">Morning</option>
                                 <option id="Option" name="CatgoryID" value="Evening">Evening</option>
                             </select>
@@ -84,15 +132,15 @@
                             <textarea type="text" placeholder="Description" id="txtDescription" class="form-control reset"></textarea>
                         </div>
                     </div>
-                   @* <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
+                    @* <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
                         <div class="form-group">
-                            <label for="inputName">Remark</label>
-                            <textarea type="text" placeholder="Remark" id="txtRemark" class="form-control"></textarea>
+                        <label for="inputName">Remark</label>
+                        <textarea type="text" placeholder="Remark" id="txtRemark" class="form-control"></textarea>
                         </div>
-                    </div>*@
+                        </div>*@
                 </div>
                 <button class="btn btn-primary" id="btnSubmit">Submit</button>
-              
+
             </div>
         </div>
     </div>
@@ -106,9 +154,9 @@
       $("#ddlCategory").change(function() {
           BindDropDownProduct($('option:selected', this).val())
       });
-      // $("#ddlFrequncy").change(function() {
-      //    $('option:selected', this).val()==1?$("#txtotherFrequncy").removeAttr("disabled"):$("#txtotherFrequncy").attr("disabled", "disabled");
-      //});
+       $("#ddlFrequncy").change(function() {
+          $('option:selected', this).val()==4?$("#selecteddays").show():$("#selecteddays").hide();
+      });
        function BindDropDownProduct(catid){
        var Productlist=s.Dropdown.Products(catid);
         Productlist.then(result=>
@@ -130,7 +178,18 @@
           formData.append("StartFromDate", $("#txtStartDate").val());
           formData.append("EndToDate", $("#txtEndDate").val());
           formData.append("Description",$("#txtDescription").val());
-           formData.append("ScheduleShift", $("#ddlshift").val());
+          formData.append("ScheduleShift", $("#ddlshift").val());
+
+
+           formData.append("Sunday",$("#txtsun").val());
+            formData.append("Moanday",$("#txtmon").val());
+             formData.append("Tuesday",$("#txttue").val());
+              formData.append("Wednesday",$("#txtwed").val());
+               formData.append("Thursday",$("#txtthus").val());
+                formData.append("Friday",$("#txtfri").val());
+                 formData.append("Saterday",$("#txtsat").val());
+
+
           $.ajax({
               type: 'POST',
               url: 'SaveOrderSchedule',
@@ -143,7 +202,7 @@
                   {
                       loadScheduleOrders();
                   $('.reset').val('');
-                
+                  $('.num').val('0');
                   $('.drpdwn').val('0');
                   $('.field-validation-valid').remove();
                  Q.notify(result.statusCode, result.responseText);

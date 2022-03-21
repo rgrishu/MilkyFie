@@ -344,86 +344,87 @@ namespace Milkyfie.Controllers
             var resp = _order.GetAllAsyncAPi(orderschedule).Result;
             if (resp != null && resp.Count() > 0)
             {
-                
+                resp.ToList().ForEach(c => c.StatusValue = Enum.GetName(typeof(Status), int.Parse(c.Status)));
                 res = new Response<List<ApiOrderSchedule>>()
                 {
                     StatusCode = ResponseStatus.Success,
                     ResponseText = ResponseStatus.Success.ToString(),
-                   
-                Result = resp.ToList()
+
+                    Result = resp.ToList()
                 };
-        }
-            return Json(res);
-    }
-
-
-    [HttpPost(nameof(OrderSummary))]
-    public IActionResult OrderSummary(int UserID)
-    {
-        var res = new Response<List<ApiOrderSummary>>()
-        {
-            StatusCode = ResponseStatus.Failed,
-            ResponseText = ResponseStatus.Failed.ToString()
-        };
-        var entity = new OrderSummary()
-        {
-            User = new ApplicationUser()
-            {
-                Id = UserID,
             }
-        };
-        var resp = _order.GetAllAsyncOrderSummaryAPi(entity).Result;
-        if (resp != null && resp.Count() > 0)
-        {
-            res = new Response<List<ApiOrderSummary>>()
-            {
-                StatusCode = ResponseStatus.Success,
-                ResponseText = ResponseStatus.Success.ToString(),
-                Result = resp.ToList()
-            };
+            return Json(res);
         }
-        return Json(res);
-    }
-    [HttpPost(nameof(OrderDetails))]
-    public IActionResult OrderDetails(int OrderID)
-    {
-        var res = new Response<List<APIOrderDetail>>()
-        {
-            StatusCode = ResponseStatus.Failed,
-            ResponseText = ResponseStatus.Failed.ToString()
-        };
-        var entity = new OrderDetail()
-        {
-            OrderSummary = new OrderSummary()
-            {
-                OrderID = OrderID,
-            },
-        };
-        var resp = _order.GetAllAsyncOrderDetailAPi(entity).Result;
-        if (resp != null && resp.Count() > 0)
-        {
-         //resp.ToList().ForEach(c => c.StatusValue = Enum.GetName(typeof(Status),int.Parse(c.Status)));
-         res = new Response<List<APIOrderDetail>>()
-            {
-                StatusCode = ResponseStatus.Success,
-                ResponseText = ResponseStatus.Success.ToString(),
-                Result = resp.ToList()
-            };
-        }
-        return Json(res);
-    }
-    [HttpPost(nameof(UpdateOrderStatus))]
-    public IActionResult UpdateOrderStatus(StatusChangeReq entity, int UserID)
-    {
-        var res = new Response()
-        {
-            StatusCode = ResponseStatus.Failed,
-            ResponseText = ResponseStatus.Failed.ToString()
-        };
-        res = _order.UodateOrderDetailStatus(entity, UserID).Result;
-        return Json(res);
-    }
-    #endregion
 
-}
+
+        [HttpPost(nameof(OrderSummary))]
+        public IActionResult OrderSummary(int UserID)
+        {
+            var res = new Response<List<ApiOrderSummary>>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var entity = new OrderSummary()
+            {
+                User = new ApplicationUser()
+                {
+                    Id = UserID,
+                }
+            };
+            var resp = _order.GetAllAsyncOrderSummaryAPi(entity).Result;
+            if (resp != null && resp.Count() > 0)
+            {
+                resp.ToList().ForEach(c => c.StatusValue = Enum.GetName(typeof(Status), int.Parse(c.Status)));
+                res = new Response<List<ApiOrderSummary>>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp.ToList()
+                };
+            }
+            return Json(res);
+        }
+        [HttpPost(nameof(OrderDetails))]
+        public IActionResult OrderDetails(int OrderID)
+        {
+            var res = new Response<List<APIOrderDetail>>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var entity = new OrderDetail()
+            {
+                OrderSummary = new OrderSummary()
+                {
+                    OrderID = OrderID,
+                },
+            };
+            var resp = _order.GetAllAsyncOrderDetailAPi(entity).Result;
+            if (resp != null && resp.Count() > 0)
+            {
+                resp.ToList().ForEach(c => c.StatusValue = Enum.GetName(typeof(Status), int.Parse(c.Status)));
+                res = new Response<List<APIOrderDetail>>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp.ToList()
+                };
+            }
+            return Json(res);
+        }
+        [HttpPost(nameof(UpdateOrderStatus))]
+        public IActionResult UpdateOrderStatus(StatusChangeReq entity, int UserID)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            res = _order.UodateOrderDetailStatus(entity, UserID).Result;
+            return Json(res);
+        }
+        #endregion
+
+    }
 }

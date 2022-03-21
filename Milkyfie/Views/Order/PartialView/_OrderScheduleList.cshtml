@@ -12,15 +12,22 @@
             <td class="name">@Html.DisplayFor(modelItem => item.User.Name)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
-            @if (item.Frequency.FrequencyID == 1)
-            {
-                <td class="name">Other ~( @Html.DisplayFor(modelItem => item.OtherFrequency))</td>
-            }
-            else
-            {
-                <td class="name">@Html.DisplayFor(modelItem => item.Frequency.FrequencyName)</td>
-            }
-            <td class="name">@Html.DisplayFor(modelItem => item.Quantity)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Frequency.FrequencyName)</td>
+              <td class="name">@Html.DisplayFor(modelItem => item.Quantity)</td>
+
+             <td class="name">@Html.DisplayFor(modelItem => item.Sunday)</td>
+             <td class="name">@Html.DisplayFor(modelItem => item.Monday)</td>
+             <td class="name">@Html.DisplayFor(modelItem => item.Tuesday)</td>
+             <td class="name">@Html.DisplayFor(modelItem => item.Wednesday)</td>
+             <td class="name">@Html.DisplayFor(modelItem => item.Thursday)</td>
+             <td class="name">@Html.DisplayFor(modelItem => item.Friday)</td>
+             <td class="name">@Html.DisplayFor(modelItem => item.Saterday)</td>
+           
+
+
+
+
+          
             <td class="name">@Html.DisplayFor(modelItem => item.StartFromDate)</td>
             <td class="name">
                 <h6>
