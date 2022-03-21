@@ -25,7 +25,7 @@ namespace Milkyfie.AppCode.Reops.Entities
         public int Wednesday { get; set; }
         public int Thursday { get; set; }
         public int Friday { get; set; }
-        public int Saterday { get; set; }
+        public int Saturday { get; set; }
 
 
         public ApplicationUser User { get; set; }

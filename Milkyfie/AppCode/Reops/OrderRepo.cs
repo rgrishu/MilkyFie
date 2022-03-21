@@ -47,7 +47,7 @@ namespace Milkyfie.AppCode.Reops
                 dbparams.Add("Wednesday", entity.Wednesday);
                 dbparams.Add("Thursday", entity.Thursday);
                 dbparams.Add("Friday", entity.Friday);
-                dbparams.Add("Saterday", entity.Saterday);
+                dbparams.Add("Saturday", entity.Saturday);
                 response = await _dapper.InsertAsync<Response>("proc_AddOrderSchedule", dbparams, commandType: CommandType.StoredProcedure);
             }
             catch (Exception ex)

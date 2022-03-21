@@ -318,7 +318,7 @@ namespace Milkyfie.Controllers
                 Wednesday= int.Parse(os.Wednesday ?? "0"),
                 Thursday= int.Parse(os.Thursday ?? "0"),
                 Friday= int.Parse(os.Friday ?? "0"),
-                Saterday= int.Parse(os.Saterday ?? "0"),
+                Saturday= int.Parse(os.Saturday ?? "0"),
             };
             res = _order.AddAsync(orderschedule).Result;
             return Json(res);
