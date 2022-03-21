@@ -311,7 +311,14 @@ namespace Milkyfie.Controllers
                 Quantity = int.Parse(os.Quantity ?? "0"),
                 StartFromDate = os.StartFromDate,
                 ScheduleShift = os.ScheduleShift,
-                Description = os.Description
+                Description = os.Description,
+                Sunday= int.Parse(os.Sunday ?? "0"),
+                Monday= int.Parse(os.Monday ?? "0"),
+                Tuesday= int.Parse(os.Tuesday ?? "0"),
+                Wednesday= int.Parse(os.Wednesday ?? "0"),
+                Thursday= int.Parse(os.Thursday ?? "0"),
+                Friday= int.Parse(os.Friday ?? "0"),
+                Saterday= int.Parse(os.Saterday ?? "0"),
             };
             res = _order.AddAsync(orderschedule).Result;
             return Json(res);
