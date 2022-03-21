@@ -3,7 +3,6 @@
 <div class="main-container">
     <!-- Row start -->
     <div class="row gutters">
-
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card lobipanel-minimize">
                 <div class="card-header bg-primary text-white h6">
@@ -21,8 +20,6 @@
                                 </select>
                             </div>
                         </div>
-
-
                         <div class="col-xl-5 col-lglg-5 col-md-5 col-sm-5 col-12">
                             <div class="form-group">
                                 <label for="inputName">Date</label>
@@ -43,7 +40,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 </div>
@@ -52,9 +48,7 @@
     <!-- Row start -->
     <div class="row gutters">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-
             <div class="table-container">
-
                 <div class="table-responsive">
                     <table id="copy-print-csv" class="table custom-table">
                         <thead>
@@ -62,9 +56,8 @@
                                 @* <th>#</th>*@
                                 <th>Customre Name</th>
                                 <th>Opening Amount </th>
-                                   <th>Amount</th>
+                                <th>Amount</th>
                                 <th>Closing Amount </th>
-                             
                                 <th>Transaction Type</th>
                                 <th>Transaction Date</th>
                                 <th>Naration</th>
@@ -77,8 +70,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 
@@ -103,38 +94,37 @@
             $('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x=>`<option value="${x.id}">${x.name}</option>`));
         });
     }
-    function loadedgerDetails(){
-         Q.preloader.load();
-        var formData=new FormData();
-        formData.append("User.Id",$('#ddluser').val());
-        formData.append("CreatedOn",$('#txtStartDate').val());
-         $.ajax({
-               type: 'post',
-               url: 'GetLedger',
-               processData: false,
-               contentType: false,
-               data: formData,
-                success: function (data) {
-                      $('tbody').html(data);
-                       Q.preloader.remove();
-                },
-                error: function (data) {
-                     Q.preloader.remove();
-                    console.log('An error occurred.');
-                    console.log(data);
-                       Q.notify(-1, 'An error occurred.');
-                },
-          });
-    }
+    //function loadedgerDetails(){
+    //    Q.preloader.load();
+    //    var formData=new FormData();
+    //    formData.append("User.Id",$('#ddluser').val());
+    //    formData.append("CreatedOn",$('#txtStartDate').val());
+    //     $.ajax({
+    //           type: 'post',
+    //           url: 'GetLedger',
+    //           processData: false,
+    //           contentType: false,
+    //           data: formData,
+    //            success: function (data) {
+    //                  $('tbody').html(data);
+    //                   Q.preloader.remove();
+    //            },
+    //            error: function (data) {
+    //                 Q.preloader.remove();
+    //                console.log('An error occurred.');
+    //                console.log(data);
+    //                   Q.notify(-1, 'An error occurred.');
+    //            },
+    //      });
+    //}
     var loadData = function(){
-        $.renderDataTable({
+        $.renderDataTable2({
             columns :  [
               //{"render":function(d,t,row){}},
                 { data: "user.name"},
                 { data: "lastAmount",orderable:false },
-                   { data: "amount",orderable:false },
+                { data: "amount",orderable:false },
                 { data: "currentAmount",orderable:false },
-             
                 { data: "transactionType",orderable:false},
                 { data: "createdOn",orderable:false},
                 { data: "naration",orderable:false}
@@ -144,9 +134,8 @@
                 UserID:$('#ddluser').val(),
                 CreatedOn:$('#txtStartDate').val()
             }
-        })
+        });
     };
-    
 </script>
 
     }

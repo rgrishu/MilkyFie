@@ -833,7 +833,7 @@ function ajaxFormSubmit(form) {
             ],
             filters: {},
         }, options);
-       // console.log(options.apiUrl);
+        // console.log(options.apiUrl);
         $(options.selector).dataTable({
             processing: true,
             serverSide: true,
@@ -858,5 +858,184 @@ function ajaxFormSubmit(form) {
             scrollCollapse: true,
             // dom: 'R<"top"Bf>rt<"bottom"ilp><"clear">',
         });
+    }
+}($));
+
+
+
+$.fn.dataTable.pipeline = function (opts) {
+    // Configuration options
+    var conf = $.extend({
+        pages: 5,     // number of pages to cache
+        url: '',      // script url
+        data: null,   // function or object with parameters to send to the server
+        // matching how `ajax.data` works in DataTables
+        method: 'POST' // Ajax HTTP method
+    }, opts);
+
+    // Private variables for storing the cache
+    let cacheLower = -1;
+    let cacheUpper = null;
+    let cacheLastRequest = true;
+    let cacheLastJson = null;
+
+    return function (request, drawCallback, settings) {
+        let ajax = false;
+        let requestStart = request.start;
+        let drawStart = request.start;
+        let requestLength = request.length;
+        let requestEnd = requestStart + requestLength;
+
+        if (settings.clearCache) {
+            // API requested that the cache be cleared
+            ajax = true;
+            settings.clearCache = false;
+        }
+        else if (cacheLower < 0 || requestStart < cacheLower || requestEnd > cacheUpper) {
+            // outside cached data - need to make a request
+            ajax = true;
+        }
+        else if (JSON.stringify(request.order) !== JSON.stringify(cacheLastRequest.order) ||
+            JSON.stringify(request.columns) !== JSON.stringify(cacheLastRequest.columns) ||
+            JSON.stringify(request.search) !== JSON.stringify(cacheLastRequest.search)
+        ) {
+            // properties changed (ordering, columns, searching)
+            ajax = true;
+        }
+
+        // Store the request for checking next time around
+        cacheLastRequest = $.extend(true, {}, request);
+
+        if (ajax) {
+            // Need data from the server
+            if (requestStart < cacheLower) {
+                requestStart = requestStart - (requestLength * (conf.pages - 1));
+                if (requestStart < 0) {
+                    requestStart = 0;
+                }
+            }
+            cacheLower = requestStart;
+            cacheUpper = requestStart + (requestLength * conf.pages);
+            request.start = requestStart;
+            request.length = requestLength * conf.pages;
+
+            // Provide the same `data` options as DataTables.
+            if (typeof conf.data === 'function') {
+                // As a function it is executed with the data object as an arg
+                // for manipulation. If an object is returned, it is used as the
+                // data object to submit
+                var d = conf.data(request);
+                if (d) {
+                    $.extend(request, d);
+                }
+            }
+            else if ($.isPlainObject(conf.data)) {
+                // As an object, the data given extends the default
+                $.extend(request, conf.data);
+            }
+            else if (opts.filters) {
+                $.extend(request, opts.filters);
+            }
+            //var additionalFilters = opts.filters
+            return $.ajax({
+                "type": conf.method,
+                "url": conf.url,
+                "data": request,
+                "dataType": "json",
+                "cache": false,
+                "success": function (json) {
+                    cacheLastJson = $.extend(true, {}, json);
+
+                    if (cacheLower != drawStart) {
+                        json.data?.splice(0, drawStart - cacheLower);
+                    }
+                    if (requestLength >= -1) {
+                        json.data?.splice(requestLength, json.data.length);
+                    }
+                    drawCallback(json);
+                }
+            });
+        }
+        else {
+            json = $.extend(true, {}, cacheLastJson);
+            json.draw = request.draw; // Update the echo for each response
+            json.data?.splice(0, requestStart - cacheLower);
+            json.data?.splice(requestLength, json.data.length);
+
+            //drawCallback(json);
+        }
+    }
+};
+
+// Register an API method that will empty the pipelined data, forcing an Ajax
+// fetch on the next draw (i.e. `table.clearPipeline().draw()`)
+$.fn.dataTable.Api.register('clearPipeline()', function () {
+    return this.iterator('table', function (settings) {
+        settings.clearCache = true;
+    });
+});
+
+
+//
+// DataTables initialisation
+//
+
+(function ($) {
+    $.renderDataTable2 = function (options) {
+        options = $.extend({}, {
+            columns: [],
+            apiUrl: '/',
+            selector: 'table',
+            buttons: [
+                'copyHtml5',
+                'excelHtml5',
+                'csvHtml5',
+                'pdfHtml5'
+            ],
+            filters: {},
+        }, options);
+        // console.log(options.apiUrl);
+        var table = $(options.selector).DataTable({
+            processing: true,
+            serverSide: true,
+            paging: true,
+            destroy: true,
+            //dom: 'Bfrtip',
+            dom: "<'row'<'col-sm-12'Bfrt>>" +
+                "<'row'<'col-sm-4'l><'col-sm-8'p>>" +
+                "<'row'<'col-sm-12'i>>",
+            searching: true,
+            buttons: options.buttons,
+            stateSave: false,
+            ajax: $.fn.dataTable.pipeline({
+                url: options.apiUrl,
+                pages: 5,// number of pages to cache,
+                filters: options.filters
+            }),
+            aoColumns: options.columns,
+            //scrollY: $('[name="Applicationlist"]').offset().top + 118,
+            scrollCollapse: true,
+            initComplete: function () {
+                delaySearch(this.api())
+            },
+            drawCallback: function (settings) {
+                //this.api().fnAdjustColumnSizing();
+            }
+        });
+
+        function delaySearch(api) {
+            var timer = null;
+            // Grab the datatables input box and alter how it is bound to events
+            $(".dataTables_filter input")
+                .unbind() // Unbind previous default bindings
+                .bind("input", function (e) { // Bind our desired behavior
+                    searchTerm = this.value;//item.val();
+                    clearTimeout(timer);
+                    timer = setTimeout(function () {
+                        api.search(searchTerm).draw();
+                    }, 600);
+                    return;
+                });
+        }
     }
 }($));
