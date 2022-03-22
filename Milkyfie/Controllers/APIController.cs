@@ -312,13 +312,13 @@ namespace Milkyfie.Controllers
                 StartFromDate = os.StartFromDate,
                 ScheduleShift = os.ScheduleShift,
                 Description = os.Description,
-                Sunday= int.Parse(os.Sunday ?? "0"),
-                Monday= int.Parse(os.Monday ?? "0"),
-                Tuesday= int.Parse(os.Tuesday ?? "0"),
-                Wednesday= int.Parse(os.Wednesday ?? "0"),
-                Thursday= int.Parse(os.Thursday ?? "0"),
-                Friday= int.Parse(os.Friday ?? "0"),
-                Saturday= int.Parse(os.Saturday ?? "0"),
+                Sunday = int.Parse(os.Sunday ?? "0"),
+                Monday = int.Parse(os.Monday ?? "0"),
+                Tuesday = int.Parse(os.Tuesday ?? "0"),
+                Wednesday = int.Parse(os.Wednesday ?? "0"),
+                Thursday = int.Parse(os.Thursday ?? "0"),
+                Friday = int.Parse(os.Friday ?? "0"),
+                Saturday = int.Parse(os.Saturday ?? "0"),
             };
             res = _order.AddAsync(orderschedule).Result;
             return Json(res);
@@ -433,5 +433,65 @@ namespace Milkyfie.Controllers
         }
         #endregion
 
+
+        #region FOS
+        [HttpPost(nameof(DashBoard))]
+        public IActionResult DashBoard(int UserID)
+        {
+            var res = new Response<DashboardApi>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var entity = new Dashboard()
+            {
+                User = new ApplicationUser()
+                {
+                    Id = UserID
+                },
+            };
+            var resp = _users.GetUserDashBoardApi(entity).Result;
+            if (resp != null)
+            {
+                // resp.ToList().ForEach(c => c.StatusValue = Enum.GetName(typeof(Status), int.Parse(c.Status)));
+                res = new Response<DashboardApi>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp
+                };
+            }
+            return Json(res);
+        }
+
+        [HttpPost(nameof(FosUsers))]
+        public IActionResult FosUsers(int UserID)
+        {
+            var res = new Response<List<UserInfoApi>>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var resp = _users.GetFosUsers(UserID).Result;
+            if (resp != null)
+            {
+                res = new Response<List<UserInfoApi>>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp.ToList()
+                };
+            }
+            return Json(res);
+        }
+
+        [HttpPost(nameof(FOSBalanceCollection))]
+        public IActionResult FOSBalanceCollection(int UserID, int FOSID, decimal Balance)
+        {
+            var res = _users.FOSBalanceCollection(UserID, FOSID, Balance).Result;
+            return Json(res);
+        }
+
+        #endregion
     }
 }

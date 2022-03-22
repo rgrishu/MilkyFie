@@ -15,5 +15,8 @@ namespace Milkyfie.AppCode.Interfaces
         Task<Response> FosMapping(FOSMap entity);
         Task<Response> DeleteFosMapping(FOSMap entity);
         Task<IEnumerable<FOSMap>> GetMapedFos(FOSMap entity = null);
+        Task<DashboardApi> GetUserDashBoardApi(Dashboard entity = null);
+        Task<IEnumerable<UserInfoApi>> GetFosUsers(int UserID);
+        Task<Response> FOSBalanceCollection(int UserID, int FosID, decimal Amount);
     }
 }

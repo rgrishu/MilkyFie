@@ -15,7 +15,7 @@
                     <div class="table-container">
                          
                         <div class="table-responsive">
-                            <table id="basicExample" class="table custom-table">
+                            <table id="tblproduct" class="table custom-table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -43,10 +43,11 @@
 
 </div>
 
-
 @section scripts{
+
 <script>
     $(document).ready(function(){
+      // $('#tblproduct').DataTable();
        loadProduct();
         $('#btnNew').click(function(){
              getform(id=0)

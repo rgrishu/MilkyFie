@@ -27,6 +27,10 @@ var ajaxvalidationerror = xhr => {
     Q.htmlEncode = htmlEncode;
     function alert(options) {
         var dialog;
+        let maxWidth = $(window).width();
+        if (options.hasOwnProperty('maxWidth')) {
+            maxWidth = options.maxWidth != '' && options.maxWidth >= maxWidth ? maxWidth : options.maxWidth;
+        }
         options = $.extend({
             htmlEncode: false,
             isOkButton: false,
@@ -39,8 +43,10 @@ var ajaxvalidationerror = xhr => {
             dialogClass: 's-MessageDialog s-AlertDialog',
             modal: true,
             width: '540px',
-            maxWidth: '',
+            maxWidth: maxWidth,
             minWidth: '50%',
+            fluid: true,
+            responsive: true,
             top: '',
             resizable: true,
             open: function () {
@@ -67,6 +73,7 @@ var ajaxvalidationerror = xhr => {
             });
             options.buttons = buttons;
         }
+
         dialog = $('<div><div class="message"><\/div><\/div>')
             .dialog(options)
             .children('.message')
@@ -74,6 +81,7 @@ var ajaxvalidationerror = xhr => {
             .parent()
             .dialog('open');
     };
+
     Q.alert = alert;
     Q.defaultNotifyOptions = {
         closeButton: true,
@@ -83,6 +91,8 @@ var ajaxvalidationerror = xhr => {
         extendedTimeOut: 500,
         positionClass: 'toast-top-right'
     };
+
+
     function getToastrOptions(options) {
         options = $.extend({}, Q.defaultNotifyOptions, options);
         positionToastContainer(false);
