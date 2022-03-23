@@ -28,6 +28,41 @@ namespace Milkyfie.Controllers
             _user = (Models.ApplicationUser)_httpContext.HttpContext.Items["User"];
             _users = users;
         }
+        [Route("Account/Users/{role}")]
+        public IActionResult Users(string role)
+        {
+            ApplicationUser au = new ApplicationUser();
+            au.Role = role;
+            return View("Users", au);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UsersDetails(string role)
+        {
+            if (role.Trim() != "Fos" && role.Trim() != "Consumer")
+            {
+                role = string.Empty;
+            }
+            var users = _users.GetAllAsync().Result;
+            if (users.Count() > 0)
+            {
+                users = users.Where(x => x.Role == role);
+            }
+            return PartialView("~/Views/Account/PartialView/_UsersList.cshtml", users);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UsersDropdown(string role)
+        {
+
+            var users = _users.GetAllAsync().Result;
+            if (users.Count() > 0)
+            {
+                users = users.Where(x => x.Role == (role ?? "Consumer"));
+            }
+            return Json(users);
+        }
         [HttpPost]
         public async Task<IActionResult> UserBalance(int id)
         {

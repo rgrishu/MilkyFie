@@ -201,64 +201,9 @@ namespace Milkyfie.Controllers
             return LocalRedirect(returnUrl);
 
         }
-        [Route("Account/Users/{role}")]
-        public IActionResult Users(string role)
-        {
-            ApplicationUser au = new ApplicationUser();
-            au.Role = role;
-            return View("Users", au);
-        }
-        [HttpPost]
-
-        public async Task<IActionResult> UsersDetails(string role)
-        {
-            if (role.Trim() != "Fos" && role.Trim() != "Consumer")
-            {
-                role = string.Empty;
-            }
-            var users = _users.GetAllAsync().Result;
-            if (users.Count() > 0)
-            {
-                users = users.Where(x => x.Role == role);
-            }
-            return PartialView("~/Views/Account/PartialView/_UsersList.cshtml", users);
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> UsersDropdown(string role)
-        {
-            
-            var users = _users.GetAllAsync().Result;
-            if (users.Count() > 0)
-            {
-                users = users.Where(x => x.Role == (role ?? "Consumer"));
-            }
-            return Json(users);
-        }
         /* JWT */
         #region JWT
-        //[HttpPost("authenticate")]
-        //public IActionResult Authenticate([FromBody] LoginRequest model)
-        //{
-        //    var response = Authenticate(model.UserName, model.Password);
-        //    if (response == null)
-        //        return BadRequest(new { message = "Username or password is incorrect" });
-        //    return Ok(response);
-        //}
-        //// helper methods
-        //private AuthenticateResponse Authenticate(string userName, string password)
-        //{
-        //    var user = _users.SingleOrDefault(x => x.UserName == userName && x.PasswordHash == password);
-
-        //    // return null if user not found
-        //    if (user == null) return null;
-
-        //    // authentication successful so generate jwt token
-        //    var token = generateJwtToken(user);
-
-        //    return new AuthenticateResponse(user, token);
-        //}
+      
         private string generateJwtToken(ApplicationUser user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
