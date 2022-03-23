@@ -118,39 +118,7 @@ namespace Milkyfie.Controllers
         }
 
 
-        [HttpPost]
-        [Route("AdminBalance")]
-        public IActionResult AdminBalance()
-        {
-            return PartialView("~/Views/Home/PartialView/_AdminBalAdd.cshtml");
-        }
-        [HttpPost]
-        public async Task<IActionResult> AddAdminBalance(ApplicationUser entity)
-        {
-            var userId = User.GetLoggedInUserId<int>();
-            entity.UserId = userId.ToString();
-            entity.Id = userId;
-            var data = _users.AddAsync(entity).Result;
-            return Json(data);
-        }
-
-
-        [HttpPost]
-        [Route("Dashboard")]
-        public async Task<IActionResult> LoadDashboard()
-        {
-            var userId = User.GetLoggedInUserId<int>(); // Specify the type of your UserId;
-            var entity = new Dashboard()
-            {
-                User = new ApplicationUser()
-                {
-                    Id = userId
-                },
-            };
-            var resp = _users.GetUserDashBoard(entity).Result;
-            return PartialView("~/Views/Home/PartialView/_Dashboard.cshtml", resp);
-        }
-
+     
 
         public void SendWelcomeMail(string userName)
         {

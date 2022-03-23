@@ -36,7 +36,7 @@ var serviceProperty = {
             $.post('/Master/GetFrequency', param).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
         }),
         Users: param => new Promise((resolve, reject) => {
-            $.post('/Account/UsersDropdown', { role: param }).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
+            $.post('/Users/UsersDropdown', { role: param }).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
         }),
         Pincode: param => new Promise((resolve, reject) => {
             $.post('/Master/GetPincodeDrop', param).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));

@@ -9,6 +9,7 @@ using Milkyfie.AppCode.Extensions;
 using Milkyfie.AppCode.DAL;
 using Milkyfie.AppCode.Reops.Entities;
 using AutoMapper;
+using System.Linq;
 
 namespace Milkyfie.Controllers
 {
@@ -17,7 +18,7 @@ namespace Milkyfie.Controllers
     {
 
         private IHttpContextAccessor _httpContext;
-        private ApplicationUser _user;
+        // private ApplicationUser _user;
         private IUser _users;
 
 
@@ -25,17 +26,25 @@ namespace Milkyfie.Controllers
            IRepository<Unit> unit, IProduct product, IOrder orderschedule, IMapper mapper, IHttpContextAccessor httpContext, IUser users) : base(dapper, category, unit, product, mapper)
         {
             _httpContext = httpContext;
-            _user = (Models.ApplicationUser)_httpContext.HttpContext.Items["User"];
+            //_user = (Models.ApplicationUser)_httpContext.HttpContext.Items["User"];
             _users = users;
         }
-        [Route("Account/Users/{role}")]
-        public IActionResult Users(string role)
+        [Route("Consumer")]
+        public IActionResult UserDetail()
         {
             ApplicationUser au = new ApplicationUser();
-            au.Role = role;
-            return View("Users", au);
+            au.Role = "Consumer";
+            return View(au);
+        }
+        [Route("Fos")]
+        public IActionResult UserDetailFos()
+        {
+            ApplicationUser au = new ApplicationUser();
+            au.Role = "Fos";
+            return View("UserDetail", au);
         }
 
+        [Route("UsersDetails")]
         [HttpPost]
         public async Task<IActionResult> UsersDetails(string role)
         {
@@ -48,7 +57,7 @@ namespace Milkyfie.Controllers
             {
                 users = users.Where(x => x.Role == role);
             }
-            return PartialView("~/Views/Account/PartialView/_UsersList.cshtml", users);
+            return PartialView("~/Views/Users/PartialView/_UserDetailList.cshtml", users);
         }
 
 
@@ -70,7 +79,7 @@ namespace Milkyfie.Controllers
             {
                 Id = id
             };
-            return PartialView("~/Views/Account/PartialView/_AddBalance.cshtml", entity);
+            return PartialView("~/Views/Users/PartialView/_AddBalance.cshtml", entity);
         }
         [HttpPost]
         public async Task<IActionResult> AddUserBalance(ApplicationUser entity)
@@ -80,6 +89,15 @@ namespace Milkyfie.Controllers
             var data = _users.AddAsync(entity).Result;
             return Json(data);
         }
+
+        [Route("DeleteUser")]
+        [HttpPost]
+        public async Task<IActionResult> DeleteUser(int id)
+        {
+            var data = _users.DeleteAsync(id).Result;
+            return Json(data);
+        }
+
         [HttpGet]
         public async Task<IActionResult> FosMap()
         {
@@ -133,5 +151,109 @@ namespace Milkyfie.Controllers
             var data = _users.GetMapedFos().Result;
             return PartialView("PartialView/_FosMapList", data);
         }
+        [HttpPost]
+        [Route("AdminBalance")]
+        public IActionResult AdminBalance()
+        {
+            return PartialView("~/Views/Home/PartialView/_AdminBalAdd.cshtml");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddAdminBalance(ApplicationUser entity)
+        {
+            var userId = User.GetLoggedInUserId<int>();
+            entity.UserId = userId.ToString();
+            entity.Id = userId;
+            var data = _users.AddAsync(entity).Result;
+            return Json(data);
+        }
+
+
+        [HttpPost]
+        [Route("Dashboard")]
+        public async Task<IActionResult> LoadDashboard()
+        {
+            var userId = User.GetLoggedInUserId<int>(); // Specify the type of your UserId;
+            var entity = new Dashboard()
+            {
+                User = new ApplicationUser()
+                {
+                    Id = userId
+                },
+            };
+            var resp = _users.GetUserDashBoard(entity).Result;
+            return PartialView("~/Views/Home/PartialView/_Dashboard.cshtml", resp);
+        }
+        [HttpPost]
+        public async Task<IActionResult> UserForm(string role, int id = 0)
+        {
+            var rv = new RegisterViewModel()
+            {
+                IsAdmin = true,
+                RoleType = role
+            };
+
+            if (id > 0)
+            {
+                var entity = new ApplicationUser()
+                {
+                    Id = id
+                };  
+                var users = _users.GetAllAsync(entity).Result;
+                if (users != null)
+                {
+                    var v= users.FirstOrDefault();
+                    rv.Name = v.Name;
+                    rv.PinCode = v.Pincode;
+                    rv.Mobile = v.PhoneNumber;
+                    rv.EmailId = v.Email;
+                    rv.Address = v.Address;
+                    rv.RoleType = v.Role;
+                    rv.id = v.Id;
+                }
+
+            }
+            return PartialView("~/Views/Users/PartialView/_Register.cshtml", rv);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateUserDetail(RegisterViewModel model)
+        {
+            Response response = new Response();
+            response.StatusCode = ResponseStatus.Failed;
+            response.ResponseText = "Updation Failed";
+            if (model == null)
+            {
+                response.ResponseText = "Invalid Data";
+                return Json(response);
+            }
+            if (model.id==0)
+            {
+                response.ResponseText = "Invalid User";
+                return Json(response);
+            }
+            if (string.IsNullOrEmpty(model.Mobile))
+            {
+                response.ResponseText = "Invalid Mobile";
+                return Json(response);
+            }
+            if (string.IsNullOrEmpty(model.EmailId))
+            {
+                response.ResponseText = "Invalid Email";
+                return Json(response);
+            }
+            var user = new ApplicationUser
+            {
+                Id = model.id,
+                Email = model.EmailId,
+                Name = model.Name,
+                Address = model.Address,
+                Pincode = model.PinCode,
+                PhoneNumber = model.Mobile
+            };
+            response = await _users.UpdateUserDetail(user);
+            return Json(response);
+        }
+
     }
 }

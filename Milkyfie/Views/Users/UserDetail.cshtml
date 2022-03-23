@@ -20,7 +20,7 @@
                     
                             <div class="table-container">
                                 <div class="table-responsive">
-                                    <table id="basicExample" class="table custom-table">
+                                    <table id="d" class="table custom-table">
                                         <thead>
                                             <tr>
                                                 <th>
@@ -71,15 +71,14 @@
 <script>
 
     $(document).ready(function(){
-
-    getUsers();
+   getUsers();
     })
 
      $('.btnaddUser').click(function(){
            Q.preloader.load();
               $.ajax({
                 type: 'post',
-                url: '/Master/UserForm',
+                url: '/Users/UserForm',
                  data:{role:$('#spnrole').text()},
                 success: function (data) {
                     console.log(data)
@@ -95,25 +94,16 @@
                 },
             });
     });
+
+
+
+
     function getUsers(){
-        debugger;
-         Q.preloader.load();
-         $.ajax({
-               type: 'post',
-                url: '/Account/UsersDetails',
-               data:{role:$('#spnrole').text()},
-                success: function (data) {
-                      $('tbody').html(data);
-                },
-                error: function (data) {
-                    console.log('An error occurred.');
-                    console.log(data);
-                       Q.notify(-1, 'An error occurred.');
-                },
-          });
-          Q.preloader.remove();
+        Q.preloader.load();
+        $.post( "UsersDetails" ,{role:$('#spnrole').text()}, function( data ) {
+            $('tbody').html(data);
+        });
+        Q.preloader.remove();
     }
-
-
 </script>
 }

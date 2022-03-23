@@ -4,6 +4,7 @@ namespace Milkyfie.Models
 {
     public class RegisterViewModel
     {
+        public int id { get; set; }
         public string RoleName { get; set; }
         [Required(ErrorMessage = "Please enter name")]
         [StringLength(200)]

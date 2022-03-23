@@ -132,10 +132,12 @@ namespace Milkyfie.Controllers
                         ReturnUrl = ReturnUrl?.Trim() == "/" ? "/Home" : ReturnUrl;
                         return LocalRedirect(ReturnUrl);
                     }
+
                     else if (roles.FirstOrDefault().Equals("3") || roles.FirstOrDefault().Equals("consumer", StringComparison.OrdinalIgnoreCase))
                     {
-                        ReturnUrl = ReturnUrl?.Trim() == "/" ? "/Consumer" : ReturnUrl;
-                        return LocalRedirect(ReturnUrl);
+                        //ModelState.AddModelError(String.Empty, "Invalid login Details.");
+                        //ReturnUrl = ReturnUrl?.Trim() == "/" ? "/Consumer" : ReturnUrl;
+                        //return LocalRedirect(ReturnUrl);
                     }
             }
             else if (result.IsLockedOut)

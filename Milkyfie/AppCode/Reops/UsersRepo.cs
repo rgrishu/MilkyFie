@@ -22,7 +22,19 @@ namespace Milkyfie.AppCode.Reops
         }
 
 
-
+        public async Task<Response> UpdateUserDetail(ApplicationUser entity)
+        {
+            var dbparams = new DynamicParameters();
+            dbparams.Add("ID", entity.Id);
+            dbparams.Add("Name", entity.Name);
+            dbparams.Add("Address", entity.Address);
+            dbparams.Add("PhoneNumber", entity.PhoneNumber);
+            dbparams.Add("Email", entity.Email);
+            dbparams.Add("Pincode", entity.Pincode);
+            var res = await _dapper.InsertAsync<Response>("proc_UpdateUserDetail", dbparams, commandType: CommandType.StoredProcedure);
+            return res;
+            // throw new System.NotImplementedException();
+        }
 
 
         public async Task<Response> AddAsync(ApplicationUser entity)
@@ -37,9 +49,12 @@ namespace Milkyfie.AppCode.Reops
         }
 
 
-        public Task<Response> DeleteAsync(int id)
+        public async Task<Response> DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var dbparams = new DynamicParameters();
+            dbparams.Add("Id", id);
+            var res = await _dapper.GetAsync<Response>("proc_DeleteUser", dbparams, commandType: CommandType.StoredProcedure);
+            return res;
         }
 
 
@@ -50,7 +65,8 @@ namespace Milkyfie.AppCode.Reops
             try
             {
                 var dbparams = new DynamicParameters();
-
+               
+                dbparams.Add("UserID", entity!=null? entity.Id:0);
                 var ires = await _dapper.GetAllAsync<ApplicationUser>("proc_users", dbparams, commandType: CommandType.StoredProcedure);
                 res = ires.ToList();
             }

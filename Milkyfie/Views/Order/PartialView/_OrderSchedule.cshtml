@@ -8,7 +8,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row gutters">
-                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Select User</label>
                             <select class="form-control Category drpdwn" name="CategoryID" id="ddlUser">
@@ -16,7 +16,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Select Category</label>
                             <select class="form-control Category drpdwn" name="CategoryID" id="ddlCategory">
@@ -24,7 +24,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Select Product</label>
                             <select class="form-control drpdwn" name="CategoryID" id="ddlProduct">
@@ -32,7 +32,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Frequncy</label>
                             <select class="form-control drpdwn" name="CategoryID" id="ddlFrequncy">
@@ -88,14 +88,14 @@
 
 
 
-                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12" style="display:none">
                         <div class="form-group">
                             <label for="inputName reset">Other Frequncy</label>
                             <input type="text" placeholder="Other Frequency" id="txtotherFrequncy" disabled class="form-control" />
                         </div>
                     </div>
 
-                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName ">Quantity</label>
                             <input type="text" placeholder="Quantity" value="0" id="txtQuantity" class="form-control num" />
@@ -103,7 +103,7 @@
                     </div>
 
 
-                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Start Date</label>
                             <input type="text" placeholder="Start Date" readonly="readonly" value="@DateTime.Now.ToString(" dd MMM yyyy")" id="txtStartDate" class="form-control" />
@@ -117,10 +117,11 @@
                         <input type="text" placeholder="End Date" readonly="readonly" value="@DateTime.Now.ToString(" dd MMM yyyy")" id="txtEndDate" class="form-control" />
                         </div>
                         </div>*@
-                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-3">
+                    <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-3" style="display:none">
                         <div class="form-group">
                             <label for="inputName">Shift</label>
                             <select class="form-control" name="CategoryID" id="ddlshift">
+                                 
                                 <option id="Option" name="CatgoryID" value="Morning">Morning</option>
                                 <option id="Option" name="CatgoryID" value="Evening">Evening</option>
                             </select>

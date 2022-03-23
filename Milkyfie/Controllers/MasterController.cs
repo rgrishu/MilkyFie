@@ -207,16 +207,6 @@ namespace Milkyfie.Controllers
 
         #endregion
 
-        #region Users
-        [HttpPost]
-        public async Task<IActionResult> UserForm(string role)
-        {
-            return PartialView("~/Views/Account/PartialView/_Register.cshtml", new RegisterViewModel { IsAdmin = true, RoleType = role });
-        }
-
-
-
-        #endregion
 
         #region Banner
         public async Task<IActionResult> Banner()
