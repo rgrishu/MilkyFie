@@ -20,7 +20,26 @@ namespace Milkyfie.AppCode.Reops
         {
             _dapper = dapper;
         }
+        public async Task<JDataTable<ApplicationUser>> UserFilter(jsonAOData filter = null)
+        {
+            JDataTable<ApplicationUser> d = new JDataTable<ApplicationUser>();
+            try
+            {
+                d = await _dapper.GetMultipleAsync<ApplicationUser,Pincode, ApplicationUser>("proc_SelectuserFilter", filter,
+                    (applicationuser,pincode) =>
+                    {
+                        return applicationuser;
+                    }, splitOn: "PincodeID");
+                d.recordsFiltered = d.PageSetting.TotoalRows;//d.Data.Count();
+                                                             // d.recordsFiltered = d.Data.Count();
+                d.recordsTotal = d.PageSetting.TotoalRows;
+            }
+            catch (Exception ex)
+            {
 
+            }
+            return d;
+        }
 
         public async Task<Response> UpdateUserDetail(ApplicationUser entity)
         {

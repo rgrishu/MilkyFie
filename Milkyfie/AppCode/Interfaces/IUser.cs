@@ -19,5 +19,6 @@ namespace Milkyfie.AppCode.Interfaces
         Task<IEnumerable<UserInfoApi>> GetFosUsers(int UserID);
         Task<Response> FOSBalanceCollection(int UserID, int FosID, decimal Amount);
         Task<Response> UpdateUserDetail(ApplicationUser entity);
+        Task<JDataTable<ApplicationUser>> UserFilter(jsonAOData filter = null);
     }
 }

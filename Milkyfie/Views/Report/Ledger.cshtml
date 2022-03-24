@@ -94,29 +94,7 @@
             $('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x=>`<option value="${x.id}">${x.name}</option>`));
         });
     }
-    //function loadedgerDetails(){
-    //    Q.preloader.load();
-    //    var formData=new FormData();
-    //    formData.append("User.Id",$('#ddluser').val());
-    //    formData.append("CreatedOn",$('#txtStartDate').val());
-    //     $.ajax({
-    //           type: 'post',
-    //           url: 'GetLedger',
-    //           processData: false,
-    //           contentType: false,
-    //           data: formData,
-    //            success: function (data) {
-    //                  $('tbody').html(data);
-    //                   Q.preloader.remove();
-    //            },
-    //            error: function (data) {
-    //                 Q.preloader.remove();
-    //                console.log('An error occurred.');
-    //                console.log(data);
-    //                   Q.notify(-1, 'An error occurred.');
-    //            },
-    //      });
-    //}
+   
     var loadData = function(){
         $.renderDataTable2({
             columns :  [

@@ -29,14 +29,14 @@ namespace Milkyfie.Controllers
             //_user = (Models.ApplicationUser)_httpContext.HttpContext.Items["User"];
             _users = users;
         }
-        [Route("Consumer")]
+      
         public IActionResult UserDetail()
         {
             ApplicationUser au = new ApplicationUser();
             au.Role = "Consumer";
             return View(au);
         }
-        [Route("Fos")]
+        
         public IActionResult UserDetailFos()
         {
             ApplicationUser au = new ApplicationUser();
@@ -90,7 +90,7 @@ namespace Milkyfie.Controllers
             return Json(data);
         }
 
-        [Route("DeleteUser")]
+        [Route("Users/DeleteUser")]
         [HttpPost]
         public async Task<IActionResult> DeleteUser(int id)
         {
@@ -255,5 +255,14 @@ namespace Milkyfie.Controllers
             return Json(response);
         }
 
+
+        [HttpPost]
+        public IActionResult UserFilter(jsonAOData jsonAOData, UserFilter filters)
+        {
+            //jsonAOData.param = new { LedgerID = 0, searchText = jsonAOData.search?.value};
+            jsonAOData.param = filters;
+            var res = (JDataTable<ApplicationUser>)_users.UserFilter(jsonAOData).Result;
+            return Json(res);
+        }
     }
 }

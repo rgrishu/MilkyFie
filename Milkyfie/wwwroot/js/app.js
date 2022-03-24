@@ -1,4 +1,27 @@
-﻿
+﻿////var dialog;
+////((dialog) => {
+////    dialog.bankSetting = function (id = 0) {
+////        $.post('/Bank/EditSetting', { id: id }).done(result => {
+////            Q.alert({
+////                title: "Bank Setting",
+////                body: result,
+////                width: '900px',
+////            });
+////        }).fail(xhr => Q.renderError(xhr)).always(() => Q.preloader.remove());
+////    };
+////    dialog.user = function (id = 0) {
+////        Q.preloader.load();
+////        $.post('/User/Edit', { id: id, role: 'User' }).done(result => {
+////            Q.alert({
+////                title: "Add User",
+////                body: result,
+////                width: '900px',
+////            });
+////        }).fail(xhr => Q.renderError(xhr)).always(() => Q.preloader.remove());
+////    };
+////})(dialog || (dialog = {}));
+
+
 var services;
 var serviceProperty = {
     Add: {},

@@ -51,7 +51,7 @@
                  
                   if(result.statusCode==1)
                   {
-                      getUsers();
+                     loadData();
                       $('#txtbalance').val('');
                  Q.notify(result.statusCode, result.responseText);
                   }
@@ -59,6 +59,7 @@
                   {
                    Q.notify(result.statusCode, result.responseText);
                   }
+                  $('.ui-dialog-titlebar-close').click();
                   Q.preloader.remove();
               },
                 error: function (data) {
