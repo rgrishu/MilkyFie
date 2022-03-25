@@ -63,3 +63,14 @@ a {
 .lobipanel .card-header .dropdown .dropdown-menu .dropdown-item:hover, .lobipanel .card-header .dropdown .dropdown-menu .dropdown-item:focus:hover {
     background-color: transparent;
 }
+
+.btn-outline-red {
+    color: #ee0000;
+    background-color: #ffffff;
+    border-color: #ee0000;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.lobipanel .card-header .dropdown .dropdown-menu .dropdown-item {
+    height: 23px!important;
+}

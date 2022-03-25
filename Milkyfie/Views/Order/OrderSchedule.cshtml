@@ -1,6 +1,4 @@
 ﻿<style>
-
-
 </style>
 
 <div class="main-container">
@@ -11,7 +9,7 @@
             <div class="card">
                 <div class="card-header bg-primary text-white h6">
                     Schedule Orders
-                    <div class="float-right">  <button id="btnNew" class="btn btn-info">New</button></div>
+                    <div class="float-right">  <button id="btnNew" class="btn btn-outline-red">New</button></div>
                 </div>
                 <div class="card-body">
 
@@ -22,12 +20,11 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Customer Name</th>
-                                        <th>Category Name</th>
-                                        <th>Product Name</th>
-
+                                        <th class="text-nowrap">Customer Name</th>
+                                        <th class="text-nowrap">Category Name</th>
+                                        <th class="text-nowrap">Product Name</th>
                                         <th>Frequency</th>
-                                         <th>Quantity</th>
+                                        <th>Quantity</th>
                                         <th>Sun</th>
                                         <th>Mon</th>
                                         <th>Tue</th>
@@ -35,11 +32,7 @@
                                         <th>Thus</th>
                                         <th>Fri</th>
                                         <th>Sat</th>
-
-
-
-                                       
-                                        <th>From Date</th>
+                                        <th class="text-nowrap">From Date</th>
                                         @*   <th>To Date</th>*@
                                         <th>Status</th>
                                         <th>Action</th>
@@ -50,46 +43,38 @@
                             </table>
                         </div>
                     </div>
-
-
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
-
-
 @section scripts{
-<script>
-    $(document).ready(function(){
-       loadScheduleOrders();
-        $('#btnNew').click(function(){
-             getform(id=0)
+    <script>
+        $(document).ready(function () {
+            loadScheduleOrders();
+            $('#btnNew').click(function () {
+                getform(id = 0)
+            });
         });
-    });
 
-
-     function getform(id=0){
-          Q.preloader.load();
-             // var id=$('#hdnProductID').val();
-              $.ajax({
+        function getform(id = 0) {
+            Q.preloader.load();
+            // var id=$('#hdnProductID').val();
+            $.ajax({
                 type: 'post',
                 url: 'OrderSchedule',
-                data:{id:id},
+                data: { id: id },
                 success: function (data) {
                     BindDropDownUsers();
                     BindDropDowncat();
-                       BindDDFrequency();
-                Q.alert({
-
-                    title: "Schedule Order",
-                    body:data,
-                    width : '900px',
-                    modal:true
+                    BindDDFrequency();
+                    Q.alert({
+                        title: "Schedule Order",
+                        body: data,
+                        width: '900px',
+                        modal: true
                     });
-                     Q.preloader.remove();
+                    Q.preloader.remove();
                 },
                 error: function (data) {
                     console.log('An error occurred.');
@@ -97,54 +82,47 @@
                     Q.preloader.remove();
                 },
             });
-    }
+        }
 
+        function BindDropDowncat() {
+            var categorylist = s.Dropdown.Category();
+            categorylist.then(result => {
+                $('#ddlCategory').empty().append('<option id="Option" name="ParentID" value="0">:: Category ::</option>').append(result.map(x => `<option value="${x.categoryID}">${x.categoryName}</option>`));
+            });
+        }
 
+        function BindDDFrequency() {
+            var frequenclist = s.Dropdown.Frequency();
+            frequenclist.then(result => {
+                $('#ddlFrequncy').empty().append('<option id="Option" name="FrequencyID" value="0">:: Select ::</option>').append(result.map(x => `<option value="${x.frequencyID}">${x.frequencyName}</option>`));
+            });
+        }
 
+        function BindDropDownUsers() {
+            var userslist = s.Dropdown.Users();
+            userslist.then(result => {
+                $('#ddlUser').empty().append('<option id="Option" name="UserID" value="0">:: User ::</option>').append(result.map(x => `<option value="${x.id}">${x.name}</option>`));
+            });
+        }
 
-      function BindDropDowncat(){
-          var categorylist=s.Dropdown.Category();
-      categorylist.then(result=>
-        {
-            $('#ddlCategory').empty().append('<option id="Option" name="ParentID" value="0">:: Category ::</option>').append(result.map(x=>`<option value="${x.categoryID}">${x.categoryName}</option>`));
-        });
-    }
-     function BindDDFrequency(){
-          var frequenclist=s.Dropdown.Frequency();
-      frequenclist.then(result=>
-        {
-            $('#ddlFrequncy').empty().append('<option id="Option" name="FrequencyID" value="0">:: Select ::</option>').append(result.map(x=>`<option value="${x.frequencyID}">${x.frequencyName}</option>`));
-        });
-    }
-
-     function BindDropDownUsers(){
-          var userslist=s.Dropdown.Users();
-      userslist.then(result=>
-        {
-            $('#ddlUser').empty().append('<option id="Option" name="UserID" value="0">:: User ::</option>').append(result.map(x=>`<option value="${x.id}">${x.name}</option>`));
-        });
-    }
-
-    function loadScheduleOrders(){
-         Q.preloader.load();
-         $.ajax({
-               type: 'post',
+        function loadScheduleOrders() {
+            Q.preloader.load();
+            $.ajax({
+                type: 'post',
                 url: 'GetScheduleOrders',
                 success: function (data) {
-                     Q.preloader.remove();
-                      $('tbody').html(data);
+                    Q.preloader.remove();
+                    $('tbody').html(data);
                 },
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
-                       Q.notify(-1, 'An error occurred.');
-                         Q.preloader.remove();
+                    Q.notify(-1, 'An error occurred.');
+                    Q.preloader.remove();
                 },
-          });
+            });
 
-    }
-
-</script>
-
+        }
+    </script>
 }
 
