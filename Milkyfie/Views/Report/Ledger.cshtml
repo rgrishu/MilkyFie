@@ -1,6 +1,6 @@
 ﻿
 
-<div class="main-container">
+<div class="main-container pb-0">
     <!-- Row start -->
     <div class="row gutters">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -31,20 +31,13 @@
                                 <button class="btn btn-lg btn-primary Deliver" style="margin-top:20px" id="btnSubmit" type="submit">Search</button>
                             </div>
                         </div>
-
-
-
                     </div>
-
-
                 </div>
             </div>
         </div>
     </div>
-
 </div>
 <div class="main-container">
-
     <!-- Row start -->
     <div class="row gutters">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -53,7 +46,7 @@
                     <table id="copy-print-csv" class="table custom-table">
                         <thead>
                             <tr>
-                                @* <th>#</th>*@
+                                <th>#</th>
                                 <th>Customre Name</th>
                                 <th>Opening Amount </th>
                                 <th>Amount</th>
@@ -74,47 +67,47 @@
 
 
 <!-- Main container end -->
-    @section scripts{
-<script>
-     $( function() {
+@section scripts{
+    <script>
+        $(function () {
             $('#txtStartDate').datepicker({ dateFormat: 'dd M yy' }).val();
-    });
-    $(document).ready(function(){
-        BindDropDownUsers();
-        loadData();
-    });
-
-    $('#btnSubmit').click(function(){
-        loadData();
-    });
-       function BindDropDownUsers(){
-          var userslist=s.Dropdown.Users();
-      userslist.then(result=>
-        {
-            $('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x=>`<option value="${x.id}">${x.name}</option>`));
         });
-    }
-   
-    var loadData = function(){
-        $.renderDataTable2({
-            columns :  [
-              //{"render":function(d,t,row){}},
-                { data: "user.name"},
-                { data: "lastAmount",orderable:false },
-                { data: "amount",orderable:false },
-                { data: "currentAmount",orderable:false },
-                { data: "transactionType",orderable:false},
-                { data: "createdOn",orderable:false},
-                { data: "naration",orderable:false}
-            ],
-            apiUrl : '/Report/LedgerFilter',
-            filters:{
-                UserID:$('#ddluser').val(),
-                CreatedOn:$('#txtStartDate').val()
-            }
+        $(document).ready(function () {
+            BindDropDownUsers();
+            loadData();
         });
-    };
-</script>
 
-    }
+        $('#btnSubmit').click(function () {
+            loadData();
+        });
+        function BindDropDownUsers() {
+            var userslist = s.Dropdown.Users();
+            userslist.then(result => {
+                $('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x => `<option value="${x.id}">${x.name}</option>`));
+            });
+        }
+
+        var loadData = function () {
+            let i = 1;
+            $.renderDataTable2({
+                columns: [
+                    { "render": () => i++ },
+                    { data: "user.name" },
+                    { data: "lastAmount", orderable: false },
+                    { data: "amount", orderable: false },
+                    { data: "currentAmount", orderable: false },
+                    { data: "transactionType", orderable: false },
+                    { data: "createdOn", orderable: false },
+                    { data: "naration", orderable: false }
+                ],
+                apiUrl: '/Report/LedgerFilter',
+                filters: {
+                    UserID: $('#ddluser').val(),
+                    CreatedOn: $('#txtStartDate').val()
+                }
+            });
+        };
+    </script>
+
+}
 

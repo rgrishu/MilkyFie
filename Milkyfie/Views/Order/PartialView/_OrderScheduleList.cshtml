@@ -1,5 +1,5 @@
 ﻿@using Milkyfie.AppCode.Reops.Entities;
- @model List<OrderSchedule>
+@model List<OrderSchedule>
 
 @if (Model != null && Model.Any())
 {
@@ -9,21 +9,20 @@
     {
         <tr data-id="@item.Category.CategoryID">
             <td>@i</td>
-            <td class="name">@Html.DisplayFor(modelItem => item.User.Name)</td>
-            <td class="name">@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
-            <td class="name">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
-            <td class="name">@Html.DisplayFor(modelItem => item.Frequency.FrequencyName)</td>
-              <td class="name">@Html.DisplayFor(modelItem => item.Quantity)</td>
-
-             <td class="name">@Html.DisplayFor(modelItem => item.Sunday)</td>
-             <td class="name">@Html.DisplayFor(modelItem => item.Monday)</td>
-             <td class="name">@Html.DisplayFor(modelItem => item.Tuesday)</td>
-             <td class="name">@Html.DisplayFor(modelItem => item.Wednesday)</td>
-             <td class="name">@Html.DisplayFor(modelItem => item.Thursday)</td>
-             <td class="name">@Html.DisplayFor(modelItem => item.Friday)</td>
-             <td class="name">@Html.DisplayFor(modelItem => item.Saturday)</td>
-            <td class="name">@Html.DisplayFor(modelItem => item.StartFromDate)</td>
-            <td class="name">
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.User.Name)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Category.CategoryName)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Product.ProductName)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Frequency.FrequencyName)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Quantity)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Sunday)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Monday)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Tuesday)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Wednesday)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Thursday)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Friday)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.Saturday)</td>
+            <td class="name text-nowrap">@Html.DisplayFor(modelItem => item.StartFromDate)</td>
+            <td class="name text-nowrap">
                 <h6>
                     @{
                         string colr = item.Status == Status.Approved ? "success" : item.Status == Status.Reject ? "danger" : "warning";
@@ -34,17 +33,19 @@
             <td>
                 @if (item.Status == Status.Pending)
                 {
-                    <a class="btn-ed-ed" onclick="ASchedule(@item.ScheduleID,'A')"><img src="~/img/accept.png" class="img-action" /></a>
-                    <a class="btn-ed-del" onclick="ASchedule(@item.ScheduleID,'R')"><img src="~/img/rejected.png" class="img-action" /></a>
+                    <div class="btn-group">
+                        <a class="btn-ed-ed" onclick="ASchedule(@item.ScheduleID,'A')"><img src="~/img/accept.png" class="img-action" /></a>
+                        <a class="btn-ed-del" onclick="ASchedule(@item.ScheduleID,'R')"><img src="~/img/rejected.png" class="img-action" /></a>
+                    </div>
                 }
                 else if (item.Status == Status.Approved)
                 {
-                
-               //   string check=@item.IsActive==true?"Checked":"";
-                 
+
+                    //   string check=@item.IsActive==true?"Checked":"";
+
                     <!-- Default switch -->
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" data-id="@item.ScheduleID" class="custom-control-input chkapprove" @Html.Raw(@item.IsActive==true?"Checked":"")   id="@("chkapprove"+@i)">
+                        <input type="checkbox" data-id="@item.ScheduleID" class="custom-control-input chkapprove" @Html.Raw(@item.IsActive == true ? "Checked" : "") id="@("chkapprove"+@i)">
                         <label class="custom-control-label" for="@("chkapprove"+@i)"></label>
                     </div>
                 }
@@ -61,67 +62,63 @@ else
 }
 
 <script>
-        $('.chkapprove').change(function() {
-               var formData = new FormData();
-            formData.append("ID", $(this).attr('data-id'));
-            formData.append("status",this.checked);
-             $.ajax({
-              type: 'POST',
-              url: 'ActDeaOrderSch',
-              processData: false,
-              contentType: false,
-              data: formData,
-              success: result => {
-                  if(result.statusCode==1)
-                  {
-                      Q.notify(result.statusCode, result.responseText);
-                      loadScheduleOrders();
-                  }
-                  else
-                  {
-                   Q.notify(result.statusCode, result.responseText);
-                  }
-                  Q.preloader.remove();
-              },
-                error: function (data) {
-                    console.log('An error occurred.');
-                    console.log(data);
-                    Q.preloader.remove();
-                },
-          })
+    $('.chkapprove').change(function () {
+        var formData = new FormData();
+        formData.append("ID", $(this).attr('data-id'));
+        formData.append("status", this.checked);
+        $.ajax({
+            type: 'POST',
+            url: 'ActDeaOrderSch',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: result => {
+                if (result.statusCode == 1) {
+                    Q.notify(result.statusCode, result.responseText);
+                    loadScheduleOrders();
+                }
+                else {
+                    Q.notify(result.statusCode, result.responseText);
+                }
+                Q.preloader.remove();
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                Q.preloader.remove();
+            },
+        })
     });
 
 
-    function ASchedule(id,type){
-          //  Q.preloader.load();
-          var formData = new FormData();
-            formData.append("ID", id);
-            formData.append("Type",type);
-            $.ajax({
-              type: 'POST',
-              url: 'UpdateOrderSchedule',
-              processData: false,
-              contentType: false,
-              data: formData,
-              success: result => {
+    function ASchedule(id, type) {
+        //  Q.preloader.load();
+        var formData = new FormData();
+        formData.append("ID", id);
+        formData.append("Type", type);
+        $.ajax({
+            type: 'POST',
+            url: 'UpdateOrderSchedule',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: result => {
 
-                  if(result.statusCode==1)
-                  {
-                      Q.notify(result.statusCode, result.responseText);
-                      loadScheduleOrders();
-                  }
-                  else
-                  {
-                   Q.notify(result.statusCode, result.responseText);
-                  }
-                  Q.preloader.remove();
-              },
-                error: function (data) {
-                    console.log('An error occurred.');
-                    console.log(data);
-                    Q.preloader.remove();
-                },
-          })
+                if (result.statusCode == 1) {
+                    Q.notify(result.statusCode, result.responseText);
+                    loadScheduleOrders();
+                }
+                else {
+                    Q.notify(result.statusCode, result.responseText);
+                }
+                Q.preloader.remove();
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+                Q.preloader.remove();
+            },
+        })
     }
 
 

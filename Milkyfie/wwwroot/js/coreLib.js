@@ -1033,7 +1033,7 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
             }),
             aoColumns: options.columns,
             //scrollY: $('[name="Applicationlist"]').offset().top + 118,
-            //scrollCollapse: true,
+            scrollCollapse: true,
             initComplete: function () {
                 delaySearch(this.api())
             },
