@@ -63,17 +63,10 @@ namespace Milkyfie.Controllers
 
         [HttpGet]
         [Route("redirect-pg")]
-        public IActionResult PGRedirect(int id, int a, int w, int pg)
+        public IActionResult PGRedirect(int a)
         {
-            //    ILoginML loginML = new LoginML(_accessor, _env);
-            //    var _WInfo = loginML.GetWebsiteInfo();
-            //    IPaymentGatewayML gatewayML = new PaymentGatewayML(_accessor, _env);
 
-            //    var res = IntiatePGTransactionForWeb(_lr.UserID, a, pg, id, w, _WInfo.WID == 1 ? _WInfo.AbsoluteHost : _WInfo.MainDomain, string.Empty);
-
-            //    return View(res);
-
-            //return BadRequest(new { msg = "Unautorised request" });
+        
             var res = new PGModelForRedirection()
             {
                 URL= "https://securegw-stage.paytm.in/",

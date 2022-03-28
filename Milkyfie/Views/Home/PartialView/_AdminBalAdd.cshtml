@@ -31,11 +31,10 @@
         Q.notify(-1, 'Enter Valid Amount.');
         return;
         }
-         CallPaymentGateway(1005, 250, 5000, 1);
-   
+         CallPaymentGateway($('#txtbalance').val());
     })
-     var CallPaymentGateway = function (upgid, oid, amount, wallet) {
-        window.open("/redirect-pg?id=" + oid + "&a=" + amount + "&w=" + wallet + "&pg=" + upgid, "_blank", "toolbar=0,width=900,height=650,left=0,top=0");
+     var CallPaymentGateway = function (amount) {
+        window.open("/redirect-pg?a=" + amount, "_blank", "toolbar=0,width=900,height=650,left=0,top=0");
     }
 </script>
 
