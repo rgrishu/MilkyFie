@@ -1032,7 +1032,8 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
                 filters: options.filters
             }),
             aoColumns: options.columns,
-            //scrollY: $('[name="Applicationlist"]').offset().top + 118,
+            scrollY: "600px",
+           
             scrollCollapse: true,
             initComplete: function () {
                 delaySearch(this.api())

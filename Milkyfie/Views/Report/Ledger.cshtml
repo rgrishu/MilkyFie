@@ -47,12 +47,12 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Customre Name</th>
-                                <th>Opening Amount </th>
+                                <th class="text-nowrap">Customre Name</th>
+                                <th class="text-nowrap">Opening Amount </th>
                                 <th>Amount</th>
-                                <th>Closing Amount </th>
-                                <th>Transaction Type</th>
-                                <th>Transaction Date</th>
+                                <th class="text-nowrap">Closing Amount </th>
+                                <th class="text-nowrap">Transaction Type</th>
+                                <th class="text-nowrap">Transaction Date</th>
                                 <th>Naration</th>
                             </tr>
                         </thead>
@@ -68,46 +68,51 @@
 
 <!-- Main container end -->
 @section scripts{
-    <script>
-        $(function () {
-            $('#txtStartDate').datepicker({ dateFormat: 'dd M yy' }).val();
-        });
-        $(document).ready(function () {
-            BindDropDownUsers();
-            loadData();
-        });
+<script>
+    $(function () {
+        $('#txtStartDate').datepicker({ dateFormat: 'dd M yy' }).val();
+    });
+    $(document).ready(function () {
+        BindDropDownUsers();
+        loadData();
+    });
 
-        $('#btnSubmit').click(function () {
-            loadData();
+    $('#btnSubmit').click(function () {
+        loadData();
+    });
+    function BindDropDownUsers() {
+        var userslist = s.Dropdown.Users();
+        userslist.then(result => {
+            $('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x => `<option value="${x.id}">${x.name}</option>`));
         });
-        function BindDropDownUsers() {
-            var userslist = s.Dropdown.Users();
-            userslist.then(result => {
-                $('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x => `<option value="${x.id}">${x.name}</option>`));
-            });
-        }
+    }
 
-        var loadData = function () {
-            let i = 1;
-            $.renderDataTable2({
-                columns: [
-                    { "render": () => i++ },
-                    { data: "user.name" },
-                    { data: "lastAmount", orderable: false },
-                    { data: "amount", orderable: false },
-                    { data: "currentAmount", orderable: false },
-                    { data: "transactionType", orderable: false },
-                    { data: "createdOn", orderable: false },
-                    { data: "naration", orderable: false }
-                ],
-                apiUrl: '/Report/LedgerFilter',
-                filters: {
-                    UserID: $('#ddluser').val(),
-                    CreatedOn: $('#txtStartDate').val()
-                }
-            });
-        };
-    </script>
+    var loadData = function () {
+
+        $.renderDataTable2({
+
+            columns: [
+               // { "render": () => i++},
+                {data: 'SrNo',
+           render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+           }},
+                { data: "user.name",orderable: false },
+                { data: "lastAmount", orderable: false },
+                { data: "amount", orderable: false },
+                { data: "currentAmount", orderable: false },
+                { data: "transactionType", orderable: false },
+                { data: "createdOn", orderable: false },
+                { data: "naration", orderable: false }
+            ],
+            apiUrl: '/Report/LedgerFilter',
+            filters: {
+                UserID: $('#ddluser').val(),
+                CreatedOn: $('#txtStartDate').val()
+            }
+        });
+    };
+</script>
 
 }
 
