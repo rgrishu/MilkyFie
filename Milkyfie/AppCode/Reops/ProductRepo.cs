@@ -26,6 +26,7 @@ namespace Milkyfie.AppCode.Reops
         public async Task<Response> AddAsync(Product entity)
         {
             var dbparams = new DynamicParameters();
+            dbparams.Add("ProductID", entity.ProductID);
             dbparams.Add("CategoryID", entity.Category != null ? entity.Category.CategoryID : 0);
             dbparams.Add("UnitID", entity.Unit != null ? entity.Unit.UnitID : 0);
             dbparams.Add("ProductName", entity.ProductName);

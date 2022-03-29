@@ -19,11 +19,11 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Category Name</th>
-                                        <th>Product Name</th>
+                                        <th class="text-nowrap">Category Name</th>
+                                        <th class="text-nowrap">Product Name</th>
                                         <th>MRP</th>
                                         <th>SellingPrice</th>
-                                        <th>Description</th>
+                                        @*<th>Description</th>*@
                                         <th>Image</th>
                                         <th>Action</th>
                                     </tr>
@@ -80,21 +80,39 @@
                 },
             });
     }
-
      function BindDropDowncat(){
           var categorylist=s.Dropdown.Category();
       categorylist.then(result=>
-        {
-            $('#ddlCategory').empty().append('<option id="Option" name="ParentID" value="0">:: Category ::</option>').append(result.map(x=>`<option value="${x.categoryID}">${x.categoryName}</option>`));
+        {             
+            $('#ddlCategory').empty()
+            .append('<option id="Option" name="ParentID" value="0">:: Category ::</option>')
+            .append(result.map(x=>`<option value="${x.categoryID}" ${x.categoryID==selectedCat?'selected':''}>${x.categoryName}</option>`));
         });
     }
      function BindDropDownUnit(){
           var unitlist=s.Dropdown.Unit();
       unitlist.then(result=>
         {
-            $('#ddlUnit').empty().append('<option id="Option" name="UnitID" value="0">:: Unit ::</option>').append(result.map(x=>`<option value="${x.unitID}">${x.unitName}</option>`));
+            $('#ddlUnit').empty()
+            .append('<option id="Option" name="UnitID" value="0">:: Unit ::</option>')
+            .append(result.map(x=>`<option value="${x.unitID}" ${x.unitID==selectedunit?'selected':''}>${x.unitName}</option>`));
         });
     }
+    // function BindDropDowncat(){
+    //      var categorylist=s.Dropdown.Category();
+    //  categorylist.then(result=>
+    //    {
+    //        $('#ddlCategory').empty().append('<option id="Option" name="ParentID" value="0">:: Category ::</option>').append(result.map(x=>`<option value="${x.categoryID}">${x.categoryName}</option>`));
+    //    });
+    //}
+
+    // function BindDropDownUnit(){
+    //      var unitlist=s.Dropdown.Unit();
+    //  unitlist.then(result=>
+    //    {
+    //        $('#ddlUnit').empty().append('<option id="Option" name="UnitID" value="0">:: Unit ::</option>').append(result.map(x=>`<option value="${x.unitID}">${x.unitName}</option>`));
+    //    });
+    //}
     function loadProduct(){
          $.ajax({
                type: 'post',

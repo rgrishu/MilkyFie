@@ -114,7 +114,13 @@ namespace Milkyfie.Controllers
         [HttpPost]
         public async Task<IActionResult> NewProduct(int id = 0)
         {
-            Product prres = new Product();
+            var prres = new Product()
+            {
+                Category = new Category()
+                { },
+                Unit = new Unit()
+                { },
+            };
             if (id != 0)
             {
                 IEnumerable<Product> lpres = await _product.GetAllAsync(new Product { ProductID = id });
@@ -139,25 +145,30 @@ namespace Milkyfie.Controllers
                 retRes.ResponseText = "Invalid Input Data.";
                 return Json(retRes);
             }
-            StringBuilder sb = new StringBuilder("P_");
-            sb.Append(DateTime.Now.ToString("yyyymmddMMss"));
-            sb.Append(Path.GetExtension(model.file.FileName));
-            var fileres = AppUtility.O.UploadFile(new FileUploadModel
+            var fileres = new Response()
             {
-                FilePath = FileDirectories.ProductImage,
-                file = model.file,
-                FileName = sb.ToString()
-            });
-            model.ProductImage = sb.ToString();
+                StatusCode = ResponseStatus.Failed,
+            };
+            if (model.file!=null)
+            {
+                StringBuilder sb = new StringBuilder("P_");
+                sb.Append(DateTime.Now.ToString("yyyymmddMMss"));
+                sb.Append(Path.GetExtension(model.file.FileName));
+                fileres = AppUtility.O.UploadFile(new FileUploadModel
+                {
+                    FilePath = FileDirectories.ProductImage,
+                    file = model.file,
+                    FileName = sb.ToString()
+                });
+                model.ProductImage = sb.ToString();
+            }
+            else {
+                fileres.StatusCode = ResponseStatus.Success;
+            }
             if (fileres.StatusCode == ResponseStatus.Success)
             {
                 Product product = _mapper.Map<Product>(model);
-                var resp = await _product.AddAsync(product);
-                if (resp.ResponseText == "Success")
-                {
-                    retRes.StatusCode = ResponseStatus.Success;
-                    retRes.ResponseText = "Product Added Successfull.";
-                }
+                retRes = await _product.AddAsync(product);
             }
             return Json(retRes);
         }
@@ -177,8 +188,8 @@ namespace Milkyfie.Controllers
         public async Task<IActionResult> GetPincodeDrop(PincodeFilter term)
         {
             var pincode = new Pincode()
-            { 
-            PinCode= term.term
+            {
+                PinCode = term.term
             };
             var resp = await _pincode.GetAllAsync(pincode);
             return Json(resp);

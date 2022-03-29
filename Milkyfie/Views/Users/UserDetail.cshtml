@@ -22,7 +22,10 @@
                             <div class="table-responsive">
                                 <table id="d" class="table custom-table">
                                     <thead>
-                                        <tr>
+                                        <tr> 
+                                            <th  class="text-nowrap">
+                                                User Id
+                                            </th>
 
                                             <th>
                                                 User Name
@@ -101,7 +104,8 @@
          $.renderDataTable2({
              columns :  [
                //{"render":function(d,t,row){}},
-                 { data: "userName"},
+                 { data: "mUserId",orderable:false},
+                 { data: "userName",orderable:false},
                  { data: "name",orderable:false },
                  { data: "phoneNumber",orderable:false },
                  { data: "email",orderable:false },

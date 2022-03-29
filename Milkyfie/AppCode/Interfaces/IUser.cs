@@ -20,5 +20,9 @@ namespace Milkyfie.AppCode.Interfaces
         Task<Response> FOSBalanceCollection(int UserID, int FosID, decimal Amount);
         Task<Response> UpdateUserDetail(ApplicationUser entity);
         Task<JDataTable<ApplicationUser>> UserFilter(jsonAOData filter = null);
+        Task<Response> DeleteFosMappingByUser(FOSMapByUser entity);
+        Task<IEnumerable<FOSMapByUser>> GetMapedFosByUser(FOSMapByUser entity = null);
+        Task<Response> FosMappingByUser(FOSMapByUser entity);
+        Task<IEnumerable<ApplicationUser>> GetUserForFosMApDrpdwn(ApplicationUser entity = null);
     }
 }

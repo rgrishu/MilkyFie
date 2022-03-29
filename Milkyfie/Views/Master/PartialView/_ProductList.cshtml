@@ -13,11 +13,13 @@
             <td class="name">@Html.DisplayFor(modelItem => item.ProductName)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.MRP)</td>
             <td class="name">@Html.DisplayFor(modelItem => item.SellingPrice)</td>
-            <td class="name">@Html.DisplayFor(modelItem => item.Description)</td>
+          @*  <td class="name">@Html.DisplayFor(modelItem => item.Description)</td>*@
             <td class="name"><img height="60px" width="60px"  src="~/images/Product/@item.ProductImage"/></td>
-            <td>
+            <td >
+                <div class="btn-group">
                 <a class="btn-ed-ed" data-id="@item.ProductID" ><img src="~/img/pencil.png"  class="img-action" /></a>
                 <a class="btn-ed-del" data-id="@item.ProductID"><img src="~/img/delete.png" class="img-action" /></a>
+                </div>
             </td>
         </tr>
         i++;

@@ -9,7 +9,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="row gutters">
-                    <input type="hidden" id="hdnProductID" />
+                    <input type="hidden" id="hdnProductID" value="@Model.ProductID" />
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Select Category</label>
@@ -46,14 +46,14 @@
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">MRP</label>
-                            <input type="text" required="" value="@Model.MRP" class="form-control"
+                            <input type="text" required="" value="@Model.MRP" class="form-control calcdscont"
                                    id="txtMRP" autocomplete="off" name="MRP" placeholder="Enter MRP">
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                             <label for="inputName">Selling Price</label>
-                            <input type="text" required="" value="@Model.SellingPrice" class="form-control"
+                            <input type="text" required="" value="@Model.SellingPrice" class="form-control calcdscont"
                                    id="txtSellingPrice" autocomplete="off" name="SellingPrice" placeholder="Enter Selling Price">
                         </div>
                     </div>
@@ -62,14 +62,14 @@
                         <div class="form-group">
                             <label for="inputName">Discount Type</label>
                             <input type="text" required="" class="form-control"
-                                   id="txtDisType" autocomplete="off" name="DiscountType" placeholder="Enter Discount Type">
+                                   id="txtDisType" autocomplete="off" disabled="disabled" value="P" name="DiscountType" placeholder="Enter Discount Type">
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
-                            <label for="inputName">Discount</label>
+                            <label for="inputName">Discount (%)</label>
                             <input type="text" required="" value="@Model.Discount" class="form-control"
-                                   id="txtdiscount" autocomplete="off" name="Discount" placeholder="Enter Discount">
+                                   id="txtdiscount" autocomplete="off" disabled="disabled" name="Discount" placeholder="Enter Discount">
                         </div>
                     </div>
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
@@ -100,26 +100,45 @@
                                    id="txtProducticon" autocomplete="off" value="@Model.ProductIcon" name="ProductIcon" placeholder="Enter Product Icon">
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                    @* <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
                         <div class="form-group">
-                            <label for="inputName">Is Discount</label>
-                            <br />
-                            <input type="checkbox" name="IsDiscount" value="@Model.IsDiscount" id="chekdiscount" value="true" />
+                        <label for="inputName">Is Discount</label>
+                        <br />
+                        <input type="checkbox" name="IsDiscount" value="@Model.IsDiscount" id="chekdiscount" value="true" />
                         </div>
-                    </div>
+                        </div>
+                    *@
+
+
+
+
 
 
                     <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
-                        <div class="form-group">
-                            <label for="inputName">Product Image</label>
-                            <input type="file" name="file" id="productimage" />
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="form-group">
+                                    <label for="inputName">Product Image</label>
+                                    <input type="file" name="file" id="productimage" onchange="previewFile(this);" />
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                @{
+                                    string src = @Model.ProductImage != null ? @Model.ProductImage : "noimage.png";
+                                }
+                                <img height="50px" id="previewImg" data-name="@Model.ProductImage" src="~/images/Product/@src" />
+                            </div>
                         </div>
+
+
                     </div>
 
                     <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
                         <div class="form-group">
                             <label for="inputName">Nutrition</label>
-                            <textarea  class="summernote" id="txtnutrition"></textarea>
+                            <textarea class="summernote" id="txtnutrition">@Model.Nutrition</textarea>
                         </div>
                     </div>
 
@@ -128,8 +147,8 @@
                     <div class="col-xl-12 col-lg col-md-12 col-sm-12 col-12">
                         <div class="form-group">
                             <label for="inputName">Discription</label>
-                           <textarea  class="summernote" id="txtDescription"> </textarea>
-                                        
+                            <textarea class="summernote" id="txtDescription">@Model.Description </textarea>
+
                         </div>
                     </div>
 
@@ -143,67 +162,99 @@
     @*</form>*@
 </div>
 <script>
-    $(document).ready(function() {
-                $('.summernote').summernote({
-                    height: 170,
-                    tabsize: 2
-                });
-            });
-    $('#btnSubmit').click(function () {
-        Q.preloader.load();
-          var fileupload = $("#productimage").get(0);
-          var isdiscount = $('#chekdiscount').is(':checked') == true ? true : false;
-          var files = fileupload.files;
-          var formData = new FormData();
 
-          formData.append("file", files[0]);
-         // formData.append("Category",cat);
-          formData.append("Category.CategoryID", $("#ddlCategory").val());
-          formData.append("Category.CategoryName","-");
-          formData.append("Unit.UnitID", $("#ddlUnit").val());
-         // formData.append("Unit.UnitID", $("#ddlUnit").val());
-          formData.append("ProductName", $("#txtProductName").val());
-          formData.append("Weight", $("#txtWeight").val());
-          formData.append("PackagingDetail", $("#txtpackdetails").val());
-          formData.append("KeyFeatures", $("#txtFeatures").val());
-          //formData.append("Quantity", $("#txtQuantity").val());
-          formData.append("MRP", $("#txtMRP").val());
-          formData.append("SellingPrice", $("#txtSellingPrice").val());
-          formData.append("DiscountType",$("#txtDisType").val());
-          formData.append("Discount", $("#txtdiscount").val());
-          formData.append("IsDiscount",isdiscount);
-          formData.append("ProductIcon",$("#txtProducticon").val());
-          formData.append("Description", $("#txtDescription").val());
-          formData.append("Nutrition", $("#txtnutrition").val());
-          //formData.append("Remark",$("#txtRemark").val());
-          $.ajax({
-              type: 'POST',
-              url: 'SaveNewProduct',
-              processData: false,
-              contentType: false,
-              data: formData,
-              success: result => {
-                  console.log(result)
-                  if(result.statusCode==1)
-                  {
-                      loadProduct();
-                  $('input').val('');
-                    $("#txtnutrition").val('');
-                       $("#txtDescription").val('');
-                  $('.field-validation-valid').remove();
-                 Q.notify(result.statusCode, result.responseText);
-                  }
-                  else
-                  {
+
+      var selectedCat=@Model.Category.CategoryID;
+          var selectedunit=@Model.Unit.UnitID;
+      $(document).ready(function() {
+                  $('.summernote').summernote({
+                      height: 170,
+                      tabsize: 2
+                  });
+              });
+              $('.calcdscont').focusout(function(){
+              var mrp= $('#txtMRP').val();
+              var sp= $('#txtSellingPrice').val();
+               var dec = (sp/100).toFixed(2); //its convert 10 into 0.10
+              var mult = mrp*dec; // gives the value for subtract from main value
+              if(mrp>0 && sp>0)
+              {
+                var discont = mrp-mult;
+                $('#txtdiscount').val(Math.round(discont));
+              }
+              });
+      $('#btnSubmit').click(function () {
+          Q.preloader.load();
+            var fileupload = $("#productimage").get(0);
+            var isdiscount = $('#chekdiscount').is(':checked') == true ? true : false;
+            var files = fileupload.files;
+            var formData = new FormData();
+
+            formData.append("file", files[0]);
+           // formData.append("Category",cat);
+            formData.append("Category.CategoryID", $("#ddlCategory").val());
+            formData.append("ProductID",$('#hdnProductID').val());
+            formData.append("ProductImage",$('#previewImg').attr("data-name"));
+            formData.append("Category.CategoryName","-");
+            formData.append("Unit.UnitID", $("#ddlUnit").val());
+           // formData.append("Unit.UnitID", $("#ddlUnit").val());
+            formData.append("ProductName", $("#txtProductName").val());
+            formData.append("Weight", $("#txtWeight").val());
+            formData.append("PackagingDetail", $("#txtpackdetails").val());
+            formData.append("KeyFeatures", $("#txtFeatures").val());
+            //formData.append("Quantity", $("#txtQuantity").val());
+            formData.append("MRP", $("#txtMRP").val());
+            formData.append("SellingPrice", $("#txtSellingPrice").val());
+            formData.append("DiscountType",$("#txtDisType").val());
+            formData.append("Discount", $("#txtdiscount").val());
+            formData.append("IsDiscount",true);
+            formData.append("ProductIcon",$("#txtProducticon").val());
+            formData.append("Description", $("#txtDescription").val());
+            formData.append("Nutrition", $("#txtnutrition").val());
+            //formData.append("Remark",$("#txtRemark").val());
+            $.ajax({
+                type: 'POST',
+                url: 'SaveNewProduct',
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: result => {
+                    console.log(result)
+                    if(result.statusCode==1)
+                    { 
+                    $('input').val('');
+                   $('#txtnutrition').summernote('reset');
+                   $('#txtDescription').summernote('reset');
+                   $('#previewImg').attr("src","/images/Product/noimage.png");
+                    $('.field-validation-valid').remove();
+                    loadProduct();
                    Q.notify(result.statusCode, result.responseText);
-                  }
-                  Q.preloader.remove();
-              },
-                error: function (data) {
-                    console.log('An error occurred.');
-                    console.log(data);
+                    }
+                    else
+                    {
+                     Q.notify(result.statusCode, result.responseText);
+                    }
                     Q.preloader.remove();
                 },
-          })
-      });
+                  error: function (data) {
+                      console.log('An error occurred.');
+                      console.log(data);
+                      Q.preloader.remove();
+                  },
+            })
+        });
+
+    function previewFile(input){
+          var file = $("#productimage").get(0).files[0];
+
+          if(file){
+              var reader = new FileReader();
+
+              reader.onload = function(){
+                  $("#previewImg").attr("src", reader.result);
+              }
+
+              reader.readAsDataURL(file);
+          }
+      }
 </script>

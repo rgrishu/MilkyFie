@@ -29,14 +29,14 @@ namespace Milkyfie.Controllers
             //_user = (Models.ApplicationUser)_httpContext.HttpContext.Items["User"];
             _users = users;
         }
-      
+
         public IActionResult UserDetail()
         {
             ApplicationUser au = new ApplicationUser();
             au.Role = "Consumer";
             return View(au);
         }
-        
+
         public IActionResult UserDetailFos()
         {
             ApplicationUser au = new ApplicationUser();
@@ -73,6 +73,13 @@ namespace Milkyfie.Controllers
             return Json(users);
         }
         [HttpPost]
+        public async Task<IActionResult> UsersDropdownForFosMap()
+        {
+
+            var users = _users.GetUserForFosMApDrpdwn().Result;
+            return Json(users);
+        }
+        [HttpPost]
         public async Task<IActionResult> UserBalance(int id)
         {
             var entity = new ApplicationUser()
@@ -100,6 +107,11 @@ namespace Milkyfie.Controllers
 
         [HttpGet]
         public async Task<IActionResult> FosMap()
+        {
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> FosMapByUser()
         {
             return View();
         }
@@ -135,6 +147,49 @@ namespace Milkyfie.Controllers
             res = _users.FosMapping(entity).Result;
             return Json(res);
         }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> FosMappingByUser(int Id, int UserID)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            if (Id == 0)
+            {
+                res.ResponseText = "Select FOS!";
+                return Json(res);
+            }
+            if (UserID == 0)
+            {
+                res.ResponseText = "Select PinCode!";
+                return Json(res);
+            }
+            var entity = new FOSMapByUser()
+            {
+                FOSUsers = new ApplicationUser()
+                {
+                    Id = Id,
+                },
+                UserID = UserID
+            };
+            res = _users.FosMappingByUser(entity).Result;
+            return Json(res);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteFosMappingByUser(int id)
+        {
+            var entity = new FOSMapByUser()
+            {
+                FOSMapID = id
+            };
+            var data = _users.DeleteFosMappingByUser(entity).Result;
+            return Json(data);
+        }
         [HttpPost]
         public async Task<IActionResult> DeleteFosMapping(int id)
         {
@@ -145,11 +200,18 @@ namespace Milkyfie.Controllers
             var data = _users.DeleteFosMapping(entity).Result;
             return Json(data);
         }
+
         [HttpPost]
         public async Task<IActionResult> GetMapedFos()
         {
             var data = _users.GetMapedFos().Result;
             return PartialView("PartialView/_FosMapList", data);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetMapedFosByUser()
+        {
+            var data = _users.GetMapedFosByUser().Result;
+            return PartialView("PartialView/_FosMapByUserList", data);
         }
         [HttpPost]
         [Route("AdminBalance")]
@@ -197,11 +259,11 @@ namespace Milkyfie.Controllers
                 var entity = new ApplicationUser()
                 {
                     Id = id
-                };  
+                };
                 var users = _users.GetAllAsync(entity).Result;
                 if (users != null)
                 {
-                    var v= users.FirstOrDefault();
+                    var v = users.FirstOrDefault();
                     rv.Name = v.Name;
                     rv.PinCode = v.Pincode;
                     rv.Mobile = v.PhoneNumber;
@@ -227,7 +289,7 @@ namespace Milkyfie.Controllers
                 response.ResponseText = "Invalid Data";
                 return Json(response);
             }
-            if (model.id==0)
+            if (model.id == 0)
             {
                 response.ResponseText = "Invalid User";
                 return Json(response);

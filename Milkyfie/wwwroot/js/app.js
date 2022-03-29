@@ -61,6 +61,9 @@ var serviceProperty = {
         Users: param => new Promise((resolve, reject) => {
             $.post('/Users/UsersDropdown', { role: param }).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
         }),
+        UsersForFosMap: param => new Promise((resolve, reject) => {
+            $.post('/Users/UsersDropdownForFosMap', { role: param }).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
+        }),
         Pincode: param => new Promise((resolve, reject) => {
             $.post('/Master/GetPincodeDrop', param).done(result => resolve(result)).fail(xhr => reject(new Error(xhr)));
         }),

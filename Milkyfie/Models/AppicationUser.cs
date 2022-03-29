@@ -7,7 +7,7 @@ namespace Milkyfie.Models
     {
         public string UserId { get; set; }
         public string Role { get; set; }
-       
+        public string MUserId { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
         public string Pincode { get; set; }
@@ -18,6 +18,7 @@ namespace Milkyfie.Models
     public class UserInfoApi
     {
         public string UserId { get; set; }
+        public string MUserId { get; set; }
         public string Role { get; set; }
         public string Name { get; set; }
         public string Address { get; set; }
