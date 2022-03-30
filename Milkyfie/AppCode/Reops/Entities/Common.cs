@@ -2,7 +2,7 @@
 
 namespace Milkyfie.AppCode.Reops.Entities
 {
-    public class Common
+    public class CallBackLog
     {
         public int Id { get; set; }
         public string Request { get; set; }

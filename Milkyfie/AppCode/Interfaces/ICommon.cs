@@ -8,6 +8,6 @@ namespace Milkyfie.AppCode.Interfaces
 {
     public interface ICommon
     {
-      
+        Task<Response> InsertLog(CallBackLog req);
     }
 }

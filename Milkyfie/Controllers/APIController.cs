@@ -24,10 +24,12 @@ namespace Milkyfie.Controllers
         protected IRepository<Category> _category;
         protected IRepository<Frequency> _frequency;
         protected IOrder _order;
+        protected IGateWay _GateWay;
+        protected ICommon _common;
         protected IRepository<News> _news;
         protected IRepository<Banners> _banners;
         public APIController(IHttpContextAccessor httpContext, IUserService userService, IProduct product, IRepository<Category> category, IRepository<Frequency> frequency,
-            IRepository<News> news, IRepository<Banners> banners, IUser users, IOrder order)
+            IRepository<News> news, IRepository<Banners> banners, IUser users, IOrder order, IGateWay GateWay, ICommon common)
         {
             _userService = userService;
             _httpContext = httpContext;
@@ -38,6 +40,8 @@ namespace Milkyfie.Controllers
             _banners = banners;
             _users = users;
             _order = order;
+            _GateWay = GateWay;
+            _common = common;
             if (_httpContext != null && _httpContext.HttpContext != null)
             {
                 loginResponse = (LoginResponse)_httpContext?.HttpContext.Items["User"];
@@ -493,5 +497,35 @@ namespace Milkyfie.Controllers
         }
 
         #endregion
+        #region PaymentGateWay
+        [HttpPost(nameof(UserAddMoney))]
+        [HttpPost]
+        public IActionResult UserAddMoney(InitiatePaymentGatewayRequest request)
+        {
+            var res = new Response<PaytmJSRequest>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var resp = _GateWay.IntiatePGTransactionForApp(request).Result;
+            res = new Response<PaytmJSRequest>()
+            {
+                StatusCode = ResponseStatus.Success,
+                ResponseText = ResponseStatus.Success.ToString(),
+                Result = resp
+            };
+            var callreq2 = new CallBackLog()
+            {
+                Request = "UserAddMoney",
+                Rdata = Newtonsoft.Json.JsonConvert.SerializeObject(request),
+                Response = Newtonsoft.Json.JsonConvert.SerializeObject(resp),
+                Apiname = "UserAddMoney"
+            };
+            var l = _common.InsertLog(callreq2);
+            return Json(res);
+        }
+
+        #endregion
+
     }
 }

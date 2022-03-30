@@ -18,14 +18,16 @@ namespace Milkyfie.AppCode.Reops
         {
             _dapper = dapper;
         }
+        public async Task<Response> InsertLog(CallBackLog req)
+        {
+            var dbparams = new DynamicParameters();
+            dbparams.Add("Request", req.Request);
+            dbparams.Add("Response", req.Response);
+            dbparams.Add("Rdata", req.Rdata);
+            dbparams.Add("Apiname", req.Apiname);
+            Response inires = await _dapper.InsertAsync<Response>("proc_insertapilog", dbparams, commandType: CommandType.StoredProcedure);
+            return inires;
+        }
 
-
-
-
-
-
-
-      
     }
-
 }

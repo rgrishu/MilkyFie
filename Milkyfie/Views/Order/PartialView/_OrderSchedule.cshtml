@@ -213,6 +213,7 @@
                    Q.notify(result.statusCode, result.responseText);
                   }
                   Q.preloader.remove();
+                  $('.ui-dialog-titlebar-close').click();
               },
                 error: function (data) {
                     console.log('An error occurred.');

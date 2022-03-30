@@ -1,126 +1,165 @@
-﻿using Dapper;
+﻿using ApiRequestUtility;
+using Dapper;
 using Milkyfie.AppCode.DAL;
 using Milkyfie.AppCode.Interfaces;
 using Milkyfie.AppCode.Reops.Entities;
 using Milkyfie.Models;
+using Newtonsoft.Json;
+using Paymentgateway.Paytm;
+using paytm;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace Milkyfie.AppCode.Reops
 {
-    public class GateWayRepo : IOrder
+    public class GateWayRepo : IGateWay
     {
         private IDapperRepository _dapper;
-        public GateWayRepo(IDapperRepository dapper)
+        protected ICommon _common;
+        public GateWayRepo(IDapperRepository dapper, ICommon common)
         {
             _dapper = dapper;
+            _common = common;
         }
 
-        public async Task<Response> AddAsync(OrderSchedule entity)
+        public async Task<PaytmJSRequest> IntiatePGTransactionForApp(InitiatePaymentGatewayRequest req)
         {
-            var response = new Response()
-            {
-                StatusCode = ResponseStatus.Failed,
-                ResponseText = ResponseStatus.Failed.ToString(),
-            };
+            PaytmJSRequest response = new PaytmJSRequest();
             try
             {
                 var dbparams = new DynamicParameters();
-                dbparams.Add("ScheduleID", entity.ScheduleID);
-                dbparams.Add("UserID", entity.User != null ? entity.User.Id : 0);
-                dbparams.Add("LoginID", entity.LoginID);
-                dbparams.Add("ProductID", entity.Product != null ? entity.Product.ProductID : 0);
-                dbparams.Add("CategoryID", entity.Category != null ? entity.Category.CategoryID : 0);
-                dbparams.Add("FrequencyID", entity.Frequency != null ? entity.Frequency.FrequencyID : 0);
-                dbparams.Add("OtherFrequency", entity.OtherFrequency);
-                dbparams.Add("Quantity", entity.Quantity);
-                dbparams.Add("StartFromDate", entity.StartFromDate);
-                dbparams.Add("ScheduleShift", entity.ScheduleShift);
-                dbparams.Add("Description", entity.Description);
-                dbparams.Add("Sunday", entity.Sunday);
-                dbparams.Add("Monday", entity.Monday);
-                dbparams.Add("Tuesday", entity.Tuesday);
-                dbparams.Add("Wednesday", entity.Wednesday);
-                dbparams.Add("Thursday", entity.Thursday);
-                dbparams.Add("Friday", entity.Friday);
-                dbparams.Add("Saturday", entity.Saturday);
-                response = await _dapper.InsertAsync<Response>("proc_AddOrderSchedule", dbparams, commandType: CommandType.StoredProcedure);
+                string responseData = string.Empty;
+                string HitURL = string.Empty;
+                dbparams.Add("UserID", req.UserID);
+                dbparams.Add("Amount", req.Amount);
+                InitiatePaymentGatewayResponse inires = await _dapper.InsertAsync<InitiatePaymentGatewayResponse>("proc_InitiatePaymentGatewayTransaction", dbparams, commandType: CommandType.StoredProcedure);
+
+                if (inires.StatusCode == ResponseStatus.Success)
+                {
+                    var res = new PGModelForRedirection()
+                    {
+                        URL = inires.URL,
+                        Statuscode = (int)inires.StatusCode,
+                        PGType = 1,
+                        paytmJSRequest = new PaytmJSRequest()
+                        {
+                            MID = inires.MerchantId,
+                            OrderID = inires.OrderID,
+                            Amount = req.Amount,
+                            CallbackUrl = inires.CallBackUrl,
+                            TokenType = "TXN_TOKEN"
+                        }
+                    };
+                    var txnAmount = new Dictionary<string, string> {
+                    { "value",req.Amount},
+                    { "currency", "INR"}
+                };
+                    var userInfo = new Dictionary<string, string> {
+                    { "custId", "CUST_"+req.UserID}
+                };
+                    var body = new Dictionary<string, object> {
+                    {"requestType", "Payment" },
+                    {"mid", res.paytmJSRequest.MID},
+                    {"websiteName", "Stage"},
+                    {"orderId", res.paytmJSRequest.OrderID },
+                    {"txnAmount", req.Amount },
+                    {"userInfo", userInfo },
+                    { "callbackUrl",res.paytmJSRequest.CallbackUrl},
+                };
+                    var CHECKSUMHASH = CheckSum.generateSignature(JsonConvert.SerializeObject(body), "hatPG5VUKRJUzhj4");
+                    var head = new Dictionary<string, string> {
+                    { "signature", CHECKSUMHASH }
+                };
+                    var requestBody = new Dictionary<string, object> {
+                    {"body", body },
+                    {"head", head }
+                };
+
+                    try
+                    {
+                        res.Statuscode = 1;
+                        res.Msg = "Transaction intiated";
+                        string post_data = JsonConvert.SerializeObject(requestBody);
+                        HitURL = $"{res.URL}theia/api/v1/initiateTransaction?mid={res.paytmJSRequest.MID}&orderId={res.paytmJSRequest.OrderID}";
+                        responseData = AppWebRequest.O.PostJsonDataUsingHWRTLS(HitURL.ToString(), requestBody, head).Result;
+                        if (!string.IsNullOrEmpty(responseData))
+                        {
+                            var apiResp = JsonConvert.DeserializeObject<PaytmTokenResponse>(responseData);
+                            if (apiResp.body != null)
+                            {
+                                if (apiResp.body.resultInfo.resultCode.Equals("0000"))
+                                {
+                                    res.paytmJSRequest.Token = apiResp.body.txnToken;
+                                }
+                            }
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        responseData = ex.Message + " | " + responseData;
+                    }
+                    var callreq2 = new CallBackLog()
+                    {
+                        Request = HitURL.ToString(),
+                        Rdata = Newtonsoft.Json.JsonConvert.SerializeObject(requestBody),
+                        Response = responseData,
+                        Apiname = "initiateTransaction"
+                    };
+                    var l = _common.InsertLog(callreq2);
+                    response.Amount = res.paytmJSRequest.Amount;
+                    response.Token = res.paytmJSRequest.Token;
+                    response.OrderID = res.paytmJSRequest.OrderID;
+                    response.CallbackUrl = res.paytmJSRequest.CallbackUrl;
+                    response.MID = res.paytmJSRequest.MID;
+                }
             }
             catch (Exception ex)
             {
 
             }
-            return response;
+            return response ?? new PaytmJSRequest();
         }
-        public async Task<Response> ChangeStatus(StatusChangeReq screq)
+
+
+        public async Task<Response> UpdateGateWayTransaction(UpdatePGTransactionRequest req)
         {
-            var response = new Response()
+            var res = new Response()
             {
-                StatusCode = ResponseStatus.Failed,
-                ResponseText = ResponseStatus.Failed.ToString(),
+                StatusCode = ResponseStatus.Pending,
+                ResponseText = ResponseStatus.Pending.ToString(),
             };
             try
             {
                 var dbparams = new DynamicParameters();
-                dbparams.Add("ScheduleID", screq.ID);
-                dbparams.Add("Status", screq.Status);
-                dbparams.Add("Remark", screq.Remark);
-                response = await _dapper.InsertAsync<Response>("proc_UpdateScheduleOrderStatus", dbparams, commandType: CommandType.StoredProcedure);
+                dbparams.Add("OrderID", req.OrderID);
+                dbparams.Add("LiveID", req.LiveID);
+                dbparams.Add("Amount", req.Amount);
+                dbparams.Add("Status", req.Status);
+                dbparams.Add("Remark", req.Remark);
+                res = await _dapper.InsertAsync<Response>("prco_UpdatePaytmPGTRansaction", dbparams, commandType: CommandType.StoredProcedure);
             }
-            catch (Exception ex)
+            catch
             {
 
             }
-            return response;
+            return res;
         }
-        public async Task<Response> ActiveDeactiveOrderSchedule(int id, bool Status)
+        public async Task<GatewayRequest> SelectPaymentGateWayDetail()
         {
-            var response = new Response()
-            {
-                StatusCode = ResponseStatus.Failed,
-                ResponseText = ResponseStatus.Failed.ToString(),
-            };
-            try
-            {
-                var dbparams = new DynamicParameters();
-                dbparams.Add("ScheduleID", id);
-                dbparams.Add("IsActive", Status);
-                response = await _dapper.InsertAsync<Response>("proc_ActiveDeactiveOrderSchedule", dbparams, commandType: CommandType.StoredProcedure);
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return response;
+            var dbparams = new DynamicParameters();
+            var res = await _dapper.GetAsync<GatewayRequest>("proc_SelectPaymentGateWayDetail", dbparams, commandType: CommandType.StoredProcedure);
+            return res;
         }
 
-
-        public async Task<Response> UodateOrderDetailStatus(StatusChangeReq screq, int LoginID)
+        public Task<Response> AddAsync(GateWay entity)
         {
-            var response = new Response()
-            {
-                StatusCode = ResponseStatus.Failed,
-                ResponseText = ResponseStatus.Failed.ToString(),
-            };
-            try
-            {
-                var dbparams = new DynamicParameters();
-                dbparams.Add("OrderDetailID", screq.ID);
-                dbparams.Add("Status", screq.Status);
-                dbparams.Add("Remark", screq.Remark);
-                dbparams.Add("LoginID", LoginID);
-                dbparams.Add("Quantity", screq.Quantity);
-                response = await _dapper.InsertAsync<Response>("proc_UpdateOrderDetailStatus", dbparams, commandType: CommandType.StoredProcedure);
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return response;
+            throw new NotImplementedException();
         }
 
         public Task<Response> DeleteAsync(int id)
@@ -128,139 +167,22 @@ namespace Milkyfie.AppCode.Reops
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<OrderSchedule>> GetAllAsync(OrderSchedule entity = null)
-        {
-            IEnumerable<OrderSchedule> oderschedule = new List<OrderSchedule>();
-            try
-            {
-                var dbparams = new DynamicParameters();
-                dbparams.Add("ProductID", entity != null && entity.Product != null ? entity.Product.ProductID : 0);
-                dbparams.Add("ScheduleID",0);
-                dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
-                //dbparams.Add("ParentCategoryID", entity != null && entity.Category != null && entity.Category.Parent != null ? entity.Category.Parent.ParentID : 0);
-              dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
-                string sqlQuery = @"proc_GetOrderSchedule";
-                var res = await _dapper.GetAllAsyncProc<OrderSchedule, ApplicationUser, Product, Frequency, Unit,
-                    Category, Parent, OrderSchedule>(entity ?? new OrderSchedule(), sqlQuery,
-                    dbparams, (oderschedule, applicationuser, product, frequency, unit, category, parent) =>
-                      {
-                          oderschedule.User = applicationuser;
-                          oderschedule.Product = product;
-                          oderschedule.Frequency = frequency;
-                          oderschedule.Unit = unit;
-                          oderschedule.Category = category;
-                          oderschedule.Category.Parent = parent;
-                          return oderschedule;
-                      }, splitOn: "ScheduleID,UserID,ProductID,FrequencyID,UnitID,CategoryID,ParentID");
-                oderschedule = res;
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return oderschedule;
-        }
-        public async Task<IEnumerable<ApiOrderSchedule>> GetAllAsyncAPi(OrderSchedule entity = null)
-        {
-            var dbparams = new DynamicParameters();
-            dbparams.Add("ProductID", entity != null && entity.Product != null ? entity.Product.ProductID : 0);
-            dbparams.Add("ScheduleID", 0);
-            dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
-            dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
-            var res = await _dapper.GetAllAsync<ApiOrderSchedule>("proc_GetOrderSchedule", dbparams, commandType: CommandType.StoredProcedure);
-            return res;
-        }
-
-        public async Task<IEnumerable<ApiOrderSummary>> GetAllAsyncOrderSummaryAPi(OrderSummary entity = null)
-        {
-            var dbparams = new DynamicParameters();
-            dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
-            var res = await _dapper.GetAllAsync<ApiOrderSummary>("proc_GetOrderSummary", dbparams, commandType: CommandType.StoredProcedure);
-            return res;
-        }
-
-        public async Task<IEnumerable<APIOrderDetail>> GetAllAsyncOrderDetailAPi(OrderDetail entity = null)
-        {
-            var dbparams = new DynamicParameters();
-            dbparams.Add("OrderID", entity.OrderSummary != null ? entity.OrderSummary.OrderID : 0);
-            dbparams.Add("UserID", entity.OrderSummary != null && entity.OrderSummary.User != null ? entity.OrderSummary.User.Id : 0);
-            dbparams.Add("Shift", entity.OrderShift != null && entity.OrderShift != "0" ? entity.OrderShift : String.Empty);
-            dbparams.Add("DateRange", entity.OrderSummary != null && entity.OrderSummary.OrderDate != null ? entity.OrderSummary.OrderDate : String.Empty);
-            var res = await _dapper.GetAllAsync<APIOrderDetail>("proc_GetOrderDetails", dbparams, commandType: CommandType.StoredProcedure);
-            return res;
-        }
-
-
-
-        public async Task<IEnumerable<OrderSummary>> GetAllAsync(OrderSummary entity = null)
-        {
-            IEnumerable<OrderSummary> oderssummary = new List<OrderSummary>();
-            try
-            {
-                var dbparams = new DynamicParameters();
-                dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
-                string sqlQuery = @"proc_GetOrderSummary";
-                var res = await _dapper.GetAllAsyncProc<OrderSummary, ApplicationUser, OrderSummary>(entity ?? new OrderSummary(), sqlQuery,
-                      dbparams, (oderssummary, applicationuser) =>
-                      {
-                          oderssummary.User = applicationuser;
-                          return oderssummary;
-                      }, splitOn: "OrderID,UserID");
-                oderssummary = res;
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return oderssummary;
-
-        }
-
-        public async Task<IEnumerable<OrderDetail>> GetAllAsync(OrderDetail entity)
-        {
-            IEnumerable<OrderDetail> orderdetail = new List<OrderDetail>();
-            try
-            {
-                var dbparams = new DynamicParameters();
-                dbparams.Add("OrderID", entity.OrderSummary != null ? entity.OrderSummary.OrderID : 0);
-                dbparams.Add("UserID", entity.OrderSummary != null && entity.OrderSummary.User != null ? entity.OrderSummary.User.Id : 0);
-                dbparams.Add("Shift", entity.OrderShift != null && entity.OrderShift != "0" ? entity.OrderShift : String.Empty);
-                dbparams.Add("DateRange", entity.OrderSummary != null && entity.OrderSummary.OrderDate != null ? entity.OrderSummary.OrderDate : String.Empty);
-                string sqlQuery = @"proc_GetOrderDetails";
-
-                var res = await _dapper.GetAllAsyncProc<OrderDetail, Product, OrderSummary, ApplicationUser, OrderDetail>(entity ?? new OrderDetail(), sqlQuery,
-                      dbparams, (orderdetail, product, ordersummary, applicationuser) =>
-                      {
-                          orderdetail.Product = product;
-                          orderdetail.OrderSummary = ordersummary;
-                          orderdetail.OrderSummary.User = applicationuser;
-                          return orderdetail;
-                      }, splitOn: "OrderDetailID,ProductID,ScheduleID,UserID");
-                orderdetail = res;
-            }
-            catch (Exception ex)
-            {
-
-            }
-            return orderdetail;
-        }
-
-
-
-
-
-
-        public Task<Response<OrderSchedule>> GetByIdAsync(int id)
+        public Task<IEnumerable<GateWay>> GetAllAsync(GateWay entity = null)
         {
             throw new NotImplementedException();
         }
 
-        public Task<OrderSchedule> GetDetails(object id)
+        public Task<Response<GateWay>> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IReadOnlyList<OrderSchedule>> GetDropdownAsync(OrderSchedule entity)
+        public Task<GateWay> GetDetails(object id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IReadOnlyList<GateWay>> GetDropdownAsync(GateWay entity)
         {
             throw new NotImplementedException();
         }

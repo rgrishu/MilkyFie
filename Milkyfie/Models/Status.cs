@@ -12,5 +12,6 @@
         Canceled = 8,
         Approved = 9,
         Completed = 10,
+        Failed = 11
     }
 }

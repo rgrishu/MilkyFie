@@ -234,6 +234,7 @@
                     {
                      Q.notify(result.statusCode, result.responseText);
                     }
+                      $('.ui-dialog-titlebar-close').click();
                     Q.preloader.remove();
                 },
                   error: function (data) {
