@@ -807,17 +807,20 @@ function printDiv(divName) {
 function ajaxFormSubmit(form) {
     event.preventDefault();
     /*$.validator.unobtrusive.parse(form);*/
-    /*if ($(form).valid()) {*/
-    //let data = new FormData(form);
-    let data = $(form).serializeArray()
+    var data, enctype = '';
+    if ($(form).find('input[type="file"]').index() == -1) {
+        data = $(form).serializeArray();
+    }
+    else {
+        enctype = 'multipart/form-data';
+        data = new FormData(form);
+    }
     var ajaxConfig = {
         type: 'POST',
         url: form.action,
         data: data,
         success: function (response) {
-            Q.notify(response
-
-                .statusCode, response.responseText);
+            Q.notify(response.statusCode, response.responseText);
             if (response.statusCode == 1) {
                 $(form).trigger("reset");
                 Q.reset();
@@ -828,14 +831,11 @@ function ajaxFormSubmit(form) {
             }
         }
     }
-    if ($(form).attr('enctype') == "multipart/form-data") {
+    if (enctype == "multipart/form-data") {
         ajaxConfig["contentType"] = false;
         ajaxConfig["processData"] = false;
     }
     $.ajax(ajaxConfig);
-
-    //}
-    //return false;
 }
 
 (function ($) {

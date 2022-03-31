@@ -2,14 +2,11 @@
 using Milkyfie.AppCode.DAL;
 using Milkyfie.AppCode.Helper;
 using Milkyfie.AppCode.Interfaces;
-using Milkyfie.AppCode.Reops;
 using Milkyfie.AppCode.Reops.Entities;
 using Milkyfie.Models;
 using Milkyfie.Models.ViewModel;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +16,6 @@ using System.Threading.Tasks;
 
 namespace Milkyfie.Controllers
 {
-
     public class MasterController : BaseController//Controller
     {
         protected IRepository<Banners> _banner;
@@ -34,10 +30,10 @@ namespace Milkyfie.Controllers
             _frequency = frequency;
             _pincode = pincode;
         }
+
         #region Category
         public async Task<IActionResult> Category()
         {
-
             //var resp = await _category.GetAllAsync(null);
             return View();
         }
@@ -218,7 +214,6 @@ namespace Milkyfie.Controllers
 
         #endregion
 
-
         #region Banner
         public async Task<IActionResult> Banner()
         {
@@ -305,7 +300,6 @@ namespace Milkyfie.Controllers
         }
         #endregion
 
-
         #region News
         public async Task<IActionResult> News()
         {
@@ -366,8 +360,6 @@ namespace Milkyfie.Controllers
             return Json(resp);
         }
         #endregion
-
-
 
         #region Frequency
 

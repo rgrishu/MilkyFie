@@ -1,10 +1,10 @@
 ﻿@using Milkyfie.AppCode.Reops.Entities;
 @model List<Category>
 
-    @if (Model != null && Model.Any())
+@if (Model != null && Model.Any())
 {
     int i = 1;
-   
+
     @foreach (var item in Model)
     {
         <tr data-id="@item.CategoryID">
@@ -29,47 +29,37 @@ else
 }
 
 <script>
-    $('.btn-ed-ed').click(function(){
-        debugger;
-         var id = $(this).attr("data-id");
-         var pid = $(this).attr("data-pid");
-         var name=$(".name"+id).text();
-         var icon=$(".icon"+id).text();
+    $('.btn-ed-ed').click(function () {
+        var id = $(this).attr("data-id");
+        var pid = $(this).attr("data-pid");
+        var name = $(".name" + id).text();
+        var icon = $(".icon" + id).text();
         $('#txtCategoryName').val(name);
         $('#txticon').val(icon);
         $('#ddlCategory').val(pid);
         $('#hdncatid').val(id);
-    })
-     $('.btn-ed-del').click(function(){
-           Q.preloader.load();
-         var id = $(this).attr("data-id");
-
+    });
+    $('.btn-ed-del').click(function () {
+        Q.preloader.load();
+        var id = $(this).attr("data-id");
         $.ajax({
-           type: 'post',
+            type: 'post',
             url: 'DelCategory',
-            data: {id:id},
+            data: { id: id },
             success: function (data) {
-                if(data.statusCode==1)
-              {
-                  BindDropDown();
-                loadCategory();
-                        Q.notify(data.statusCode, data.responseText);
-              }
-              else
-              {
-                      Q.notify(data.statusCode, data.responseText);
-              }
-
-                  Q.preloader.remove();
+                if (data.statusCode == 1) {
+                    BindDropDown();
+                    loadData();
+                }
+                Q.notify(data.statusCode, data.responseText);
+                Q.preloader.remove();
             },
             error: function (data) {
                 console.log('An error occurred.');
                 console.log(data);
-                   Q.notify(-1, 'An error occurred.');
-                     Q.preloader.remove();
+                Q.notify(-1, 'An error occurred.');
+                Q.preloader.remove();
             },
         });
-
     })
-
 </script>
