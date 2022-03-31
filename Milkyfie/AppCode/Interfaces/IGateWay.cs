@@ -11,5 +11,6 @@ namespace Milkyfie.AppCode.Interfaces
         Task<PaytmJSRequest> IntiatePGTransactionForApp(InitiatePaymentGatewayRequest req);
         Task<Response> UpdateGateWayTransaction(UpdatePGTransactionRequest req);
         Task<GatewayRequest> SelectPaymentGateWayDetail();
+        Task<PGModelForRedirection> IntiatePGTransactionForWeb(InitiatePaymentGatewayRequest req);
     }
 }

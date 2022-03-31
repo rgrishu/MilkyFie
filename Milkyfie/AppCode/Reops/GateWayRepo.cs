@@ -126,6 +126,91 @@ namespace Milkyfie.AppCode.Reops
             return response ?? new PaytmJSRequest();
         }
 
+        public async Task<PGModelForRedirection> IntiatePGTransactionForWeb(InitiatePaymentGatewayRequest req)
+        {
+            PaytmJSRequest response = new PaytmJSRequest();
+
+            var dbparams = new DynamicParameters();
+            dbparams.Add("UserID", req.UserID);
+            dbparams.Add("Amount", req.Amount);
+            InitiatePaymentGatewayResponse inires = await _dapper.InsertAsync<InitiatePaymentGatewayResponse>("proc_InitiatePaymentGatewayTransaction", dbparams, commandType: CommandType.StoredProcedure);
+
+            var res = new PGModelForRedirection()
+            {
+                URL = "https://securegw-stage.paytm.in/",
+
+                Statuscode = 1,
+                PGType = 1,
+                paytmJSRequest = new PaytmJSRequest()
+                {
+                    MID = "rZdffo36021582175490",
+                    OrderID = inires.OrderID,
+                    Amount = inires.Amount,
+                }
+            };
+            var paytmPGRequest = new PaytmPGRequest();
+            try
+            {
+                res.Statuscode = 1;
+                res.Msg = "Transaction intiated";
+                res.paytmJSRequest = new PaytmJSRequest
+                {
+                    MID = "rZdffo36021582175490",
+                    Amount = inires.Amount,
+                    OrderID = inires.OrderID,
+                    TokenType = "TXN_TOKEN"
+                };
+                var txnAmount = new Dictionary<string, string> {
+                    { "value",inires.Amount},
+                    { "currency", "INR"}
+                };
+
+                var userInfo = new Dictionary<string, string> {
+                    { "custId", "CUST_"+req.UserID}
+                };
+                var body = new Dictionary<string, object> {
+                    {"requestType", "Payment" },
+                    {"mid",  "rZdffo36021582175490" },
+                    {"websiteName", "Stage"},
+                    {"orderId", inires.OrderID },
+                    {"txnAmount", txnAmount },
+                    {"userInfo", userInfo },
+                    { "callbackUrl",inires.CallBackUrl},
+                };
+                res.paytmJSRequest.CallbackUrl = Convert.ToString(body["callbackUrl"]);
+                paytmPGRequest.CHECKSUMHASH = CheckSum.generateSignature(JsonConvert.SerializeObject(body), "hatPG5VUKRJUzhj4");
+                var head = new Dictionary<string, string> {
+                    { "signature", paytmPGRequest.CHECKSUMHASH }
+                };
+                var requestBody = new Dictionary<string, object> {
+                    {"body", body },
+                    {"head", head }
+                };
+                string post_data = JsonConvert.SerializeObject(requestBody);
+                StringBuilder HitURL = new StringBuilder("{HOST}theia/api/v1/initiateTransaction?mid={MID}&orderId={ORDER_ID}");
+                HitURL.Replace("{HOST}", "https://securegw-stage.paytm.in/");
+                HitURL.Replace("{MID}", "rZdffo36021582175490");
+                HitURL.Replace("{ORDER_ID}", inires.OrderID);
+                var responseData = AppWebRequest.O.PostJsonDataUsingHWRTLS(HitURL.ToString(), requestBody, head).Result;
+                if (!string.IsNullOrEmpty(responseData))
+                {
+                    var apiResp = JsonConvert.DeserializeObject<PaytmTokenResponse>(responseData);
+                    if (apiResp.body != null)
+                    {
+                        if (apiResp.body.resultInfo.resultCode.Equals("0000"))
+                        {
+                            res.paytmJSRequest.Token = apiResp.body.txnToken;
+                        }
+                    }
+                }
+
+            }
+            catch (Exception ex) { }
+
+            return res;
+
+        }
+
 
         public async Task<Response> UpdateGateWayTransaction(UpdatePGTransactionRequest req)
         {

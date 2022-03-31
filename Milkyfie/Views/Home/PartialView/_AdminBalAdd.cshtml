@@ -30,8 +30,40 @@
         {
         Q.notify(-1, 'Enter Valid Amount.');
         return;
-        }
-         CallPaymentGateway($('#txtbalance').val());
+        } Q.preloader.load();
+          var formData = new FormData();
+          formData.append("Balance",$('#txtbalance').val());
+          $.ajax({
+              type: 'POST',
+              url: '/Users/AddAdminBalance',
+              processData: false,
+              contentType: false,
+              data: formData,
+              success: result => {
+                 
+                  if(result.statusCode==1)
+                  {
+                     loadData();
+                      $('#txtbalance').val('');
+                 Q.notify(result.statusCode, result.responseText);
+                  }
+                  else
+                  {
+                   Q.notify(result.statusCode, result.responseText);
+                  }
+                  $('.ui-dialog-titlebar-close').click();
+                  Q.preloader.remove();
+              },
+                error: function (data) {
+                    console.log('An error occurred.');
+                    console.log(data);
+                    Q.preloader.remove();
+                },
+          })
+
+
+
+       //  CallPaymentGateway($('#txtbalance').val());
     })
      var CallPaymentGateway = function (amount) {
         window.open("/redirect-pg?a=" + amount, "_blank", "toolbar=0,width=900,height=650,left=0,top=0");
