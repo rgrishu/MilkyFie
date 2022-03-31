@@ -5,8 +5,6 @@ var ajaxvalidationerror = xhr => {
         $('span[validation-error-for="' + validationerrors[i].key + '"]').text(validationerrors[i].errors[0]);
     }
 }
-
-
 /*var Q;*/
 (Q => {
     function htmlEncoder(a) {
@@ -778,8 +776,6 @@ function printDiv(divName) {
     };
 })(Q || (Q = {}));
 
-
-
 (function ($) {
     $.fn.fixTableHeader = function () {
         let scrollTop = $(window).scrollTop(),
@@ -877,8 +873,6 @@ function ajaxFormSubmit(form) {
         });
     }
 }($));
-
-
 
 $.fn.dataTable.pipeline = function (opts) {
     // Configuration options
@@ -983,7 +977,6 @@ $.fn.dataTable.pipeline = function (opts) {
         }
     }
 };
-
 // Register an API method that will empty the pipelined data, forcing an Ajax
 // fetch on the next draw (i.e. `table.clearPipeline().draw()`)
 $.fn.dataTable.Api.register('clearPipeline()', function () {
@@ -991,12 +984,8 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
         settings.clearCache = true;
     });
 });
-
-
 //
 // DataTables initialisation
-//
-
 (function ($) {
     $.renderDataTable2 = function (options) {
         options = $.extend({}, {
