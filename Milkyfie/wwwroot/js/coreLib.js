@@ -824,8 +824,6 @@ function ajaxFormSubmit(form) {
             if (response.statusCode == 1) {
                 $(form).trigger("reset");
                 Q.reset();
-                $("#firstTab").html(response.html);
-                // refreshAddNewTab($(form).attr('data-restUrl'), true);
                 if (typeof loadData !== 'undefined' && $.isFunction(loadData))
                     loadData();
             }
