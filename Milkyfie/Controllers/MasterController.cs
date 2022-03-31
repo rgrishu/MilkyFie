@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Milkyfie.AppCode.CustomAttributes;
 
 namespace Milkyfie.Controllers
 {
@@ -37,7 +38,8 @@ namespace Milkyfie.Controllers
             //var resp = await _category.GetAllAsync(null);
             return View();
         }
-        [HttpPost]
+
+        [HttpPost, ValidateAjax]
         public async Task<IActionResult> Category(Category model)
         {
             var response = new Response()

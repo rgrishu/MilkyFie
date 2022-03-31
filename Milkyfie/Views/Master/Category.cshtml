@@ -22,7 +22,7 @@
                                 <div class="col-xl-4 col-lglg-4 col-md-4 col-sm-4 col-12">
                                     <div class="form-group">
                                         <label for="inputName">Category Name</label>
-                                        <input type="text" required="" class="form-control" id="txtCategoryName" name="CategoryName" placeholder="Enter Category name">
+                                        <input type="text" required class="form-control" id="txtCategoryName" name="CategoryName" placeholder="Enter Category name">
                                     </div>
                                 </div>
                                 <div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
@@ -92,8 +92,5 @@
                 $('#ddlCategory').empty().append('<option id="Option" name="ParentID" value="0">:: Select Category ::</option>').append(result.map(x => `<option value="${x.categoryID}">${x.categoryName}</option>`));
             });
         }
-
-
     </script>
-
 }

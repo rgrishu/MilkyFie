@@ -761,7 +761,15 @@ function printDiv(divName) {
         if (xhr.status === 400) {
             let validationErrors = xhr.responseJSON;
             for (var i = 0; i < validationErrors.length; i++) {
-                $('span[data-valmsg-for="' + validationErrors[i].key + '"]').text(validationErrors[i].errors[0]);
+                let __span = $('span[data-valmsg-for="' + validationErrors[i].key + '"]');
+                if (__span.index() == -1) {
+                    console.log('[name="' + validationErrors[i].key + '"]');
+                    $('[name="' + validationErrors[i].key + '"]').parent('div').append(`<span data-valmsg-for="${validationErrors[i].key}" class="error">${validationErrors[i].errors[0]}</span>`);
+                }
+                else {
+                    __span.text(validationErrors[i].errors[0]);
+                }
+                
             }
         }
         else if (xhr.status === 401) {
@@ -818,11 +826,15 @@ function ajaxFormSubmit(form) {
         success: function (response) {
             Q.notify(response.statusCode, response.responseText);
             if (response.statusCode == 1) {
+                $('.error').text('');
                 $(form).trigger("reset");
                 Q.reset();
                 if (typeof loadData !== 'undefined' && $.isFunction(loadData))
                     loadData();
             }
+        },
+        error: function (xhr) {
+            Q.renderError(xhr);
         }
     }
     if (enctype == "multipart/form-data") {
