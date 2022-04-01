@@ -1,0 +1,32 @@
+﻿
+@using Milkyfie.AppCode.Reops.Entities;
+ @model List<FOSCollecionFilter>
+
+@if (Model != null && Model.Any())
+{
+    int i = 1;
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@i</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.UserName)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Users)</td>
+            <td class="name">@Html.DisplayFor(modelItem => item.Balance)</td>
+             <td class="name">@Html.DisplayFor(modelItem => item.FoSBalance)</td>  
+        </tr>
+        i++;
+    }
+}
+else
+{
+    <tr>
+        <td colspan="5">No Records Found</td>
+    </tr>
+}
+
+  
+    
+<script>
+   
+</script>

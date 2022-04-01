@@ -10,4 +10,5 @@ namespace Milkyfie.AppCode.Interfaces
         Task<IEnumerable<Ledger>> GetAllLedger(Ledger entity = null);
         Task<JDataTable<Ledger>> Ledger(jsonAOData filter = null);
     }
+ 
 }

@@ -5,7 +5,7 @@ namespace Milkyfie.AppCode.Reops.Entities
     public class Report
     {
 
-       
+
 
     }
     public class Ledger
@@ -20,5 +20,16 @@ namespace Milkyfie.AppCode.Reops.Entities
         public string Naration { get; set; }
         public ApplicationUser User { get; set; }
         public OrderSummary Order { get; set; }
+    }
+
+    public class FOSCollecionFilter
+    {
+
+        public int Srno { get; set; }
+        public string UserName { get; set; }
+        public string Users { get; set; }
+        public decimal Balance { get; set; }
+        public decimal FoSBalance { get; set; }
+       
     }
 }
