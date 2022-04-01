@@ -42,31 +42,13 @@ namespace Milkyfie.Controllers
         [HttpPost, ValidateAjax]
         public async Task<IActionResult> Category(Category model)
         {
-            var response = new Response()
-            {
-                StatusCode = ResponseStatus.Failed,
-                ResponseText = "Failed"
-            };
-            if (!ModelState.IsValid)
-            {
-                return Json(response);
-            }
-            var resp = await _category.AddAsync(model);
-            if (resp.StatusCode == ResponseStatus.Success)
-            {
-                response.StatusCode = ResponseStatus.Success;
-                response.ResponseText = resp.ResponseText;
-            }
-            else
-            {
-                response.ResponseText = resp.ResponseText;
-            }
+            var response = await _category.AddAsync(model);
             return Json(response);
         }
+
         [HttpPost]
         public async Task<IActionResult> GetCategory()
         {
-
             var resp = await _category.GetAllAsync();
             return PartialView("PartialView/_Category", resp);
         }
@@ -74,7 +56,6 @@ namespace Milkyfie.Controllers
         [HttpPost]
         public async Task<IActionResult> GetCategoryDrop()
         {
-
             var resp = await _category.GetAllAsync();
             return Json(resp);
         }
@@ -83,21 +64,7 @@ namespace Milkyfie.Controllers
         [HttpPost]
         public async Task<IActionResult> DelCategory(int id)
         {
-            var response = new Response()
-            {
-                StatusCode = ResponseStatus.Failed,
-                ResponseText = "Failed"
-            };
             var resp = await _category.DeleteAsync(id);
-            if (resp.StatusCode == ResponseStatus.Success)
-            {
-                response.StatusCode = ResponseStatus.Success;
-                response.ResponseText = resp.ResponseText;
-            }
-            else
-            {
-                response.ResponseText = resp.ResponseText;
-            }
             return Json(resp);
         }
 

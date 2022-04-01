@@ -14,8 +14,8 @@
                                     <input type="hidden" name="CategoryID" value="0" id="hdncatid" />
                                     <div class="form-group">
                                         <label for="inputName">Select Category</label>
-                                        <select class="form-control" name="ParentID" id="ddlCategory">
-                                            <option id="Option" name="ParentID" value="0">:: Select Category ::</option>
+                                        <select class="form-control" name="Parent.ParentID" id="ddlCategory">
+                                            <option id="Option" value="0">:: Select Category ::</option>
                                         </select>
                                     </div>
                                 </div>
@@ -67,7 +67,7 @@
         $(document).ready(function () {
             BindDropDown();
             loadData();
-        });
+        })
         function loadData() {
             Q.preloader.load();
             $.ajax({
