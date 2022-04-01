@@ -25,7 +25,6 @@ namespace Milkyfie.Controllers
             _unit = unit;
             _product = product;           
             _mapper = mapper;
-
         }
     }
 }
