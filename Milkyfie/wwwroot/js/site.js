@@ -24,7 +24,7 @@ var fluidDialog = function () {
             // check window width against dialog width
             if (wWidth < (parseInt(dialog.options.maxWidth) + 50)) {
                 // keep dialog from filling entire screen
-                $this.css("max-width", "90%");
+                $this.css({ "max-width": "99%", "width": "98%!important" });
             } else {
                 // fix maxWidth bug
                 $this.css("max-width", dialog.options.maxWidth + "px");
