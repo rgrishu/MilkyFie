@@ -11,47 +11,25 @@
                 <div class="card">
                     <div class="card-header bg-primary text-white h6">
                         <span id="spnrole">@Model.Role</span>
-                        @*  <input type="hidden" value="@Model.Role" id="hdnroleid" />*@
-
-                        <div class="float-right">  <button id="btnNew" class="btnaddUser btn btn-info">New</button></div>
+                        <div class="float-right">
+                            <button id="btnNew" class="btnaddUser btn btn-info">New</button>
+                        </div>
                     </div>
                     <div class="card-body">
-
-
                         <div class="table-container">
                             <div class="table-responsive">
                                 <table id="d" class="table custom-table">
                                     <thead>
-                                        <tr> 
-                                            <th  class="text-nowrap">
-                                                User Id
-                                            </th>
-
-                                            <th>
-                                                User Name
-                                            </th>
-
-                                            <th>
-                                                Name
-                                            </th>
-                                            <th>
-                                                Mobile
-                                            </th>
-                                            <th>
-                                                EmailID
-                                            </th>
-                                            <th>
-                                                Balance
-                                            </th>
-                                            <th>
-                                                Address
-                                            </th>
-                                            <th>
-                                                Pincode
-                                            </th>
-                                            <th>
-                                                Action
-                                            </th>
+                                        <tr>
+                                            <th class="text-nowrap">User Id</th>
+                                            <th>User Name</th>
+                                            <th>Name</th>
+                                            <th>Mobile</th>
+                                            <th>EmailID</th>
+                                            <th>Balance</th>
+                                            <th>Address</th>
+                                            <th>Pincode</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -59,9 +37,6 @@
                                 </table>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
@@ -69,158 +44,134 @@
     </div>
 </div>
 @section scripts{
-<script>
-
-     $(document).ready(function(){
-    loadData();
-     })
-
-      $('.btnaddUser').click(function(){
+    <script>
+        $(document).ready(function () {
+            loadData();
+        });
+        $('.btnaddUser').click(function () {
             Q.preloader.load();
-               $.ajax({
-                 type: 'post',
-                 url: '/Users/UserForm',
-                  data:{role:$('#spnrole').text()},
-                 success: function (data) {
-                     console.log(data)
-                 Q.alert({
-                     title: "Add User",
-                     body:data,
-                     width : '900px',
-                     });
-                       Q.preloader.remove();
-                 },
-                 error: function (data) {
-                     Q.renderError(data);
-                 },
-             });
-     });
-
-
-
-
-
-       var loadData = function(){
-         $.renderDataTable2({
-             columns :  [
-               //{"render":function(d,t,row){}},
-                 { data: "mUserId",orderable:false},
-                 { data: "userName",orderable:false},
-                 { data: "name",orderable:false },
-                 { data: "phoneNumber",orderable:false },
-                 { data: "email",orderable:false },
-                 //{ data: "balance",orderable:false},
-                 {
-                     "render": function (d, t, row) {
-                         var $nav = `<a style="color:blue" class="userbalance" data-id="${row.id}">${row.balance}</a>`
-                         return $nav;
-                     }
-                 },
-                 { data: "address",orderable:false},
-                 { data: "pincode",orderable:false},
-                 {
-                     "render": function (d, t, row) {
-                         var $nav =`<div class="btn-group"><a class="btn-ed-ed" data-id="${row.id}"><img src="/img/pencil.png" class="img-action" /></a>
-                                    <a class="btn-ed-del btndel" data-id="${row.id}"><img src="/img/delete.png" class="img-action" /></a></div>`
-                         return $nav;
-                     }
-                 },
-             ],
-             apiUrl : 'UserFilter',
-             filters:{
-                  PhoneNumber:'',
-                 Role:$('#spnrole').text()
-             },
-
-         });
-     };
-     $(document).on('click','.btn-ed-ed',function(){
-          var id = $(this).attr("data-id");
-           Q.preloader.load();
-               $.ajax({
-                 type: 'post',
-                 url: '/Users/UserForm',
-                  data:{role:"",id:id},
-                 success: function (data) {
-                    
-                 Q.alert({
-                     title: "Add User",
-                     body:data,
-                     width : '900px',
-                     });
-                       Q.preloader.remove();
-                 },
-                 error: function (data) {
-                     Q.renderError(data);
-                 },
-             });
-             });
-
-  $(document).on('click','.btn-ed-del',function(){
-       var id=$(this).attr('data-id');
-     $.ajax({
-               type: 'post',
-                url: 'DeleteUser',
-                data: {id:id},
+            $.ajax({
+                type: 'post',
+                url: '/Users/UserForm',
+                data: { role: $('#spnrole').text() },
                 success: function (data) {
-                    if(data.statusCode==1)
-                  {
-                    loadData();
-                            Q.notify(data.statusCode, data.responseText);
-                  }
-                  else
-                  {
-                          Q.notify(data.statusCode, data.responseText);
-                  }
-
-                      Q.preloader.remove();
+                    Q.alert({
+                        title: "Add User",
+                        body: data,
+                        width: '900px',
+                    });
+                    Q.preloader.remove();
                 },
                 error: function (data) {
-                    console.log('An error occurred.');
-                    console.log(data);
-                       Q.notify(-1, 'An error occurred.');
-                         Q.preloader.remove();
+                    Q.renderError(data);
                 },
             });
-       })
+        });
 
+        var loadData = function () {
+            $.renderDataTable2({
+                columns: [
+                    { data: "mUserId", orderable: false },
+                    { data: "userName", orderable: false },
+                    { data: "name", orderable: false },
+                    { data: "phoneNumber", orderable: false },
+                    { data: "email", orderable: false },
+                    {
+                        "render": function (d, t, row) {
+                            var $nav = `<a style="color:blue" class="userbalance" data-id="${row.id}">${row.balance}</a>`
+                            return $nav;
+                        }
+                    },
+                    { data: "address", orderable: false },
+                    { data: "pincode", orderable: false },
+                    {
+                        "render": function (d, t, row) {
+                            var $nav = `<div class="btn-group"><a class="btn-ed-ed" data-id="${row.id}"><img src="/img/pencil.png" class="img-action" /></a>
+                                                    <a class="btn-ed-del btndel" data-id="${row.id}"><img src="/img/delete.png" class="img-action" /></a></div>`
+                            return $nav;
+                        }
+                    },
+                ],
+                apiUrl: 'UserFilter',
+                filters: {
+                    PhoneNumber: '',
+                    Role: $('#spnrole').text()
+                },
 
-    
+            });
+        };
 
-       $(document).on('click','.userbalance',function(){
-      var id=$(this).attr('data-id');
-       var formData = new FormData();
-            formData.append("Id",id);
-        $.ajax({
+        $(document).on('click', '.btn-ed-ed', function () {
+            var id = $(this).attr("data-id");
+            Q.preloader.load();
+            $.ajax({
+                type: 'post',
+                url: '/Users/UserForm',
+                data: { role: "", id: id },
+                success: function (data) {
+                    Q.alert({
+                        title: "Add User",
+                        body: data,
+                        width: '900px',
+                    });
+                    Q.preloader.remove();
+                },
+                error: function (data) {
+                    Q.renderError(data);
+                },
+            });
+        });
+
+        $(document).on('click', '.btn-ed-del', function () {
+            var id = $(this).attr('data-id');
+            $.ajax({
+                type: 'post',
+                url: 'DeleteUser',
+                data: { id: id },
+                success: function (data) {
+                    if (data.statusCode == 1) {
+                        loadData();
+                        Q.notify(data.statusCode, data.responseText);
+                    }
+                    else {
+                        Q.notify(data.statusCode, data.responseText);
+                    }
+
+                    Q.preloader.remove();
+                },
+                error: function (data) {
+                    console.log(data);
+                    Q.notify(-1, 'An error occurred.');
+                    Q.preloader.remove();
+                },
+            });
+        });
+
+        $(document).on('click', '.userbalance', function () {
+            var id = $(this).attr('data-id');
+            var formData = new FormData();
+            formData.append("Id", id);
+            $.ajax({
                 type: 'POST',
                 url: '/Users/UserBalance',
                 processData: false,
                 contentType: false,
                 data: formData,
                 success: result => {
-                        Q.alert({
-                      title: "Add Balance",
-                      body:result,
-                      width : '900px',
-                      });
+                    Q.alert({
+                        title: "Add Balance",
+                        body: result,
+                        width: '900px',
+                    });
                     Q.preloader.remove();
                 },
-                  error: function (data) {
-                      console.log('An error occurred.');
-                      console.log(data);
-                      Q.preloader.remove();
-                  },
+                error: function (data) {
+                    console.error(data);
+                    Q.preloader.remove();
+                },
             })
 
-      })
+        });
 
-
-     //function getUsers(){
-     //    Q.preloader.load();
-     //    $.post( "UsersDetails" ,{role:$('#spnrole').text()}, function( data ) {
-     //        $('tbody').html(data);
-     //    });
-     //    Q.preloader.remove();
-     //}
-</script>
+    </script>
 }
