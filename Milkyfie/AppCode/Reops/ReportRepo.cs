@@ -20,6 +20,7 @@ namespace Milkyfie.AppCode.Reops
             _dapper = dapper;
         }
 
+        #region MyRegion
         public async Task<JDataTable<Ledger>> Ledger(jsonAOData filter = null)
         {
             JDataTable<Ledger> d = new JDataTable<Ledger>();
@@ -31,8 +32,8 @@ namespace Milkyfie.AppCode.Reops
                         ledger.User = applicationuser;
                         return ledger;
                     }, splitOn: "LedgerID,UserID");
-                  d.recordsFiltered = d.PageSetting.TotoalRows;//d.Data.Count();
-               // d.recordsFiltered = d.Data.Count();
+                d.recordsFiltered = d.PageSetting.TotoalRows;//d.Data.Count();
+                                                             // d.recordsFiltered = d.Data.Count();
                 d.recordsTotal = d.PageSetting.TotoalRows;
             }
             catch (Exception ex)
@@ -66,6 +67,8 @@ namespace Milkyfie.AppCode.Reops
             return ledger;
 
         }
+        #endregion
+
 
         private DynamicParameters prepareParam(jsonAOData param)
         {

@@ -40,5 +40,18 @@ namespace Milkyfie.Controllers
             var res = (JDataTable<Ledger>)_report.Ledger(jsonAOData).Result;
             return Json(res);
         }
+
+        public IActionResult FOSCollectionFilter()
+        { 
+            return View();
+        }
+        [HttpPost]
+        public IActionResult FOSCollection(jsonAOData jsonAOData, FOSFilters filters)
+        {
+            jsonAOData.param = filters;
+            var res = (JDataTable<FOSCollecionFilter>)_report(jsonAOData).Result;
+            return Json(res);
+        }
     }
+
 }

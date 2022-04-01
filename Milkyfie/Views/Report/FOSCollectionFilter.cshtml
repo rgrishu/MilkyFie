@@ -47,12 +47,11 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th class="text-nowrap">Customer Name</th>
-                                <th class="text-nowrap">Opening Amount </th>
-                                <th>Amount</th>
-                                <th class="text-nowrap">Closing Amount </th>
-                                <th class="text-nowrap">Transaction Type</th>
-                                <th class="text-nowrap">Transaction Date</th>
+                                <th class="text-nowrap">UserName</th>
+                                <th class="text-nowrap">Users </th>
+                                <th class="text-nowrap">Balance </th>
+                                <th class="text-nowrap">FoSBalance</th>
+                                <th class="text-nowrap">Date</th>
                                 <th>Naration</th>
                             </tr>
                         </thead>
@@ -81,7 +80,7 @@
         loadData();
     });
     function BindDropDownUsers() {
-        var userslist = s.Dropdown.Users();
+        var userslist = s.Dropdown.Users("Fos");
         userslist.then(result => {
             $('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x => `<option value="${x.id}">${x.name}</option>`));
         });
