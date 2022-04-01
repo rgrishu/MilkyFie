@@ -15,6 +15,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
+using GraphQL;
+using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Playground;
+using Milkyfie.AppCode.GraphQL.QueryResolver;
+
 namespace Milkyfie
 {
     public class Startup
@@ -90,6 +95,9 @@ namespace Milkyfie
                     builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
             });
             //services.AddHttpContextAccessor();
+            #region GraphQL
+            services.AddGraphQLServer().AddQueryType(q => q.Name("Query")).AddType<ProductQueryResolver>();
+            #endregion
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILog logger)
@@ -97,6 +105,11 @@ namespace Milkyfie
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UsePlayground(new PlaygroundOptions
+                {
+                    QueryPath = "/api",
+                    Path = "/playground"
+                });
             }
             else
             {
@@ -120,6 +133,7 @@ namespace Milkyfie
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=WebSite}/{action=Index}/{id?}");
+                endpoints.MapGraphQL();
             });
             app.UseSwagger();
             app.UseSwaggerUI(c =>
