@@ -18,7 +18,7 @@ using System.Text;
 using GraphQL;
 using HotChocolate.AspNetCore;
 using HotChocolate.AspNetCore.Playground;
-using Milkyfie.AppCode.GraphQL.QueryResolver;
+using Milkyfie.AppCode.GraphQL.ProductQL;
 
 namespace Milkyfie
 {
@@ -96,7 +96,7 @@ namespace Milkyfie
             });
             //services.AddHttpContextAccessor();
             #region GraphQL
-            services.AddGraphQLServer().AddQueryType(q => q.Name("Query")).AddType<ProductQueryResolver>();
+            services.AddGraphQLServer().AddQueryType(q => q.Name("Query")).AddType<GraphQLQueryResolver>();
             #endregion
         }
 
