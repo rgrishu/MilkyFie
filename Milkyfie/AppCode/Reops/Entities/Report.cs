@@ -22,14 +22,8 @@ namespace Milkyfie.AppCode.Reops.Entities
         public OrderSummary Order { get; set; }
     }
 
-    public class FOSCollecionFilter
+    public class FOSCollecionFilter: Ledger
     {
 
-        public int Srno { get; set; }
-        public string UserName { get; set; }
-        public string Users { get; set; }
-        public decimal Balance { get; set; }
-        public decimal FoSBalance { get; set; }
-       
     }
 }

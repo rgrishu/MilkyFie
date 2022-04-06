@@ -6,7 +6,7 @@
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card lobipanel-minimize">
                 <div class="card-header bg-primary text-white h6">
-                    Ledger Details
+                    Fos Collection
                 </div>
                 <div class="card-body">
 
@@ -47,11 +47,12 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th class="text-nowrap">UserName</th>
-                                <th class="text-nowrap">Users </th>
-                                <th class="text-nowrap">Balance </th>
-                                <th class="text-nowrap">FoSBalance</th>
-                                <th class="text-nowrap">Date</th>
+                                <th class="text-nowrap">Customer Name</th>
+                                <th class="text-nowrap">Opening Amount </th>
+                                <th>Amount</th>
+                                <th class="text-nowrap">Closing Amount </th>
+                                <th class="text-nowrap">Transaction Type</th>
+                                <th class="text-nowrap">Transaction Date</th>
                                 <th>Naration</th>
                             </tr>
                         </thead>
@@ -104,12 +105,13 @@
                 { data: "createdOn", orderable: false },
                 { data: "naration", orderable: false }
             ],
-            apiUrl: '/Report/LedgerFilter',
+            apiUrl: '/Report/FOSCollection',
             filters: {
                 UserID: $('#ddluser').val(),
                 CreatedOn: $('#txtStartDate').val()
             }
         });
+       // $('.buttons-pdf').hide();
     };
 </script>
 

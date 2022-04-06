@@ -69,7 +69,29 @@ namespace Milkyfie.AppCode.Reops
         }
         #endregion
 
+        #region FOSReport
+        public async Task<JDataTable<FOSCollecionFilter>> FosCollection(jsonAOData filter = null)
+        {
+            JDataTable<FOSCollecionFilter> d = new JDataTable<FOSCollecionFilter>();
+            try
+            {
+                d = await _dapper.GetMultipleAsync<FOSCollecionFilter, ApplicationUser, FOSCollecionFilter>("proc_FosCollection", filter,
+                    (ledger, applicationuser) =>
+                    {
+                        ledger.User = applicationuser;
+                        return ledger;
+                    }, splitOn: "LedgerID,UserID");
+                d.recordsFiltered = d.PageSetting.TotoalRows;//d.Data.Count();
+                                                             // d.recordsFiltered = d.Data.Count();
+                d.recordsTotal = d.PageSetting.TotoalRows;
+            }
+            catch (Exception ex)
+            {
 
+            }
+            return d;
+        }
+        #endregion
         private DynamicParameters prepareParam(jsonAOData param)
         {
             DynamicParameters p = new DynamicParameters();

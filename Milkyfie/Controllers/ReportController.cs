@@ -49,7 +49,7 @@ namespace Milkyfie.Controllers
         public IActionResult FOSCollection(jsonAOData jsonAOData, FOSFilters filters)
         {
             jsonAOData.param = filters;
-            var res = (JDataTable<FOSCollecionFilter>)_report(jsonAOData).Result;
+            var res = (JDataTable<FOSCollecionFilter>)_report.FosCollection(jsonAOData).Result;
             return Json(res);
         }
     }
