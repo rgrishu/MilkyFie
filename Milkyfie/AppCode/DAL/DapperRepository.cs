@@ -40,9 +40,25 @@ namespace Milkyfie.AppCode.DAL
         public async Task<int> ExecuteAsync(string sp, object param = null, CommandType commandType = CommandType.StoredProcedure)
         {
             int i = 0;
-            using (IDbConnection db = new SqlConnection(Connectionstring))
+            try
             {
-                i = await db.ExecuteAsync(sp, param, commandType: commandType);
+                using (IDbConnection db = new SqlConnection(Connectionstring))
+                {
+                    i = await db.ExecuteAsync(sp, param, commandType: commandType);
+                }
+            }
+            catch (Exception ex)
+            {
+                var w32ex = ex as SqlException;
+                if (w32ex == null)
+                {
+                    w32ex = ex.InnerException as SqlException;
+                }
+                if (w32ex != null)
+                {
+                    i = w32ex.Number;
+                }
+                _logger.LogError(ex, ex.Message);
             }
             return i;
         }
@@ -271,7 +287,7 @@ namespace Milkyfie.AppCode.DAL
         }
 
 
-     
+
 
         public async Task<dynamic> GetMultipleAsync<T1, T2, TReturn>(string sp, object parms, Func<T1, T2, TReturn> p, string splitOn
             , CommandType commandType = CommandType.StoredProcedure)
