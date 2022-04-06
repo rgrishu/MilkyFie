@@ -122,19 +122,45 @@ BEGIN
 		insert into ErrorLog(ErrorMsg,ErrorFrom,EntryOn) values(ERROR_MESSAGE(),'AddUser',GETDATE())
 	End Catch
  end");
-            //Create.Table("Companies")
-            //    .WithColumn("Id").AsInt64().NotNullable().Identity()
-            //    .WithColumn("CompanyId").AsGuid().NotNullable().PrimaryKey()
-            //    .WithColumn("Name").AsString(50).NotNullable()
-            //    .WithColumn("Address").AsString(60).NotNullable()
-            //    .WithColumn("Country").AsString(50).NotNullable();
-            //Create.Table("Employees")
-            //    .WithColumn("Id").AsInt64().NotNullable().Identity()
-            //    .WithColumn("EmployeeId").AsGuid().NotNullable().PrimaryKey()
-            //    .WithColumn("Name").AsString(50).NotNullable()
-            //    .WithColumn("Age").AsInt32().NotNullable()
-            //    .WithColumn("Position").AsString(50).NotNullable()
-            //    .WithColumn("CompanyId").AsGuid().NotNullable().ForeignKey("Companies", "CompanyId");
+            Execute.Sql(@"CREATE proc [dbo].[proc_users]               
+								@UserName varchar(250)='',
+								@Role varchar(50)='', 
+								@UserID int=0
+as              
+begin              
+	select us.Id,us.Id UserId,ur.RoleId,us.[Name] ,us.UserName,us.Email,us.PhoneNumber,us.UserName       
+	from Users us(nolock) 
+		 inner join UserRoles(nolock) ur on us.Id=ur.UserId         
+		 inner join ApplicationRole ar(nolock) on  ur.RoleId=ar.Id           
+	where (@UserID=0 or us.Id=@UserID) 
+		  and  (isnull(@UserName,'')='' or us.UserName=@UserName or us.PhoneNumber=@UserName)  
+		  and us.Id<>1 and (isnull(@Role,'')='' or ar.[Name]=@Role)             
+end");
+            Execute.Sql(@"CREATE proc proc_SaveNLog @msg varchar(max),@level varchar(max),@exception varchar(max),
+                                                    @trace varchar(max),@logger varchar(max)  
+                          As  
+                          Begin
+                          	INSERT INTO [NLogs]([When],[Message],[Level],Exception,Trace,Logger) VALUES (getutcdate(),@msg,@level,@exception,@trace,@logger)  
+                          End  ");
+            Execute.Sql(@"CREATE proc proc_getUserRole      
+@Id bigint=0,      
+@Email varchar(120)='',  
+@mobileNo varchar(12)=''  
+as      
+begin      
+if(@Id=0 and @Email='')      
+begin      
+select * from UserRoles  where 1=2      
+return       
+end      
+if(@Id=0 and @Email<>'')      
+begin      
+select  @Id=ID from Users where NormalizedUserName=@Email      
+end      
+      
+select RoleId from UserRoles where UserID=@Id      
+end");
+
         }
     }
 }
