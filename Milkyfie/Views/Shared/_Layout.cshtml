@@ -4,7 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-   <title> @ViewData["Title"] </title>
+    <title> @ViewData["Title"] </title>
     <!-- Meta -->
     <meta name="description" content="Responsive Bootstrap4 Dashboard Template">
     <meta name="author" content="ParkerThemes">
@@ -52,34 +52,34 @@
                 </a>
             </div>
             <div class="sidebar-content">
-                <div class="sidebar-menu">
+                <div class="sidebar-menu" id="nvHome">
                     <ul>
                         <li class="header-menu">General</li>
                         <li class="active">
-                            <a href="/Home">
+                            <a href="/Home" class="nvmain">
                                 <i class="icon-devices_other"></i>
                                 <span class="menu-text">Dashboard</span>
                             </a>
                         </li>
 
                         <li class="sidebar-dropdown">
-                            <a href="#">
+                            <a href="#" class="nvmain" id="nvMaster">
                                 <i class="icon-calendar1"></i>
                                 <span class="menu-text">Master</span>
                             </a>
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="~/Master/Banner"> Banner</a>
+                                        <a href="~/Master/Banner" class="nvchild" id="cnvBanner"> Banner</a>
                                     </li>
                                     <li>
-                                        <a href="~/Master/News"> News</a>
+                                        <a href="~/Master/News" class="nvchild" id="cvnNews"> News</a>
                                     </li>
                                     <li>
-                                        <a href="~/Master/Category">Category</a>
+                                        <a href="~/Master/Category" class="nvchild" id="cvnCategory">Category</a>
                                     </li>
                                     <li>
-                                        <a href="~/Master/Product">Product</a>
+                                        <a href="~/Master/Product" class="nvchild" id="cvnProduct">Product</a>
                                     </li>
                                 </ul>
                             </div>
@@ -87,58 +87,58 @@
 
 
                         <li class="sidebar-dropdown">
-                            <a href="#">
+                            <a href="#" class="nvmain" id="nvUser">
                                 <i class="icon-calendar1"></i>
                                 <span class="menu-text">User</span>
                             </a>
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="~/Users/UserDetail">Consumer Details</a>
+                                        <a href="~/Users/UserDetail" class="nvchild" id="cnvConsumerDetails">Consumer Details</a>
                                     </li>
                                     <li>
-                                        <a href="~/Users/UserDetailFos">FOS Details</a>
+                                        <a href="~/Users/UserDetailFos" class="nvchild" id="cnvFOSDetails">FOS Details</a>
                                     </li>
                                     <li style="display:none">
-                                        <a href="~/Users/FosMap">FOS MapingBy Pincode</a>
+                                        <a href="~/Users/FosMap" class="nvchild" id="FOSMapingBy">FOS MapingBy Pincode</a>
                                     </li>
                                     <li>
-                                        <a href="~/Users/FosMapByUser">FOS Maping</a>
+                                        <a href="~/Users/FosMapByUser" class="nvchild" id="FOSMaping">FOS Maping</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
                         <li class="sidebar-dropdown">
-                            <a href="#">
+                            <a href="#" class="nvmain" id="nvOrder">
                                 <i class="icon-calendar1"></i>
                                 <span class="menu-text">Order</span>
                             </a>
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="~/Order/OrderSchedule">Schedule Order</a>
+                                        <a href="~/Order/OrderSchedule" class="nvchild" id="cnvScheduleOrder">Schedule Order</a>
                                     </li>
                                     <li>
-                                        <a href="~/Order/Orders">Order Summary</a>
+                                        <a href="~/Order/Orders" class="nvchild" id="cnvOrderSummary">Order Summary</a>
                                     </li>
                                     <li>
-                                        <a href="~/Order/OrderDetail">Order Details</a>
+                                        <a href="~/Order/OrderDetail" class="nvchild" id="cvnOrderDetails">Order Details</a>
                                     </li>
                                 </ul>
                             </div>
                         </li>
                         <li class="sidebar-dropdown">
-                            <a href="#">
+                            <a class="nvmain" href="#" id="nvReports">
                                 <i class="icon-calendar1"></i>
                                 <span class="menu-text">Reports</span>
                             </a>
                             <div class="sidebar-submenu">
                                 <ul>
                                     <li>
-                                        <a href="~/Report/Ledger">Ledger</a>
+                                        <a href="~/Report/Ledger" class="nvchild" id="cvnLedger">Ledger</a>
                                     </li>
-                                      <li>
-                                        <a href="~/Report/FOSCollectionFilter">FOS Collection</a>
+                                    <li>
+                                        <a href="~/Report/FOSCollectionFilter" class="nvchild" id="cnvFOSCollection">FOS Collection</a>
                                     </li>
                                 </ul>
                             </div>
@@ -210,7 +210,7 @@
                     <li>
                         <a href="#" id="reportrange">
                             <span class="date-time"></span>
-                           
+
                         </a>
                     </li>
                     <li>
@@ -297,7 +297,7 @@
 
     <script src="~/theme/vendor/lobipanel/js/lobipanel.js"></script>
     <script src="~/theme/vendor/lobipanel/js/lobipanel-custom.js"></script>
-    	<script src="~/theme/vendor/summernote/summernote-bs4.js"></script>
+    <script src="~/theme/vendor/summernote/summernote-bs4.js"></script>
     <script src="~/js/coreLib.js" defer></script>
     <link rel="stylesheet" href="~/js/toastr/toastr.js.map">
     <script src="~/js/toastr/toastr.min.js"></script>
@@ -310,4 +310,19 @@
 
     @RenderSection("Scripts", required: false)
 </body>
+<script>
+    $(document).ready(function(){
+       activeLink();
+    })
+    const activeLink=()=>{
+        $('li.active').removeClass('active');
+        let _url= new URL(window.location.href);
+        let _selector=$('[href="'+_url.pathname+'"]');
+        _selector.addClass('current-page');
+        let __parent=_selector.parents('li');
+        __parent.find('.nvmain').click();
+        __parent.addClass('active');
+    };
+</script>
 </html>
+
