@@ -5,6 +5,7 @@ using Milkyfie.AppCode.Helper;
 using Milkyfie.AppCode.Interfaces;
 using Milkyfie.AppCode.Reops.Entities;
 using Milkyfie.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -45,13 +46,18 @@ namespace Milkyfie.Controllers
         { 
             return View();
         }
-        [HttpPost]
-        public IActionResult FOSCollection(jsonAOData jsonAOData, FOSFilters filters)
-        {
-            jsonAOData.param = filters;
-            var res = (JDataTable<FOSCollecionFilter>)_report(jsonAOData).Result;
-            return Json(res);
-        }
+        //[HttpPost]
+        //public IActionResult FOSCollection(jsonAOData jsonAOData, FOSFilters filters)
+        //{
+        //    jsonAOData.param = filters;
+        //    var res = (JDataTable<FOSCollecionFilter>)_report(jsonAOData).Result;
+        //    return Json(res);
+        //}
+
+        //private object _report(jsonAOData jsonAOData)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 
 }
