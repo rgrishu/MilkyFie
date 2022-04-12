@@ -864,8 +864,8 @@ function ajaxFormSubmit(form) {
             buttons: [
                 'copyHtml5',
                 'excelHtml5',
-                'csvHtml5',
-                'pdfHtml5'
+                'csvHtml5'
+               // 'pdfHtml5'
             ],
             filters: {},
         }, options);
@@ -1022,8 +1022,8 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
             buttons: [
                 'copyHtml5',
                 'excelHtml5',
-                'csvHtml5',
-                'pdfHtml5'
+                'csvHtml5'
+               // 'pdfHtml5'
             ],
             filters: {},
         }, options);

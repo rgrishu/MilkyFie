@@ -80,7 +80,7 @@
     });
 
     $('#btnSubmit').click(function () {
-        loadData();
+        loadData(true);
     });
     function BindDropDownUsers() {
         var userslist = s.Dropdown.Users("Fos");
@@ -89,7 +89,7 @@
         });
     }
 
-    var loadData = function () {
+    var loadData = function (customeEvent = false) {
 
         $.renderDataTable2({
 
@@ -108,6 +108,7 @@
                 { data: "naration", orderable: false }
             ],
             apiUrl: '/Report/FOSCollection',
+              customeEvent: customeEvent,
             filters: {
                 UserID: $('#ddluser').val(),
                 CreatedOn: $('#txtStartDate').val()
