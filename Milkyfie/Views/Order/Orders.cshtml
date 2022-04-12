@@ -52,16 +52,14 @@
     });
 
     function loadOrders(){
-         Q.preloader.load();
+         
          $.ajax({
                type: 'post',
                 url: 'OrderSummaryList',
                 success: function (data) {
                       $('tbody').html(data);
-                       Q.preloader.remove();
                 },
                 error: function (data) {
-                     Q.preloader.remove();
                     console.log('An error occurred.');
                     console.log(data);
                        Q.notify(-1, 'An error occurred.');

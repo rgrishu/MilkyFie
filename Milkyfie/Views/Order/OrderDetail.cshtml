@@ -104,7 +104,7 @@
         });
     }
     function loadOrderDetails(){
-         Q.preloader.load();
+        
         var formData=new FormData();
         formData.append("OrderSummary.User.Id",$('#ddluser').val());
         formData.append("OrderShift",$('#ddlshift').val());
@@ -117,10 +117,8 @@
                data: formData,
                 success: function (data) {
                       $('tbody').html(data);
-                       Q.preloader.remove();
                 },
                 error: function (data) {
-                     Q.preloader.remove();
                     console.log('An error occurred.');
                     console.log(data);
                        Q.notify(-1, 'An error occurred.');

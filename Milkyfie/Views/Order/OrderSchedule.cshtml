@@ -59,7 +59,6 @@
         });
 
         function getform(id = 0) {
-            Q.preloader.load();
             // var id=$('#hdnProductID').val();
             $.ajax({
                 type: 'post',
@@ -75,12 +74,10 @@
                         width: '900px',
                         modal: true
                     });
-                    Q.preloader.remove();
                 },
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
-                    Q.preloader.remove();
                 },
             });
         }
@@ -107,7 +104,7 @@
         }
 
         function loadScheduleOrders() {
-            Q.preloader.load();
+         
             $.ajax({
                 type: 'post',
                 url: 'GetScheduleOrders',
@@ -119,7 +116,7 @@
                     console.log('An error occurred.');
                     console.log(data);
                     Q.notify(-1, 'An error occurred.');
-                    Q.preloader.remove();
+                  
                 },
             });
 
