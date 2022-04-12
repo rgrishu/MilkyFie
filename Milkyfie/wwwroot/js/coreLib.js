@@ -769,7 +769,7 @@ function printDiv(divName) {
                 else {
                     __span.text(validationErrors[i].errors[0]);
                 }
-                
+
             }
         }
         else if (xhr.status === 401) {
@@ -893,7 +893,8 @@ $.fn.dataTable.pipeline = function (opts) {
         url: '',      // script url
         data: null,   // function or object with parameters to send to the server
         // matching how `ajax.data` works in DataTables
-        method: 'POST' // Ajax HTTP method
+        method: 'POST', // Ajax HTTP method
+        customeEvent: false
     }, opts);
 
     // Private variables for storing the cache
@@ -925,7 +926,9 @@ $.fn.dataTable.pipeline = function (opts) {
             // properties changed (ordering, columns, searching)
             ajax = true;
         }
-
+        if (conf.customeEvent == true) {
+            ajax = true;
+        }
         // Store the request for checking next time around
         cacheLastRequest = $.extend(true, {}, request);
 
@@ -1004,6 +1007,7 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
             columns: [],
             apiUrl: '/',
             selector: 'table',
+            customeEvent: false,
             buttons: [
                 'copyHtml5',
                 'excelHtml5',
@@ -1017,6 +1021,7 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
             processing: true,
             serverSide: true,
             paging: true,
+            customeEvent: false,
             destroy: true,
             //dom: 'Bfrtip',
             dom: "<'row'<'col-sm-12'Bfrt>>" +
@@ -1028,11 +1033,12 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
             ajax: $.fn.dataTable.pipeline({
                 url: options.apiUrl,
                 pages: 5,// number of pages to cache,
-                filters: options.filters
+                filters: options.filters,
+                customeEvent: options.customeEvent
             }),
             aoColumns: options.columns,
             scrollY: "600px",
-           
+
             scrollCollapse: true,
             initComplete: function () {
                 delaySearch(this.api())

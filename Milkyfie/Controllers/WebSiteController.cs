@@ -25,6 +25,11 @@ namespace Milkyfie.Controllers
         {
             return View();
         }
+        [Route("privacy")]
+        public IActionResult privacy()
+        {
+            return View();
+        }
         [Route("Products")]
         public IActionResult Products()
         {

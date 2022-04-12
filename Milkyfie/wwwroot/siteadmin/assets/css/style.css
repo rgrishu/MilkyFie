@@ -6461,3 +6461,26 @@ img {
 .contact-map iframe {
     width: 100%;
 }
+.outter-section {
+}
+
+    .outter-section h2 {
+        font-size: 25px;
+        padding: 10px 0;
+    }
+
+    .outter-section p {
+        font-size: 13px;
+        padding: 0;
+        line-height: 20px;
+    }
+
+        .outter-section p span {
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+    .outter-section h4 {
+        font-size: 17px;
+        font-weight: 600;
+    }
