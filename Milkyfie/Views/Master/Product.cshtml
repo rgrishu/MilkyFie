@@ -59,7 +59,7 @@
 
     
      function getform(id=0){
-          Q.preloader.load();
+        
              // var id=$('#hdnProductID').val();
               $.ajax({
                 type: 'post',
@@ -74,7 +74,7 @@
                     body:data,
                     width : '900px',
                     });
-                     Q.preloader.remove();
+                   
                 },
                 error: function (data) {
                     console.log('An error occurred.');

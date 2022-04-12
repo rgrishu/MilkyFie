@@ -1,4 +1,15 @@
 ﻿var Q;
+
+paceOptions = {
+    ajax: true, // disabled
+    restartOnRequestAfter: false,
+    document: false, // disabled
+    eventLag: false, // disabled
+    elements: {
+        selectors: ['.my-page']
+    }
+};
+
 var ajaxvalidationerror = xhr => {
     let validationerrors = xhr.responsejson;
     for (var i = 0; i < validationerrors.length; i++) {

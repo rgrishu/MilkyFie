@@ -4,12 +4,11 @@
     ViewData["Title"] = "DashBoard";
 }
 <style>
-    
+
 </style>
 <div class="main-container">
     <div id="dashboard"></div>
     <!-- Row start -->
-    
     <!-- Row end -->
     <!-- Row start -->
     <!-- Row end -->
@@ -18,29 +17,25 @@
 
 @section scripts{
 <script>
-    $(document).ready(function(){
-    loadData();
-    });
-     function loadData(){
-         Q.preloader.load();
-         $.ajax({
-               type: 'post',
-               url: 'Dashboard',
-               processData: false,
-               contentType: false,
-             
-                success: function (data) {
-                      $('#dashboard').html(data);
-                       Q.preloader.remove();
-                },
-                error: function (data) {
-                     Q.preloader.remove();
-                    console.log('An error occurred.');
-                    console.log(data);
-                       Q.notify(-1, 'An error occurred.');
-                },
-          });
-    }
-    
+        $(document).ready(function(){
+        loadData();
+        });
+         function loadData(){
+             $.ajax({
+                   type: 'post',
+                   url: 'Dashboard',
+                   processData: false,
+                   contentType: false,
+                    success: function (data) {
+                          $('#dashboard').html(data);
+                    },
+                    error: function (data) {
+                         Q.preloader.remove();
+                        console.log('An error occurred.');
+                        console.log(data);
+                           Q.notify(-1, 'An error occurred.');
+                    },
+              });
+        }
 </script>
 }

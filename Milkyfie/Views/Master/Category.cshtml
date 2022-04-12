@@ -75,20 +75,20 @@
             loadData();
         })
         function loadData() {
-            Q.preloader.load();
+           
             $.ajax({
                 type: 'post',
                 url: 'GetCategory',
                 data: '',
                 success: function (data) {
                     $('tbody').html(data);
-                    Q.preloader.remove();
+                   
                 },
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
                     Q.notify(-1, 'An error occurred.');
-                    Q.preloader.remove();
+                  
                 },
             });
         }

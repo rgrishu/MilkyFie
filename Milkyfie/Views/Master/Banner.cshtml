@@ -75,14 +75,13 @@
             loadData();
         });
         function loadData() {
-            Q.preloader.load();
+            
             $.ajax({
                 type: 'post',
                 url: 'GetBanner',
                 data: '',
                 success: function (data) {
                     $('tbody').html(data);
-                    Q.preloader.remove();
                 },
                 error: function (data) {
                     console.log('An error occurred.');

@@ -75,12 +75,14 @@ var serviceProperty = {
 
 
 $(function () {
-   // $("#loaderbody").addClass('hide');
-    //$(document).bind('ajaxStart', function () {
-    //    Q.preloader.load();
-    //}).bind('ajaxStop', function () {
-    //    Q.preloader.remove();
-    //});
+    $("#loaderbody").addClass('hide');
+    $(document).bind('ajaxStart', function () {
+        Pace.start();
+       // Q.preloader.load();
+    }).bind('ajaxStop', function () {
+        Pace.stop();
+      //  Q.preloader.remove();
+    });
     $('body').on('submit', 'form', function () {
         ajaxFormSubmit(this)
     })
