@@ -58,10 +58,12 @@
                     <div class="table-container">
 
                         <div class="table-responsive">
-                            <table id="basicExample" class="table custom-table">
+                            <table id="basicExample" class="table custom-table display responsive nowrap"  style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>#</th>
+                                            <th>Action</th>
+                                         <th>Status</th>
                                         <th class="text-nowrap">Customer Name</th>
                                         <th class="text-nowrap">Category Name</th>
                                         <th class="text-nowrap">Product Name</th>
@@ -75,8 +77,8 @@
                                         <th>Fri</th>
                                         <th>Sat</th>
                                         <th class="text-nowrap">From Date</th>
-                                        <th>Status</th>
-                                        @*<th>Action</th>*@
+                                       
+                                       
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -174,6 +176,7 @@
         }
 
          var loadData = function (customeEvent = false) {
+             var i=0;
 
         $.renderDataTable2({
 
@@ -181,8 +184,50 @@
                // { "render": () => i++},
                 {data: 'SrNo',
            render: function (data, type, row, meta) {
+               i=meta.row + meta.settings._iDisplayStart + 1;
                 return meta.row + meta.settings._iDisplayStart + 1;
            }},
+      
+           
+            {
+                        "render": function (d, t, row) {
+                            if(row.statusValue=='Approved')
+                            {
+                           // var $nav = ` <img height="60px" width="60px" src="/images/Product/${row.product.productImage}" />`
+                            var $nav = ` <div class="custom-control custom-switch">
+                        <input type="checkbox" data-id="${row.scheduleID}" id="chkapprove${i}" id="chkapprove" class="custom-control-input chkapprove" ${row.isActive == true ? "Checked" : ""} >
+                        <label class="custom-control-label" for="chkapprove${i}"></label>
+                    </div>`
+                            }
+                            else
+                            {
+                             // var $nav = `<span>${row.remark}</span>`
+                              var $nav = `<span></span>`
+                            }
+                            return $nav;
+                        }
+                    },
+
+            {
+                        "render": function (d, t, row) {
+                            if(row.statusValue=='Pending')
+                            {
+                           // var $nav = ` <img height="60px" width="60px" src="/images/Product/${row.product.productImage}" />`
+                            var $nav = ` <div class="btn-group">
+                        <a class="btn-ed-ed" onclick="ASchedule(${row.scheduleID},'A')"><img src="/img/accept.png" class="img-action" /></a>
+                        <a class="btn-ed-del" onclick="ASchedule(${row.scheduleID},'R')"><img src="/img/rejected.png" class="img-action" /></a>
+                    </div>`
+                            }
+                            else
+                            {
+                             // var $nav = `<span>${row.remark}</span>`
+                              var $nav = `<span>${row.statusValue}</span>`
+                            }
+                            return $nav;
+                        }
+                    },
+
+
                  { data: "user.name",orderable: false },
                 { data: "category.categoryName",orderable: false },
                 { data: "product.productName", orderable: false },
@@ -196,7 +241,7 @@
                 { data: "friday", orderable: false },
                 { data: "saturday", orderable: false },
                 { data: "startFromDate", orderable: false },
-                { data: "status", orderable: false },
+
             ],
              apiUrl: 'GetScheduleOrdersFilter',
              customeEvent: customeEvent,
@@ -206,6 +251,61 @@
             }
         });
     };
+      $('body').on('change','.chkapprove', function() {
+    // $('.chkapprove').change(function () {
+        var formData = new FormData();
+        formData.append("ID", $(this).attr('data-id'));
+        formData.append("status", this.checked);
+        $.ajax({
+            type: 'POST',
+            url: 'ActDeaOrderSch',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: result => {
+                if (result.statusCode == 1) {
+                    Q.notify(result.statusCode, result.responseText);
+                    $('#btnSubmit').click();
+                }
+                else {
+                    Q.notify(result.statusCode, result.responseText);
+                }
+              
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+               
+            },
+        })
+    });
+      function ASchedule(id, type) {
+        //  Q.preloader.load();
+        var formData = new FormData();
+        formData.append("ID", id);
+        formData.append("Type", type);
+        $.ajax({
+            type: 'POST',
+            url: 'UpdateOrderSchedule',
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: result => {
+                if (result.statusCode == 1) {
+                    Q.notify(result.statusCode, result.responseText);
+                   $('#btnSubmit').click();
+                }
+                else {
+                    Q.notify(result.statusCode, result.responseText);
+                }
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+               
+            },
+        })
+    }
 </script>
 }
 

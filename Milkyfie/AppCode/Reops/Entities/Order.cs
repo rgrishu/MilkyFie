@@ -18,7 +18,7 @@ namespace Milkyfie.AppCode.Reops.Entities
         public string CreatedOn { get; set; }
         public string UpdatedOn { get; set; }
         public bool IsActive { get; set; }
-
+        public string StatusValue { get; set; }
         public int Sunday { get; set; }
         public int Monday { get; set; }
         public int Tuesday { get; set; }

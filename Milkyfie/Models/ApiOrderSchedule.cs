@@ -58,6 +58,7 @@
     {
         public int OrderID { get; set; }
         public string UserID { get; set; }
+        public string MUserID { get; set; }
         public string Name { get; set; }
         public string OrderDate { get; set; }
         public int TotalItem { get; set; }

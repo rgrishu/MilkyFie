@@ -875,6 +875,7 @@ function ajaxFormSubmit(form) {
             serverSide: true,
             paging: true,
             destroy: true,
+            responsive: true,
             dom: 'Bfrtip',
             buttons: options.buttons,
             ajax: {
@@ -1034,6 +1035,17 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
             paging: true,
             customeEvent: false,
             destroy: true,
+            responsive: {
+                details: {
+                    type: 'column',
+                    target: -1
+                }
+            },
+            columnDefs: [{
+                className: 'dtr-control',
+                orderable: false,
+                targets: -1
+            }],
             //dom: 'Bfrtip',
             dom: "<'row'<'col-sm-12'Bfrt>>" +
                 "<'row'<'col-sm-4'l><'col-sm-8'p>>" +

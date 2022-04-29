@@ -98,6 +98,7 @@ namespace Milkyfie.Controllers
         {
             jsonAOData.param = filters;
             var res = (JDataTable<OrderSchedule>)_orderschedule.GetScheduleOrdersFilter(jsonAOData).Result;
+            res.Data.ToList().ForEach(c => c.StatusValue = Enum.GetName(typeof(Status), c.Status));
             return Json(res);
         }
 
