@@ -2,9 +2,9 @@
     ViewData["Title"] = "Schedule Orders";
 }
 <style>
-button#btnNew {
-    margin-right:30px;
-}</style>
+    button#btnNew {
+        margin-right: 30px;
+    }</style>
 <div class="main-container pb-0">
     <!-- Row start -->
     <div class="row gutters">
@@ -103,6 +103,9 @@ button#btnNew {
             });
         });
 
+         $('#btnSubmit').click(function () {
+        loadData(true);
+    });
         function getform(id = 0) {
             // var id=$('#hdnProductID').val();
             $.ajax({
@@ -171,7 +174,7 @@ button#btnNew {
         }
 
          var loadData = function (customeEvent = false) {
-           
+
         $.renderDataTable2({
 
             columns: [
