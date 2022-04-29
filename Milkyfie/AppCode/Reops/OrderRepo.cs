@@ -127,6 +127,7 @@ namespace Milkyfie.AppCode.Reops
         {
             throw new NotImplementedException();
         }
+        //[proc_GetOrderScheduleFilter]
 
         public async Task<IEnumerable<OrderSchedule>> GetAllAsync(OrderSchedule entity = null)
         {
@@ -135,10 +136,10 @@ namespace Milkyfie.AppCode.Reops
             {
                 var dbparams = new DynamicParameters();
                 dbparams.Add("ProductID", entity != null && entity.Product != null ? entity.Product.ProductID : 0);
-                dbparams.Add("ScheduleID",0);
+                dbparams.Add("ScheduleID", 0);
                 dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
                 //dbparams.Add("ParentCategoryID", entity != null && entity.Category != null && entity.Category.Parent != null ? entity.Category.Parent.ParentID : 0);
-              dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
+                dbparams.Add("CategoryID", entity != null && entity.Category != null ? entity.Category.CategoryID : 0);
                 string sqlQuery = @"proc_GetOrderSchedule";
                 var res = await _dapper.GetAllAsyncProc<OrderSchedule, ApplicationUser, Product, Frequency, Unit,
                     Category, Parent, OrderSchedule>(entity ?? new OrderSchedule(), sqlQuery,
@@ -160,6 +161,38 @@ namespace Milkyfie.AppCode.Reops
             }
             return oderschedule;
         }
+
+        public async Task<JDataTable<OrderSchedule>> GetScheduleOrdersFilter(jsonAOData filter = null)
+        {
+            JDataTable<OrderSchedule> d = new JDataTable<OrderSchedule>();
+            try
+            {
+                d = await _dapper.GetMultipleAsync<OrderSchedule, ApplicationUser, Product, Frequency, Unit,
+                    Category, Parent, OrderSchedule>("proc_GetOrderScheduleFilter", filter,
+                  (oderschedule, applicationuser, product, frequency, unit, category, parent) =>
+                  {
+                      oderschedule.User = applicationuser;
+                      oderschedule.Product = product;
+                      oderschedule.Frequency = frequency;
+                      oderschedule.Unit = unit;
+                      oderschedule.Category = category;
+                      oderschedule.Category.Parent = parent;
+                      return oderschedule;
+                  }, splitOn: "ScheduleID,UserID,ProductID,FrequencyID,UnitID,CategoryID,ParentID");
+                d.recordsFiltered = d.PageSetting.TotoalRows;//d.Data.Count();
+                                                             // d.recordsFiltered = d.Data.Count();
+                d.recordsTotal = d.PageSetting.TotoalRows;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return d;
+        }
+
+
+
+
         public async Task<IEnumerable<ApiOrderSchedule>> GetAllAsyncAPi(OrderSchedule entity = null)
         {
             var dbparams = new DynamicParameters();
@@ -175,6 +208,7 @@ namespace Milkyfie.AppCode.Reops
         {
             var dbparams = new DynamicParameters();
             dbparams.Add("UserID", entity != null && entity.User != null ? entity.User.Id : 0);
+            dbparams.Add("OrderDate", entity != null ? entity.OrderDate : string.Empty);
             var res = await _dapper.GetAllAsync<ApiOrderSummary>("proc_GetOrderSummary", dbparams, commandType: CommandType.StoredProcedure);
             return res;
         }
@@ -215,6 +249,27 @@ namespace Milkyfie.AppCode.Reops
             return oderssummary;
 
         }
+        public async Task<JDataTable<OrderSummary>> OrderSummaryFilter(jsonAOData filter = null)
+        {
+            JDataTable<OrderSummary> d = new JDataTable<OrderSummary>();
+            try
+            {
+                d = await _dapper.GetMultipleAsync<OrderSummary, ApplicationUser, OrderSummary>("proc_GetOrderSummaryFilter", filter,
+                   (oderssummary, applicationuser) =>
+                   {
+                       oderssummary.User = applicationuser;
+                       return oderssummary;
+                   }, splitOn: "OrderID,UserID");
+                d.recordsFiltered = d.PageSetting.TotoalRows;//d.Data.Count();
+                                                             // d.recordsFiltered = d.Data.Count();
+                d.recordsTotal = d.PageSetting.TotoalRows;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return d;
+        }
 
         public async Task<IEnumerable<OrderDetail>> GetAllAsync(OrderDetail entity)
         {
@@ -244,7 +299,29 @@ namespace Milkyfie.AppCode.Reops
             }
             return orderdetail;
         }
+        public async Task<JDataTable<OrderDetail>> OrderDetailFilter(jsonAOData filter = null)
+        {
+            JDataTable<OrderDetail> d = new JDataTable<OrderDetail>();
+            try
+            {
+                d = await _dapper.GetMultipleAsync<OrderDetail, Product, OrderSummary, ApplicationUser, OrderDetail>("proc_GetOrderDetailsFilter", filter,
+                  (orderdetail, product, ordersummary, applicationuser) =>
+                  {
+                      orderdetail.Product = product;
+                      orderdetail.OrderSummary = ordersummary;
+                      orderdetail.OrderSummary.User = applicationuser;
+                      return orderdetail;
+                  }, splitOn: "OrderDetailID,ProductID,ScheduleID,UserID");
+                d.recordsFiltered = d.PageSetting.TotoalRows;//d.Data.Count();
+                                                             // d.recordsFiltered = d.Data.Count();
+                d.recordsTotal = d.PageSetting.TotoalRows;
+            }
+            catch (Exception ex)
+            {
 
+            }
+            return d;
+        }
 
 
 

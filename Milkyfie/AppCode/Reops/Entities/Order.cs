@@ -46,6 +46,8 @@ namespace Milkyfie.AppCode.Reops.Entities
         public bool IsProcess { get; set; }
         public ApplicationUser User { get; set; }
         public Status Status { get; set; }
+        public string StatusValue { get; set; }
+        
     }
     public class OrderDetail
     {
@@ -62,5 +64,6 @@ namespace Milkyfie.AppCode.Reops.Entities
         public Product Product { get; set; }
         public Category Category { get; set; }
         public Status Status { get; set; }
+        public string StatusValue { get; set; }
     }
 }

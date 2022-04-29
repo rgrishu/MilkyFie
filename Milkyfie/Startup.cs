@@ -75,7 +75,8 @@ namespace Milkyfie
                 options.Lockout.MaxFailedAccessAttempts = 3;
             }).AddUserStore<UserStore>()
             .AddRoleStore<RoleStore>()
-            .AddUserManager<ApplicationUserManager>();
+            .AddUserManager<ApplicationUserManager>()
+            .AddDefaultTokenProviders();
             //       .AddDefaultTokenProviders();
             services.ConfigureApplicationCookie(options =>
             {

@@ -92,6 +92,16 @@ namespace Milkyfie.Controllers
             var resp = await _orderschedule.GetAllAsync(new OrderSchedule { ScheduleID = 0 });
             return PartialView("PartialView/_OrderScheduleList", resp);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> GetScheduleOrdersFilter(jsonAOData jsonAOData, LedgerFilters filters)
+        {
+            jsonAOData.param = filters;
+            var res = (JDataTable<OrderSchedule>)_orderschedule.GetScheduleOrdersFilter(jsonAOData).Result;
+            return Json(res);
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> Orders()
         {
@@ -102,6 +112,15 @@ namespace Milkyfie.Controllers
         {
             var res = await _orderschedule.GetAllAsync(entity);
             return PartialView("PartialView/_Orders", res);
+        }
+        [HttpPost]
+        public IActionResult OrderSummaryFilter(jsonAOData jsonAOData, LedgerFilters filters)
+        {
+            //jsonAOData.param = new { LedgerID = 0, searchText = jsonAOData.search?.value};
+            jsonAOData.param = filters;
+            var res = (JDataTable<OrderSummary>)_orderschedule.OrderSummaryFilter(jsonAOData).Result;
+            res.Data.ToList().ForEach(c => c.StatusValue = Enum.GetName(typeof(Status), c.Status));
+            return Json(res);
         }
 
         [HttpGet]
@@ -122,7 +141,15 @@ namespace Milkyfie.Controllers
             return PartialView("PartialView/_OrdersDetails", res);
         }
 
-
+        [HttpPost]
+        public IActionResult OrderDetailListFilter(jsonAOData jsonAOData, LedgerFilters filters)
+        {
+            //jsonAOData.param = new { LedgerID = 0, searchText = jsonAOData.search?.value};
+            jsonAOData.param = filters;
+            var res = (JDataTable<OrderDetail>)_orderschedule.OrderDetailFilter(jsonAOData).Result;
+            res.Data.ToList().ForEach(c => c.StatusValue = Enum.GetName(typeof(Status),c.Status));
+            return Json(res);
+        } 
 
         [HttpPost]
         public async Task<IActionResult> UpdateOrderDetailStatus(StatusChangeReq entity, string type)

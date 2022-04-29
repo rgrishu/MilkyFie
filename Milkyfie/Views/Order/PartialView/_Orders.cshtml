@@ -32,31 +32,31 @@ else
 }
 <script>
 
-       function loadOrderDetails(id){
-           var formData=new FormData();
-        formData.append("OrderSummary.OrderID",id);
-            Q.preloader.load();
-         $.ajax({
-               type: 'post',
-                url: 'OrderSummaryDetailList',
-                processData: false,
-               contentType: false,
-               data: formData,
-                success: function (data) {
-                      Q.preloader.remove();
-                       Q.alert({
-                    title: "Order Details",
-                    body:data,
-                    width : '900px',
-                    });
-                },
-                error: function (data) {
-                     Q.preloader.remove();
-                    console.log('An error occurred.');
-                    console.log(data);
-                       Q.notify(-1, 'An error occurred.');
-                },
+//       function loadOrderDetails(id){
+//           var formData=new FormData();
+//        formData.append("OrderSummary.OrderID",id);
+//            Q.preloader.load();
+//         $.ajax({
+//               type: 'post',
+//                url: 'OrderSummaryDetailList',
+//                processData: false,
+//               contentType: false,
+//               data: formData,
+//                success: function (data) {
+//                      Q.preloader.remove();
+//                       Q.alert({
+//                    title: "Order Details",
+//                    body:data,
+//                    width : '900px',
+//                    });
+//                },
+//                error: function (data) {
+//                     Q.preloader.remove();
+//                    console.log('An error occurred.');
+//                    console.log(data);
+//                       Q.notify(-1, 'An error occurred.');
+//                },
 
-          });
-    }
+//          });
+//    }
 </script>

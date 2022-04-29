@@ -1,7 +1,48 @@
 ﻿@{
     ViewData["Title"] = "Schedule Orders";
 }
+<style>
+button#btnNew {
+    margin-right:30px;
+}</style>
+<div class="main-container pb-0">
+    <!-- Row start -->
+    <div class="row gutters">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="card lobipanel-minimize">
+                <div class="card-header bg-primary text-white h6">
+                    Order Schedule
+                    <div class="float-right">  <button id="btnNew" class="btn btn-outline-red">NEW</button></div>
+                </div>
+                <div class="card-body">
 
+                    <div class="row gutters">
+                        <div class="col-xl-5 col-lg col-md-5 col-sm-5 col-12">
+                            <div class="form-group">
+                                <label for="inputName">Select User</label>
+                                <select class="form-control" name="ParentID" id="ddluserf">
+                                    <option id="Option" name="ParentID" value="0">-Select-</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xl-5 col-lglg-5 col-md-5 col-sm-5 col-12">
+                            <div class="form-group">
+                                <label for="inputName">Date</label>
+                                <input type="text" placeholder="Start Date" readonly="readonly" value="@DateTime.Now.ToString("dd MMM yyyy")" id="txtStartDate" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
+                            <div class="btn-group">
+                                <button class="btn btn-lg btn-primary Deliver" style="margin-top:20px" id="btnSubmit" type="submit">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="main-container">
     <!-- Row start -->
     <div class="row gutters">
@@ -9,8 +50,8 @@
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="card">
                 <div class="card-header bg-primary text-white h6">
-                    Schedule Orders
-                    <div class="float-right">  <button id="btnNew" class="btn btn-outline-red">New</button></div>
+                    Schedule Order Details
+
                 </div>
                 <div class="card-body">
 
@@ -34,9 +75,8 @@
                                         <th>Fri</th>
                                         <th>Sat</th>
                                         <th class="text-nowrap">From Date</th>
-                                        @*   <th>To Date</th>*@
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        @*<th>Action</th>*@
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -50,9 +90,14 @@
     </div>
 </div>
 @section scripts{
-    <script>
+<script>
+         $(function () {
+        $('#txtStartDate').datepicker({ dateFormat: 'dd M yy' }).val();
+    });
         $(document).ready(function () {
-            loadScheduleOrders();
+            BindDropDownUsersf();
+            loadData();
+
             $('#btnNew').click(function () {
                 getform(id = 0)
             });
@@ -102,9 +147,14 @@
                 $('#ddlUser').empty().append('<option id="Option" name="UserID" value="0">:: User ::</option>').append(result.map(x => `<option value="${x.id}">${x.name}</option>`));
             });
         }
+        function BindDropDownUsersf() {
+            var userslist = s.Dropdown.Users();
+            userslist.then(result => {
+                $('#ddluserf').empty().append('<option id="Option" name="UserID" value="0">:: User ::</option>').append(result.map(x => `<option value="${x.id}">${x.name}</option>`));
+            });
+        }
 
         function loadScheduleOrders() {
-         
             $.ajax({
                 type: 'post',
                 url: 'GetScheduleOrders',
@@ -116,11 +166,43 @@
                     console.log('An error occurred.');
                     console.log(data);
                     Q.notify(-1, 'An error occurred.');
-                  
                 },
             });
-
         }
-    </script>
+
+         var loadData = function (customeEvent = false) {
+           
+        $.renderDataTable2({
+
+            columns: [
+               // { "render": () => i++},
+                {data: 'SrNo',
+           render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+           }},
+                 { data: "user.name",orderable: false },
+                { data: "category.categoryName",orderable: false },
+                { data: "product.productName", orderable: false },
+                { data: "frequency.frequencyName", orderable: false },
+                { data: "quantity", orderable: false },
+                { data: "sunday", orderable: false },
+                { data: "monday", orderable: false },
+                { data: "tuesday", orderable: false },
+                { data: "wednesday", orderable: false },
+                { data: "thursday", orderable: false },
+                { data: "friday", orderable: false },
+                { data: "saturday", orderable: false },
+                { data: "startFromDate", orderable: false },
+                { data: "status", orderable: false },
+            ],
+             apiUrl: 'GetScheduleOrdersFilter',
+             customeEvent: customeEvent,
+            filters: {
+                UserID: $('#ddluserf').val(),
+                CreatedOn: $('#txtStartDate').val()
+            }
+        });
+    };
+</script>
 }
 

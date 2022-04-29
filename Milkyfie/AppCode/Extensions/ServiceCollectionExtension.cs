@@ -38,6 +38,8 @@ namespace Milkyfie.AppCode.Extensions
             services.AddSingleton<IRepository<News>, NewsRepo>();
             services.AddSingleton<IRepository<ApplicationUser>, UsersRepo>();
             services.AddSingleton<IUser, UsersRepo>();
+            services.AddSingleton<IAccount, AccountRepo>();
+            services.AddSingleton<ISMSAPI, SMSAPIRepo>();
             services.AddSingleton<IOrder, OrderRepo>();
             services.AddSingleton<IGateWay, GateWayRepo>();
             services.AddSingleton<ICommon, CommonRepo>();

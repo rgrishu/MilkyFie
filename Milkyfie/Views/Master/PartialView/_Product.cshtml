@@ -175,13 +175,8 @@
               $('.calcdscont').focusout(function(){
               var mrp= $('#txtMRP').val();
               var sp= $('#txtSellingPrice').val();
-               var dec = (sp/100).toFixed(2); //its convert 10 into 0.10
-              var mult = mrp*dec; // gives the value for subtract from main value
-              if(mrp>0 && sp>0)
-              {
-                var discont = mrp-mult;
-                $('#txtdiscount').val(Math.round(discont));
-              }
+              var d=(mrp-sp)/mrp*100;
+               $('#txtdiscount').val(Math.round(d));
               });
       $('#btnSubmit').click(function () {
           Q.preloader.load();
@@ -221,7 +216,7 @@
                 success: result => {
                     console.log(result)
                     if(result.statusCode==1)
-                    { 
+                    {
                     $('input').val('');
                    $('#txtnutrition').summernote('reset');
                    $('#txtDescription').summernote('reset');

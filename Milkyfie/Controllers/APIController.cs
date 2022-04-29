@@ -7,6 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
+using System.Text;
+using Milkyfie.AppCode.Helper;
+using Milkyfie.AppCode.Data;
+using ApiRequestUtility;
 
 namespace Milkyfie.Controllers
 {
@@ -21,6 +26,8 @@ namespace Milkyfie.Controllers
         private readonly ApplicationUser _user;
         protected IUser _users;
         protected IProduct _product;
+        protected IAccount _account;
+        protected ISMSAPI _smsapi;
         protected IRepository<Category> _category;
         protected IRepository<Frequency> _frequency;
         protected IOrder _order;
@@ -28,8 +35,9 @@ namespace Milkyfie.Controllers
         protected ICommon _common;
         protected IRepository<News> _news;
         protected IRepository<Banners> _banners;
+        private readonly ApplicationUserManager _userManager;
         public APIController(IHttpContextAccessor httpContext, IUserService userService, IProduct product, IRepository<Category> category, IRepository<Frequency> frequency,
-            IRepository<News> news, IRepository<Banners> banners, IUser users, IOrder order, IGateWay GateWay, ICommon common)
+            IRepository<News> news, IRepository<Banners> banners, IUser users, IAccount account, ISMSAPI smsapi, IOrder order, IGateWay GateWay, ICommon common, ApplicationUserManager userManager)
         {
             _userService = userService;
             _httpContext = httpContext;
@@ -39,6 +47,9 @@ namespace Milkyfie.Controllers
             _news = news;
             _banners = banners;
             _users = users;
+            _account = account;
+            _smsapi = smsapi;
+            _userManager = userManager;
             _order = order;
             _GateWay = GateWay;
             _common = common;
@@ -149,6 +160,61 @@ namespace Milkyfie.Controllers
         #endregion
 
         #region User
+
+        [HttpPost(nameof(CreateUser))]
+        [HttpPost]
+        public async Task<IActionResult> CreateUser(RegisterViewModel model)
+        {
+            var response = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            if (!ModelState.IsValid)
+            {
+                return Json(response);
+            }
+            model.Password = AppUtility.O.CreatePassword(8);
+
+            model.RoleName = "Consumer";
+            var user = new ApplicationUser
+            {
+                UserId = Guid.NewGuid().ToString(),
+                UserName = model.EmailId,
+                Email = model.EmailId,
+                Role = model.RoleName,
+                Name = model.Name,
+                Address = model.Address,
+                Pincode = model.PinCode,
+                PhoneNumber = model.Mobile
+            };
+            var res = await _userManager.CreateAsync(user, model.Password);
+            if (res.Succeeded)
+            {
+                user = _userManager.FindByEmailAsync(user.Email).Result;
+                await _userManager.AddToRoleAsync(user, model.RoleName);
+
+                // Send Email
+                var apidetail = await _smsapi.GetSmsApi("Registration");
+                // Send Email End Here
+                model.Password = String.Empty;
+                model.EmailId = String.Empty;
+                ModelState.Clear();
+                response.StatusCode = ResponseStatus.Success;
+                response.ResponseText = "Register Successfully";
+            }
+            else
+            {
+                foreach (var error in res.Errors)
+                {
+                    ModelState.TryAddModelError("", error.Description);
+                    response.ResponseText = error.Description;
+                }
+            }
+            return Json(response);
+        }
+
+
         [HttpPost(nameof(UerInfo))]
         public IActionResult UerInfo(int id)
         {
@@ -369,7 +435,7 @@ namespace Milkyfie.Controllers
 
 
         [HttpPost(nameof(OrderSummary))]
-        public IActionResult OrderSummary(int UserID)
+        public IActionResult OrderSummary(int UserID, string orderdate)
         {
             var res = new Response<List<ApiOrderSummary>>()
             {
@@ -378,6 +444,7 @@ namespace Milkyfie.Controllers
             };
             var entity = new OrderSummary()
             {
+                OrderDate = orderdate,
                 User = new ApplicationUser()
                 {
                     Id = UserID,
@@ -525,6 +592,21 @@ namespace Milkyfie.Controllers
             return Json(res);
         }
 
+        #endregion
+       
+        #region ProductDelivery
+        [HttpPost(nameof(UpdateDeliveryStatus))]
+        [HttpPost]
+        public async Task<IActionResult> UpdateDeliveryStatus(StatusChangeReq screq, int LoginID)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            res = await _order.UodateOrderDetailStatus(screq, LoginID);
+            return Json(res);
+        }
         #endregion
 
     }

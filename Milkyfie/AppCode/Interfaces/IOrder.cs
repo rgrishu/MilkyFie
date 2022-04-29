@@ -15,5 +15,8 @@ namespace Milkyfie.AppCode.Interfaces
         Task<IEnumerable<ApiOrderSchedule>> GetAllAsyncAPi(OrderSchedule entity = null);
         Task<IEnumerable<ApiOrderSummary>> GetAllAsyncOrderSummaryAPi(OrderSummary entity = null);
         Task<IEnumerable<APIOrderDetail>> GetAllAsyncOrderDetailAPi(OrderDetail entity = null);
+        Task<JDataTable<OrderSummary>> OrderSummaryFilter(jsonAOData filter = null);
+        Task<JDataTable<OrderDetail>> OrderDetailFilter(jsonAOData filter = null);
+        Task<JDataTable<OrderSchedule>> GetScheduleOrdersFilter(jsonAOData filter = null);
     }
 }

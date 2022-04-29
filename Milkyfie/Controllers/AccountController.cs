@@ -19,6 +19,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using ApiRequestUtility;
+
 namespace Milkyfie.Controllers
 {
     [ApiExplorerSettings(IgnoreApi =true)]
@@ -32,6 +34,8 @@ namespace Milkyfie.Controllers
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private IUser _users;
+        protected IAccount _account;
+        protected ISMSAPI _smsapi;
         private readonly ILogger<AccountController> _logger;
         private readonly IRepository<EmailConfig> _emailConfig;
         private IMapper _mapper;
@@ -39,7 +43,7 @@ namespace Milkyfie.Controllers
         //IConfiguration config
         public AccountController(IOptions<AppSettings> appSettings,
             ApplicationUserManager userManager, RoleManager<ApplicationRole> roleManager,
-            SignInManager<ApplicationUser> signInManager, IUser users,
+            SignInManager<ApplicationUser> signInManager, IUser users, IAccount account, ISMSAPI smsapi,
             ILogger<AccountController> logger, IRepository<EmailConfig> emailConfig, IMapper mapper)
         {
             //_config = config;
@@ -51,6 +55,8 @@ namespace Milkyfie.Controllers
             _roleManager = roleManager;
             _signInManager = signInManager;
             _users = users;
+            _account = account;
+            _smsapi=    smsapi;
         }
         [HttpGet]
         public IActionResult Register()
@@ -232,5 +238,71 @@ namespace Milkyfie.Controllers
         }
         #endregion
         /* End */
+        #region Forget Password
+        [HttpPost]
+        public async Task<IActionResult> ForgetPassword(string MobileNo)
+        {
+            var res = new Response()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var UserDetail = await _account.GetUserDetailForForgetPassword(MobileNo);
+            if (UserDetail != null && !string.IsNullOrEmpty(UserDetail.PhoneNumber))
+            {
+                var apidetail = await _smsapi.GetSmsApi("ForgetPassword");
+                  string password = AppUtility.O.CreatePassword(8);
+               // string password = "123456";
+
+                var user = await _userManager.FindByEmailAsync(UserDetail.Email);
+                if (user == null)
+                {
+                    return Json(res);
+                }
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var resetPassResult = await _userManager.ResetPasswordAsync(user, token, password);
+                if (!resetPassResult.Succeeded)
+                {
+                    foreach (var error in resetPassResult.Errors)
+                    {
+                        res.ResponseText = error.Description;
+                    }
+                    return Json(res);
+                }
+                StringBuilder sbMessage = new StringBuilder(apidetail.SmsTemplate.MessageTemplate);
+                sbMessage.Replace("{LoginID}", UserDetail.PhoneNumber);
+                sbMessage.Replace("{Password}", password);
+                sbMessage.Replace("{PinPassword}", password);
+                sbMessage.Replace("{CompanyDomain}", "http://milkyfie.in/");
+                sbMessage.Replace("{BrandName}", "MILKYFIE");
+
+
+                StringBuilder sbDetailUrl = new StringBuilder(apidetail.ApiUrl);
+                sbDetailUrl.Replace("{TO}", UserDetail.PhoneNumber);
+                sbDetailUrl.Replace("{MESSAGE}", sbMessage.ToString());
+                sbDetailUrl.Replace("{TemplateID}", apidetail.SmsTemplate.TemplateID);
+                //SMS Send Here
+                var responseData = AppWebRequest.O.PostJsonDataUsingHWR(sbDetailUrl.ToString(), "");
+                var SmsReportreq = new SmsReport()
+                {
+                    UserID = UserDetail.UserId,
+                    Name = "ForgetPassword",
+                    RequestUrl = sbDetailUrl.ToString(),
+                    Response = responseData
+                };
+                _smsapi.InsertSmsReportLog(SmsReportreq);
+                //SMS Send End
+                //Sms Api Integrate;
+                res.StatusCode = ResponseStatus.Success;
+                res.ResponseText = "New password has been sent to your registered mobile no.";
+            }
+            else
+            {
+                res.ResponseText = "Mobile no Not Exists.";
+                return Json(res);
+            }
+            return Json(res);
+        }
+        #endregion
     }
 }

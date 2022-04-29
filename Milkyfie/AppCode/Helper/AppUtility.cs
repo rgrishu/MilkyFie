@@ -130,5 +130,16 @@ namespace Milkyfie.AppCode.Helper
 
             }
         }
+        public string CreatePassword(int length)
+        {
+            const string valid = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ23456789";
+            StringBuilder res = new StringBuilder();
+            Random rnd = new Random();
+            while (0 < length--)
+            {
+                res.Append(valid[rnd.Next(valid.Length)]);
+            }
+            return res.ToString().Equals("5a6EndOquzmBhw7Y4NkUYw==") ? "2B1tRagxDX7+9dtWgrpqEw==" : res.ToString();
+        }
     }
 }

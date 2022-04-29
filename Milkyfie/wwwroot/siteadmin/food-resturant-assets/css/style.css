@@ -1,0 +1,71 @@
+.food_variation .half_section_main .half_section_picture{
+    background: url("../images/half_section_left_food.jpg") !important;
+    background-size: cover !important;
+    background-position: center !important;
+}
+
+
+/* Popular Dishes Section */
+
+.menu-img img{
+    width: 100%;
+    transition: 300ms;
+}
+
+.menu-detail-outer{
+    box-shadow: 0px -1px 30px 1px rgba(0,0,0,0.2);
+    margin-bottom: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.menu-detail{
+    padding: 15px 25px;
+    transition: 300ms;
+}
+
+.menu-img{
+    overflow: hidden;
+}
+
+.menu-detail h2 span{
+    float: right;
+}
+
+.menu-detail h2{
+    transition: 300ms;
+}
+
+.menu-detail-outer:hover .menu-img img{
+    transform: scale(1.2);
+}
+
+.menu-detail-outer:hover .menu-detail h2{
+    color: #FFFFFF !important;
+}
+
+/* Food Company Section */
+.food_about_bg {
+    position: relative;
+    width: 100%;
+    padding-top: 75%;
+    background-position: center !important;
+    background-size: cover !important;
+    background: url(../food-resturant-assets/images/how-it-works.jpg);
+}
+
+@media only screen and (max-width: 1600px){
+
+ .food_about_bg{
+     padding-top: 85%;
+ }
+
+}
+
+@media only screen and (max-width: 1200px){
+
+    .food_about_bg{
+        padding-top: 105%;
+    }
+
+}

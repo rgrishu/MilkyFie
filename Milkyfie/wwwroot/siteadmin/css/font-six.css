@@ -1,0 +1,11 @@
+/* Monserrat */
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900');
+
+.raleway,
+.default_section_heading,
+.menu_bars,
+.countdown ul.count_down li,
+.hashtags_div a
+{
+    font-family: 'Montserrat', sans-serif;
+}

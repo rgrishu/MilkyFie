@@ -14,7 +14,7 @@
                 <div class="card-body">
 
                     <div class="row gutters">
-                        <div class="col-xl-4 col-lg col-md-4 col-sm-4 col-12">
+                        <div class="col-xl-5 col-lg col-md-5 col-sm-5 col-12">
                             <div class="form-group">
                                 <label for="inputName">Select User</label>
                                 <select class="form-control" name="ParentID" id="ddluser">
@@ -23,7 +23,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12">
+                        <div class="col-xl-3 col-lg col-md-3 col-sm-3 col-12" style="display:none">
                             <div class="form-group">
                                 <label for="inputName">Select Shift</label>
                                 <select class="form-control" name="ParentID" id="ddlshift">
@@ -34,7 +34,7 @@
                             </div>
                         </div>
 
-                        <div class="col-xl-3 col-lglg-3 col-md-3 col-sm-3 col-12">
+                        <div class="col-xl-5 col-lglg-5 col-md-5 col-sm-5 col-12">
                             <div class="form-group">
                                 <label for="inputName">Date</label>
                                 <input type="text" placeholder="Start Date" readonly="readonly" value="@DateTime.Now.ToString("dd MMM yyyy")" id="txtStartDate" class="form-control" />
@@ -70,7 +70,6 @@
                         <th>Quantity</th>
                         <th>Cost</th>
                         <th>Discount</th>
-                        <th>Shift</th>
                         <th>Status</th>
                         <th>Remark</th>
                         <th>Action</th>
@@ -90,11 +89,11 @@
     });
     $(document).ready(function(){
         BindDropDownUsers();
-      loadOrderDetails();
+      loadData();
     });
 
     $('#btnSubmit').click(function(){
-        loadOrderDetails();
+       loadData(true);
     });
        function BindDropDownUsers(){
           var userslist=s.Dropdown.Users();
@@ -103,29 +102,120 @@
             $('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x=>`<option value="${x.id}">${x.name}</option>`));
         });
     }
-    function loadOrderDetails(){
-        
-        var formData=new FormData();
-        formData.append("OrderSummary.User.Id",$('#ddluser').val());
-        formData.append("OrderShift",$('#ddlshift').val());
-        formData.append("OrderSummary.OrderDate",$('#txtStartDate').val());
-         $.ajax({
-               type: 'post',
-               url: 'OrderDetailList',
-               processData: false,
-               contentType: false,
-               data: formData,
-                success: function (data) {
-                      $('tbody').html(data);
-                },
+    $('body').on('click','.Deliver', function() {
+    let row = $(this).closest('tr');
+    var orderdid = $(this).attr("data-id");
+    var auencid = $(this).attr("data-enc");
+    var status = $(this).attr("data-status");
+    var qnty=row.find('td:eq(4) input').val();
+    var remark=row.find('td:eq(8) input').val();
+
+    var formData=new FormData();
+    formData.append("ID",orderdid);
+    formData.append("Remark",remark);
+    formData.append("Quantity",qnty);
+    formData.append("type",status);
+     $.ajax({
+              type: 'POST',
+              url: 'UpdateOrderDetailStatus',
+              processData: false,
+              contentType: false,
+              data: formData,
+              success: result => {
+                  if(result.statusCode==1)
+                  {
+                      Q.notify(result.statusCode, result.responseText);
+                      $('#btnSubmit').click();
+                  }
+                  else
+                  {
+                   Q.notify(result.statusCode, result.responseText);
+                  }
+                 
+              },
                 error: function (data) {
                     console.log('An error occurred.');
                     console.log(data);
-                       Q.notify(-1, 'An error occurred.');
                 },
-          });
-    }
-
+          })
+    })
+     var loadData = function (customeEvent = false) {
+        $.renderDataTable2({
+            columns: [
+               // { "render": () => i++},
+                {data: 'SrNo',
+           render: function (data, type, row, meta) {
+                return meta.row + meta.settings._iDisplayStart + 1;
+           }},
+                { data: "orderSummary.user.name",orderable: false },
+                { data: "product.productName", orderable: false },
+                 {
+                        "render": function (d, t, row) {
+                            var $nav = ` <img height="60px" width="60px" src="/images/Product/${row.product.productImage}" />`
+                            return $nav;
+                        }
+                    },
+               // { data: "product.productImage", orderable: false },
+              //  { data: "quantity", orderable: false },
+               {
+                        "render": function (d, t, row) {
+                            if(row.statusValue=='Pending')
+                            {
+                           // var $nav = ` <img height="60px" width="60px" src="/images/Product/${row.product.productImage}" />`
+                            var $nav = ` <input class="form-control" name="Quantity"   min="1" max="50" value="${row.quantity}">`
+                            }
+                            else
+                            {
+                              var $nav = `<span>${row.quantity}</span>`
+                            }
+                            return $nav;
+                        }
+                    },
+                { data: "cost", orderable: false },
+                { data: "discount", orderable: false },
+                { data: "statusValue", orderable: false },
+                //{ data: "remark", orderable: false },
+                 {
+                        "render": function (d, t, row) {
+                            if(row.statusValue=='Pending')
+                            {
+                           // var $nav = ` <img height="60px" width="60px" src="/images/Product/${row.product.productImage}" />`
+                            var $nav = `<input class="form-control" name="remark"  type="text" placeholder="Remark">`
+                            }
+                            else
+                            {
+                             // var $nav = `<span>${row.remark}</span>`
+                              var $nav = `<span>${row.remark}</span>`
+                            }
+                            return $nav;
+                        }
+                    },
+                 {
+                        "render": function (d, t, row) {
+                            
+                            if(row.statusValue=='Pending')
+                            {
+                           // var $nav = ` <img height="60px" width="60px" src="/images/Product/${row.product.productImage}" />`
+                            var $nav = `  <div class="btn-group"><button class="btn btn-sm btn-primary Deliver"  data-id="${row.orderDetailID}" data-status="D" >Deliver</button>
+                        <button class="btn btn-sm btn-dark Deliver"  data-status="C"   data-id="${row.orderDetailID}" >Cancel</button> </div>`
+                            }
+                            else
+                            {
+                             var $nav = `<span></span>`
+                            }
+                            
+                            return $nav;
+                        }
+                    },
+            ],
+            apiUrl: 'OrderDetailListFilter',
+             customeEvent: customeEvent,
+            filters: {
+                UserID: $('#ddluser').val(),
+                CreatedOn: $('#txtStartDate').val()
+            }
+        });
+    };
 </script>
 
 }
