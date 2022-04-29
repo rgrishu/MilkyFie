@@ -43,7 +43,7 @@ table.dataTable thead .sorting:before, table.dataTable thead .sorting_asc:before
 	color: #229e45;
 }
 table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
-	color: #ff4f57;
+	color: #2bbf75;
 }
 
 .dataTable .btn-group-sm > .btn, .btn-sm {

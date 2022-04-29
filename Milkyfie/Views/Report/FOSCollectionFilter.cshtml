@@ -1,121 +1,129 @@
 ﻿@{
-    ViewData["Title"] = "FOS Collection";
+	ViewData["Title"] = "FOS Collection";
 }
 
 <div class="main-container pb-0">
-    <!-- Row start -->
-    <div class="row gutters">
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <div class="card lobipanel-minimize">
-                <div class="card-header bg-primary text-white h6">
-                    Fos Collection
-                </div>
-                <div class="card-body">
+	<!-- Row start -->
+	<div class="row gutters">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="card lobipanel-minimize">
+				<div class="card-header bg-primary text-white h6">
+					Fos Collection
+				</div>
+				<div class="card-body">
 
-                    <div class="row gutters">
-                        <div class="col-xl-5 col-lg col-md-5 col-sm-5 col-12">
-                            <div class="form-group">
-                                <label for="inputName">Select User</label>
-                                <select class="form-control" name="ParentID" id="ddluser">
-                                    <option id="Option" name="ParentID" value="0">-Select-</option>
+					<div class="row gutters">
+						<div class="col-xl-5 col-lg col-md-5 col-sm-5 col-12">
+							<div class="form-group">
+								<label for="inputName">Select User</label>
+								<select class="form-control" name="ParentID" id="ddluser">
+									<option id="Option" name="ParentID" value="0">-Select-</option>
 
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-xl-5 col-lglg-5 col-md-5 col-sm-5 col-12">
-                            <div class="form-group">
-                                <label for="inputName">Date</label>
-                                <input type="text" placeholder="Start Date" readonly="readonly" value="@DateTime.Now.ToString("dd MMM yyyy")" id="txtStartDate" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
-                            <div class="btn-group">
-                                <button class="btn btn-lg btn-primary Deliver" style="margin-top:20px" id="btnSubmit" type="submit">Search</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+								</select>
+							</div>
+						</div>
+						<div class="col-xl-5 col-lglg-5 col-md-5 col-sm-5 col-12">
+							<div class="form-group">
+								<label for="inputName">Date</label>
+								<input type="text" placeholder="Start Date" readonly="readonly" value="@DateTime.Now.ToString("dd MMM yyyy")" id="txtStartDate" class="form-control" />
+							</div>
+						</div>
+						<div class="col-xl-2 col-lglg-2 col-md-2 col-sm-2 col-12">
+							<div class="btn-group">
+								<button class="btn btn-lg btn-primary Deliver" style="margin-top:20px" id="btnSubmit" type="submit">Search</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <div class="main-container">
-    <!-- Row start -->
-    <div class="row gutters">
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <div class="table-container">
-                <div class="table-responsive">
-                    <table id="copy-print-csv" class="table custom-table">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th class="text-nowrap">Customer Name</th>
-                                <th class="text-nowrap">Opening Amount </th>
-                                <th>Amount</th>
-                                <th class="text-nowrap">Closing Amount </th>
-                                <th class="text-nowrap">Transaction Type</th>
-                                <th class="text-nowrap">Transaction Date</th>
-                                <th>Naration</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+	<!-- Row start -->
+	<div class="row gutters">
+		<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+
+			<div class="card lobipanel-minimize">
+				<div class="card-header bg-primary text-white h6">
+					FOS Collection List
+				</div>
+				<div class="card-body">
+					<div class="table-container">
+						<div class="table-responsive">
+							<table id="copy-print-csv" class="table custom-table">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th class="text-nowrap">Customer Name</th>
+										<th class="text-nowrap">Opening Amount </th>
+										<th>Amount</th>
+										<th class="text-nowrap">Closing Amount </th>
+										<th class="text-nowrap">Transaction Type</th>
+										<th class="text-nowrap">Transaction Date</th>
+										<th>Naration</th>
+									</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 
 
 <!-- Main container end -->
 @section scripts{
 <script>
-    $(function () {
-        $('#txtStartDate').datepicker({ dateFormat: 'dd M yy' }).val();
-    });
-    $(document).ready(function () {
-        BindDropDownUsers();
-        loadData();
-    });
+	$(function () {
+		$('#txtStartDate').datepicker({ dateFormat: 'dd M yy' }).val();
+	});
+	$(document).ready(function () {
+		BindDropDownUsers();
+		loadData();
+	});
 
-    $('#btnSubmit').click(function () {
-        loadData(true);
-    });
-    function BindDropDownUsers() {
-        var userslist = s.Dropdown.Users("Fos");
-        userslist.then(result => {
-            $('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x => `<option value="${x.id}">${x.name}</option>`));
-        });
-    }
+	$('#btnSubmit').click(function () {
+		loadData(true);
+	});
+	function BindDropDownUsers() {
+		var userslist = s.Dropdown.Users("Fos");
+		userslist.then(result => {
+			$('#ddluser').empty().append('<option id="Option" name="UserID" value="0">-Select-</option>').append(result.map(x => `<option value="${x.id}">${x.name}</option>`));
+		});
+	}
 
-    var loadData = function (customeEvent = false) {
+	var loadData = function (customeEvent = false) {
 
-        $.renderDataTable2({
+		$.renderDataTable2({
 
-            columns: [
-               // { "render": () => i++},
-                {data: 'SrNo',
-           render: function (data, type, row, meta) {
-                return meta.row + meta.settings._iDisplayStart + 1;
-           }},
-                { data: "user.name",orderable: false },
-                { data: "lastAmount", orderable: false },
-                { data: "amount", orderable: false },
-                { data: "currentAmount", orderable: false },
-                { data: "transactionType", orderable: false },
-                { data: "createdOn", orderable: false },
-                { data: "naration", orderable: false }
-            ],
-            apiUrl: '/Report/FOSCollection',
-              customeEvent: customeEvent,
-            filters: {
-                UserID: $('#ddluser').val(),
-                CreatedOn: $('#txtStartDate').val()
-            }
-        });
-       // $('.buttons-pdf').hide();
-    };
+			columns: [
+			   // { "render": () => i++},
+				{data: 'SrNo',
+		   render: function (data, type, row, meta) {
+				return meta.row + meta.settings._iDisplayStart + 1;
+		   }},
+				{ data: "user.name",orderable: false },
+				{ data: "lastAmount", orderable: false },
+				{ data: "amount", orderable: false },
+				{ data: "currentAmount", orderable: false },
+				{ data: "transactionType", orderable: false },
+				{ data: "createdOn", orderable: false },
+				{ data: "naration", orderable: false }
+			],
+			apiUrl: '/Report/FOSCollection',
+			  customeEvent: customeEvent,
+			filters: {
+				UserID: $('#ddluser').val(),
+				CreatedOn: $('#txtStartDate').val()
+			}
+		});
+	   // $('.buttons-pdf').hide();
+	};
 </script>
 
 }
