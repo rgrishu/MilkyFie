@@ -24,5 +24,6 @@ namespace Milkyfie.AppCode.Interfaces
         Task<IEnumerable<FOSMapByUser>> GetMapedFosByUser(FOSMapByUser entity = null);
         Task<Response> FosMappingByUser(FOSMapByUser entity);
         Task<IEnumerable<ApplicationUser>> GetUserForFosMApDrpdwn(ApplicationUser entity = null);
+        Task<IEnumerable<UserAccountSummary>> GetAccountSummary(string UserID);
     }
 }

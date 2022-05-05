@@ -280,6 +280,33 @@ namespace Milkyfie.Controllers
             var resp = _users.UpdateUserInfo(au).Result;
             return Json(resp);
         }
+
+
+        [HttpPost(nameof(UserAccountSummary))]
+        public IActionResult UserAccountSummary(string UserID)
+        {
+            var res = new Response<List<UserAccountSummary>>()
+            {
+                StatusCode = ResponseStatus.Failed,
+                ResponseText = ResponseStatus.Failed.ToString()
+            };
+            var resp = _users.GetAccountSummary(UserID).Result;
+            if (resp != null && resp.Count() > 0)
+            {
+                res = new Response<List<UserAccountSummary>>()
+                {
+                    StatusCode = ResponseStatus.Success,
+                    ResponseText = ResponseStatus.Success.ToString(),
+                    Result = resp.ToList()
+                };
+            }
+            return Json(res);
+        }
+
+
+
+
+
         #endregion
         #region Product
         [HttpPost(nameof(Products))]

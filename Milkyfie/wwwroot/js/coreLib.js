@@ -1035,12 +1035,12 @@ $.fn.dataTable.Api.register('clearPipeline()', function () {
             paging: true,
             customeEvent: false,
             destroy: true,
-            responsive: {
-                details: {
-                    type: 'column',
-                    target: -1
-                }
-            },
+            //responsive: {
+            //    details: {
+            //        type: 'column',
+            //        target: -1
+            //    }
+            //},
             columnDefs: [{
                 className: 'dtr-control',
                 orderable: false,

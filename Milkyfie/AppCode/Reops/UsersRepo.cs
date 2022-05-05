@@ -204,6 +204,23 @@ namespace Milkyfie.AppCode.Reops
             { }
             return res;
         }
+
+        public async Task<IEnumerable<UserAccountSummary>> GetAccountSummary(string UserID)
+        {
+            IEnumerable<UserAccountSummary> accountSummary = new List<UserAccountSummary>();
+            try
+            {
+                var dbparams = new DynamicParameters();
+                dbparams.Add("UserID", UserID);
+                accountSummary = await _dapper.GetAllAsync<UserAccountSummary>("proc_SelectTransactionDetail", dbparams, commandType: CommandType.StoredProcedure);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return accountSummary;
+        }
+
         public async Task<decimal> UserBalanceForAPi(int UserID)
         {
             decimal balance = 0;
